@@ -24,7 +24,7 @@ object ProjectVersions {
     BUILD_VERSION = props.getProperty("buildVersion", "1").toInt()
     VERSION_OFFSET = props.getProperty("versionOffset", "1").toInt()
     VERSION_FORMAT = props.getProperty("versionFormat", "0.0.%d")
-    GROUP_ID = props.getProperty("groupID", "com.github.danbrough.androidutils")
+    GROUP_ID = props.getProperty("groupID", "com.github.danbrough.audioservice")
     KEYSTORE_PASSWORD = props.getProperty("keystorePassword", "")
   }
 

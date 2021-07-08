@@ -62,40 +62,41 @@ val testTracks = testData {
 
   item {
     title = "Opus Test"
-    id = "https://h1.danbrough.org/guitar/improv/improv1.opus"
+    id = "${ipfs_gateway}/ipns/audienz.danbrough.org/demos/improv/improv1.opus"
     subtitle = "Improv1 - Dan Brough"
   }
 
   item {
     title = "Flac Test"
-    id = "https://h1.danbrough.org/guitar/improv/improv2.flac"
+    id = "${ipfs_gateway}/ipns/audienz.danbrough.org/demos/improv/improv2.flac"
     subtitle = "Improv2 - Dan Brough"
   }
 
 
   item {
     title = "MP3 Test"
-    id = "https://h1.danbrough.org/guitar/improv/improv3.mp3"
+    id = "${ipfs_gateway}/ipns/audienz.danbrough.org/demos/improv/improv3.mp3"
     subtitle = "Improv3 - Dan Brough"
   }
 
 
   item {
     title = "Ogg Test"
-    id = "https://h1.danbrough.org/guitar/improv/improv4.ogg"
+    id = "${ipfs_gateway}/ipns/audienz.danbrough.org/demos/improv/improv4.ogg"
     subtitle = "Improv4 - Dan Brough"
   }
 
   item {
     title = "Ogg Test 2"
-    subtitle = "Electric Youth - Runaway"
+    subtitle = "Local ogg file that wont play for you"
     id = "http://192.168.1.2/music/Electric%20Youth/Innerworld/02%20-%20Runaway.ogg"
   }
 
 
   item {
     title = "Short OGA"
-    id = "https://h1.danbrough.org/media/tests/test.oga"
+    id = "${ipfs_gateway}/ipns/audienz.danbrough.org/demos/test.oga"
+    subtitle = "A short OGA file"
   }
 }
 

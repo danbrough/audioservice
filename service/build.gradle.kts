@@ -1,6 +1,7 @@
 plugins {
   id("com.android.library")
   kotlin("android")
+  id("maven-publish")
   kotlin("kapt")
 }
 
@@ -46,6 +47,29 @@ android {
     jvmTarget = ProjectVersions.KOTLIN_VERSION
   }
 
+  val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.getByName("main").java.srcDirs)
+  }
+
+
+  afterEvaluate {
+    publishing {
+      val projectName = name
+      publications {
+        val release by registering(MavenPublication::class) {
+          /*components.forEach {
+        println("Publication component: ${it.name}")
+      }*/
+          from(components["release"])
+          artifact(sourcesJar.get())
+          artifactId = projectName
+          groupId = ProjectVersions.GROUP_ID
+          version = ProjectVersions.VERSION_NAME
+        }
+      }
+    }
+  }
 
 }
 
@@ -142,3 +166,31 @@ dependencies {
   androidTestImplementation("androidx.test.ext:junit:_")
   androidTestImplementation("androidx.test.espresso:espresso-core:_")
 }
+
+/*
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.example.MyLibrary'
+                artifactId = 'final'
+                version = '1.0'
+            }
+            // Creates a Maven publication called “debug”.
+            debug(MavenPublication) {
+                // Applies the component for the debug build variant.
+                from components.debug
+
+                groupId = 'com.example.MyLibrary'
+                artifactId = 'final-debug'
+                version = '1.0'
+            }
+        }
+    }
+
+ */
