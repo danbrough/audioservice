@@ -398,8 +398,8 @@ class AudioService : MediaSessionService() {
       log.debug("onCommandRequest() ${command.commandCode}:${command.customAction}:extras:${command.customExtras}")
       if (session.player.playerState == SessionPlayer.PLAYER_STATE_ERROR) {
         log.info("in the error state suppresion reason: ${exoPlayer.playbackSuppressionReason} error: ${exoPlayer.playerError}")
-        session.player.prepare()
-        //exoPlayer.prepare()
+        //session.player.prepare()
+        exoPlayer.prepare()
       }
       return super.onCommandRequest(session, controller, command)
     }
