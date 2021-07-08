@@ -1,7 +1,14 @@
 plugins {
-    id("de.fayard.refreshVersions") version "0.10.1"
+  id("de.fayard.refreshVersions") version "0.10.1"
 }
 
-include(":app", ":media")
-rootProject.name = "media2_demo"
+if (System.getenv("JITPACK") == null) {
+  //println("including :demo")
+  include(":demo")
+}else {
+  println("Not including demo as building on jitpack.io")
+}
+
+include(":service")
+rootProject.name = "audioservice"
 

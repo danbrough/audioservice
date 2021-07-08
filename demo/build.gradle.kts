@@ -78,7 +78,7 @@ tasks.withType<Test> {
 
 dependencies {
 
-  implementation(project(":media"))
+  implementation(project(":service"))
   implementation(AndroidX.lifecycle.runtimeKtx)
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation(AndroidX.lifecycle.viewModelKtx)

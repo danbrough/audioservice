@@ -9,8 +9,5 @@
 .externalNativeBuild
 .cxx
 /app/release
-*/schemas
-/password.gradle.kts
-/buildSrc/src/main/kotlin/KeystoreConfig.kt
 **/build/
 /stuff

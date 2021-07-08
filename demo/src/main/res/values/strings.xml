@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Media2 Demo</string>
+    <string name="app_name">AudioService Demo</string>
     <string name="action_settings">Settings</string>
 
 </resources>
