@@ -481,11 +481,12 @@ class AudioService : MediaSessionService() {
       log.dtrace("currentItem.metadata: ${session.player.currentMediaItem?.metadata}")
       log.dtrace("title: $title")
 
-      MediaMetadata.Builder(session.player.currentMediaItem!!.metadata!!)
-          .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, title)
-          .build().also {
-            session.player.currentMediaItem!!.metadata = it
-          }
+      if (title != "")
+        MediaMetadata.Builder(session.player.currentMediaItem!!.metadata!!)
+            .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, title)
+            .build().also {
+              session.player.currentMediaItem!!.metadata = it
+            }
 
 
       /*  val oldMetadata = session.player.playlistMetadata?.also {
