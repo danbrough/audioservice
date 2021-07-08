@@ -10,7 +10,7 @@ object ProjectVersions {
   var BUILD_TOOLS_VERSION = "30.0.3"
   var BUILD_VERSION = 1
   var VERSION_OFFSET = 1
-  var GROUP_ID = ""
+  var GROUP_ID = "com.github.danbrough.audioservice"
   var KEYSTORE_PASSWORD = ""
   var VERSION_FORMAT = ""
   val NDK_VERSION =  "21.3.6528147"
