@@ -106,7 +106,7 @@ dependencies {
   implementation("com.github.danbrough.androidutils:logging_android:_")
   implementation("com.github.danbrough.androidutils:menu:_")
   implementation("com.github.danbrough.androidutils:misc:_")
-
+  implementation("com.sothree.slidinguppanel:library:_")
 /*  implementation("com.mikepenz:iconics-core:5.0.3")
   implementation("com.mikepenz:iconics-views:5.0.3")
   implementation ("com.mikepenz:fontawesome-typeface:5.9.0.0-kotlin")

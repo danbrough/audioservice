@@ -13,7 +13,7 @@ class DemoApplication : Application() {
 
 
   val log = LogConfig.let {
-    val log = AndroidLog("DEMO")
+    val log = AndroidLog("AUDIO_DEMO")
     val clientLog = AndroidLog("AUDIO_CLIENT")
     val serviceLog = AndroidLog("AUDIO_SERVICE")
     it.GET_LOG = {

@@ -98,6 +98,12 @@ val testTracks = testData {
     id = "${ipfs_gateway}/ipns/audienz.danbrough.org/demos/test.oga"
     subtitle = "A short OGA file"
   }
+
+  item {
+    title = "Another Short OGA"
+    id = "${ipfs_gateway}/ipns/audienz.danbrough.org/demos/complete.oga"
+    subtitle = "A short OGA file"
+  }
 }
 
 @DslMarker
