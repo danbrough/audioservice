@@ -109,6 +109,8 @@ dependencies {
   implementation("androidx.compose.ui:ui-tooling:_")
   implementation("com.github.danbrough.androidutils:compose:_")
 
+  implementation("com.google.accompanist:accompanist-systemuicontroller:_")
+  implementation("com.google.accompanist:accompanist-insets:_")
 
   //implementation("androidx.media2:media2-exoplayer:$media_version")
   //implementation("androidx.media2:media2-player:$media_version")
