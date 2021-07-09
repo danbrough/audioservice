@@ -4,14 +4,18 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import androidx.activity.viewModels
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.media2.common.MediaMetadata
 import androidx.navigation.NavController
 import com.google.android.material.snackbar.Snackbar
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import danbroid.demo.media2.content.URI_CONTENT_ROOT
 import danbroid.demo.media2.content.rootContent
+import danbroid.demo.media2.model.ActivityModel
 import danbroid.demo.media2.model.AudioClientModel
+import danbroid.demo.media2.model.activityModel
+import danbroid.demo.media2.model.audioClientModel
 import danbroid.media.client.AudioClient
 import danbroid.media.service.AudioService
 import danbroid.util.menu.MenuActivity
@@ -25,7 +29,11 @@ class MainActivity : MenuActivity() {
     rootContent(this)
   }
 
-  val audioClientModel: AudioClientModel by viewModels()
+  lateinit var audioClientModel: AudioClientModel
+
+  val activityModel: ActivityModel by lazy {
+    activityModel()
+  }
 
   override fun getRootMenu() = rootContent
 
@@ -34,6 +42,7 @@ class MainActivity : MenuActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    audioClientModel = audioClientModel()
 
     lifecycleScope.launchWhenResumed {
       audioClientModel.client.playState.collect {
@@ -43,6 +52,19 @@ class MainActivity : MenuActivity() {
         }
       }
     }
+
+    val slidingPanel = findViewById<SlidingUpPanelLayout>(R.id.sliding_layout)
+    log.warn("GOT SLIDING PANEL $slidingPanel. Current state: ${slidingPanel.panelState}")
+    slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+      override fun onPanelSlide(panel: View, slideOffset: Float) {
+        log.dtrace("onPanelSlide() $slideOffset")
+      }
+
+      override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
+        activityModel.slidePanelState.value = newState!!
+      }
+
+    })
   }
 
 /*

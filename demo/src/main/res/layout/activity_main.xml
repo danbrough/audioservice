@@ -42,10 +42,9 @@
 
   <androidx.fragment.app.FragmentContainerView
       android:id="@+id/bottom_controls_fragment"
-      android:name="danbroid.demo.media2.ui.ControlsFragment"
+      android:name="danbroid.demo.media2.ui.FadeBetweenFragment"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="?colorPrimary"
       android:padding="0dp" />
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

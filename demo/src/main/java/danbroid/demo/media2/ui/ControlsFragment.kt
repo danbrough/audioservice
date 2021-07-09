@@ -10,7 +10,6 @@ import androidx.annotation.ColorInt
 import androidx.lifecycle.lifecycleScope
 import androidx.media2.common.MediaMetadata
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import danbroid.demo.media2.R
 import danbroid.demo.media2.databinding.FragmentBottomControlsBinding
 import danbroid.demo.media2.model.audioClientModel
@@ -41,7 +40,7 @@ class ControlsFragment : BottomSheetDialogFragment() {
   @ColorInt
   private var textColor: Int = Color.WHITE
 
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
+/*  override fun onActivityCreated(savedInstanceState: Bundle?) {
     log.ddebug("onActivityCreated()")
     super.onActivityCreated(savedInstanceState)
     val slidingPanel = requireActivity().findViewById<SlidingUpPanelLayout>(R.id.sliding_layout)
@@ -58,12 +57,12 @@ class ControlsFragment : BottomSheetDialogFragment() {
 
     })
 
-  }
+  }*/
   @SuppressLint("ResourceType")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     log.debug("onViewCreated()")
     super.onViewCreated(view, savedInstanceState)
-    val audioClient = audioClientModel.client
+    val audioClient = audioClientModel().client
 
 
 

@@ -28,19 +28,17 @@ class AudioClientModel(context: Context) : ViewModel() {
 }
 
 
-val Fragment.audioClientModel: AudioClientModel
-  get() = activityViewModels<AudioClientModel> {
-    object : ViewModelProvider.NewInstanceFactory() {
-      override fun <T : ViewModel?> create(modelClass: Class<T>) = AudioClientModel(requireContext()) as T
-    }
-  }.value
+fun Fragment.audioClientModel(): AudioClientModel = activityViewModels<AudioClientModel> {
+  object : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel?> create(modelClass: Class<T>) = AudioClientModel(requireContext()) as T
+  }
+}.value
 
 
-val ComponentActivity.audioClientModel: AudioClientModel
-  get() = viewModels<AudioClientModel> {
-    object : ViewModelProvider.NewInstanceFactory() {
-      override fun <T : ViewModel?> create(modelClass: Class<T>) = AudioClientModel(this@audioClientModel) as T
-    }
-  }.value
+fun ComponentActivity.audioClientModel(): AudioClientModel = viewModels<AudioClientModel> {
+  object : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel?> create(modelClass: Class<T>) = AudioClientModel(this@audioClientModel) as T
+  }
+}.value
 
 private val log = danbroid.logging.getLog(AudioClientModel::class)
