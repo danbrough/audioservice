@@ -14,6 +14,7 @@ object ProjectVersions {
   var KEYSTORE_PASSWORD = ""
   var VERSION_FORMAT = ""
   val NDK_VERSION =  "21.3.6528147"
+  const val COMPOSE_VERSION = "1.0.0-rc01"
 
   val VERSION_NAME: String
     get() = getVersionName()

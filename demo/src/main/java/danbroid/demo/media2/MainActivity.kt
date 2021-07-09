@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.collect
 
 class MainActivity : MenuActivity() {
 
-
   private val rootContent by lazy {
     rootContent(this)
   }
