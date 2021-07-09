@@ -8,8 +8,8 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.media2.common.MediaMetadata
 import androidx.navigation.NavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import danbroid.demo.media2.content.URI_CONTENT_ROOT
 import danbroid.demo.media2.content.rootContent
 import danbroid.demo.media2.model.ActivityModel
@@ -43,6 +43,10 @@ class MainActivity : MenuActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     audioClientModel = audioClientModel()
+    val bottomSheet = BottomSheetBehavior.from(findViewById(R.id.bottom_controls_fragment))
+    bottomSheet.isFitToContents = true
+
+
 
     lifecycleScope.launchWhenResumed {
       audioClientModel.client.playState.collect {
@@ -53,18 +57,7 @@ class MainActivity : MenuActivity() {
       }
     }
 
-    val slidingPanel = findViewById<SlidingUpPanelLayout>(R.id.sliding_layout)
-    log.warn("GOT SLIDING PANEL $slidingPanel. Current state: ${slidingPanel.panelState}")
-    slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-      override fun onPanelSlide(panel: View, slideOffset: Float) {
-        log.dtrace("onPanelSlide() $slideOffset")
-      }
 
-      override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
-        activityModel.slidePanelState.value = newState!!
-      }
-
-    })
   }
 
 /*
@@ -167,6 +160,7 @@ class MainActivity : MenuActivity() {
   }
 
 }
+
 
 private val log = danbroid.logging.getLog(MainActivity::class)
 
