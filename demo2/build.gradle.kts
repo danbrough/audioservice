@@ -106,7 +106,7 @@ dependencies {
   implementation(AndroidX.compose.runtime.liveData)
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
-  implementation("androidx.compose.ui:ui-tooling:_")
+  implementation("androidx.compose.ui:ui-tooling:1.0.0-beta09")
   implementation("com.github.danbrough.androidutils:compose:_")
 
   implementation("com.google.accompanist:accompanist-systemuicontroller:_")
