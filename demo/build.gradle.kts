@@ -16,7 +16,6 @@ android {
   buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
 
   defaultConfig {
-    //buildToolsVersion("30.0.2")
 
     minSdk = ProjectVersions.MIN_SDK_VERSION
     targetSdk = ProjectVersions.SDK_VERSION
@@ -78,6 +77,7 @@ tasks.withType<Test> {
 
 dependencies {
 
+  implementation(project(":demo_content"))
   implementation(project(":service"))
   implementation(AndroidX.lifecycle.runtimeKtx)
   implementation(AndroidX.lifecycle.liveDataKtx)
@@ -106,12 +106,11 @@ dependencies {
   implementation("com.github.danbrough.androidutils:logging_android:_")
   implementation("com.github.danbrough.androidutils:menu:_")
   implementation("com.github.danbrough.androidutils:misc:_")
-  implementation("com.sothree.slidinguppanel:library:_")
+  //implementation("com.sothree.slidinguppanel:library:_")
 /*  implementation("com.mikepenz:iconics-core:5.0.3")
   implementation("com.mikepenz:iconics-views:5.0.3")
   implementation ("com.mikepenz:fontawesome-typeface:5.9.0.0-kotlin")
   implementation("com.mikepenz:community-material-typeface:5.3.45.1-kotlin")*/
-
 
 
   implementation(Square.okHttp3.okHttp)

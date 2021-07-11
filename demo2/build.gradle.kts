@@ -59,6 +59,7 @@ android {
   kotlin.sourceSets.all {
     setOf(
         "kotlinx.serialization.ExperimentalSerializationApi",
+        "androidx.compose.material.ExperimentalMaterialApi",
         //"kotlinx.coroutines.ExperimentalCoroutinesApi",
         //"kotlinx.coroutines.FlowPreview",
         //"androidx.compose.material.ExperimentalMaterialApi"
@@ -83,6 +84,8 @@ tasks.withType<Test> {
 dependencies {
 
   implementation(project(":service"))
+  implementation(project(":demo_content"))
+
   implementation(AndroidX.lifecycle.runtimeKtx)
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation(AndroidX.lifecycle.viewModelKtx)
@@ -106,11 +109,12 @@ dependencies {
   implementation(AndroidX.compose.runtime.liveData)
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
-  implementation("androidx.compose.ui:ui-tooling:_")
+  implementation("androidx.compose.ui:ui-tooling:${ProjectVersions.COMPOSE_TOOLS_VERSION}")
   implementation("com.github.danbrough.androidutils:compose:_")
 
   implementation("com.google.accompanist:accompanist-systemuicontroller:_")
   implementation("com.google.accompanist:accompanist-insets:_")
+  implementation("com.google.accompanist:accompanist-coil:_")
 
   //implementation("androidx.media2:media2-exoplayer:$media_version")
   //implementation("androidx.media2:media2-player:$media_version")

@@ -5,9 +5,12 @@ import android.content.Context
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import danbroid.demo.content.ipfs_gateway
+import danbroid.demo.content.somaFM
+import danbroid.demo.content.testTracks
 import danbroid.demo.media2.R
-import danbroid.demo.media2.model.AudioClientModel
 import danbroid.media.client.AudioClient
+import danbroid.media.client.AudioClientModel
 import danbroid.util.format.uriEncode
 import danbroid.util.menu.MenuItemBuilder
 import danbroid.util.menu.MenuItemClickContext
@@ -53,7 +56,7 @@ fun rootContent(context: Context) = context.rootMenu<MenuItemBuilder> {
     title = "Soma FM"
     subtitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
     isBrowsable = true
-    imageURI = "${ipfs_gateway}/ipns/audienz.danbrough.org/media/somafm.png"
+    imageURI = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
     onClick = {
       log.dinfo("Test1")
       this@menu.children?.clear()

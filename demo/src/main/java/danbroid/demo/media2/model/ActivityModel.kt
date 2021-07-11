@@ -5,11 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ActivityModel(context: Context) : ViewModel() {
-  val slidePanelState = MutableStateFlow(SlidingUpPanelLayout.PanelState.COLLAPSED)
 }
 
 fun ComponentActivity.activityModel(): ActivityModel =

@@ -1,4 +1,4 @@
-package danbroid.demo.media2.content
+package danbroid.demo.content
 
 import androidx.core.net.toUri
 import androidx.media2.common.MediaItem

@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
-    app:umanoDragView="@id/bottom_controls_fragment"
-    app:umanoInitialState="collapsed"
-    app:umanoOverlay="false"
-    app:umanoPanelHeight="@dimen/bottom_panel_size"
-    app:umanoShadowHeight="4dp">
+    tools:context="danbroid.demo.media2.MainActivity">
 
-  <androidx.coordinatorlayout.widget.CoordinatorLayout
+  <com.google.android.material.appbar.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:elevation="1dp"
+      android:theme="@style/AppTheme.AppBarOverlay">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <include
+      layout="@layout/fragment_navhost"
+
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      tools:context="danbroid.demo.media2.MainActivity">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-      <androidx.appcompat.widget.Toolbar
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          android:background="?attr/colorPrimary"
-          app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <include
-        layout="@layout/fragment_navhost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-  </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
+      android:elevation="0dp"
+      android:layout_marginBottom="@dimen/bottom_panel_size"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
   <androidx.fragment.app.FragmentContainerView
       android:id="@+id/bottom_controls_fragment"
       android:name="danbroid.demo.media2.ui.FadeBetweenFragment"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:padding="0dp" />
+      android:layout_height="wrap_content"
+      android:clickable="true"
+      android:elevation="20dp"
+      android:padding="0dp"
+      app:behavior_draggable="true"
+      app:behavior_hideable="false"
+      app:behavior_peekHeight="@dimen/bottom_panel_size"
+      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+

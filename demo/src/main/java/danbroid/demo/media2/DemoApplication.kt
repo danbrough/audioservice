@@ -1,8 +1,8 @@
 package danbroid.demo.media2
 
 import android.app.Application
-import danbroid.demo.media2.content.SomaFM
-import danbroid.demo.media2.content.TestDataLibrary
+import danbroid.demo.content.SomaFM
+import danbroid.demo.content.TestDataLibrary
 import danbroid.logging.AndroidLog
 import danbroid.logging.LogConfig
 import danbroid.media.service.Config

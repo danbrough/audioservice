@@ -1,4 +1,4 @@
-package danbroid.demo.media2.content
+package danbroid.demo.content
 
 import android.content.Context
 import androidx.core.net.toUri

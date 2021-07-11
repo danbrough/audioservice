@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_controls"
     android:layout_width="match_parent"
-    android:layout_height="52dp"
+    android:layout_height="124dp"
     android:layout_margin="0dp"
+    android:background="?colorPrimary"
     android:gravity="center_vertical|start"
     android:orientation="vertical">
 

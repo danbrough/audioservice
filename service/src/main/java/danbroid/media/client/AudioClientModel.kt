@@ -1,4 +1,4 @@
-package danbroid.demo.media2.model
+package danbroid.media.client
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import danbroid.media.client.AudioClient
 import danbroid.media.service.AudioService
 
 class AudioClientModel(context: Context) : ViewModel() {
@@ -27,18 +26,20 @@ class AudioClientModel(context: Context) : ViewModel() {
   }
 }
 
+class AudioClientModelFactory(val context: Context) : ViewModelProvider.NewInstanceFactory() {
+  @Suppress("UNCHECKED_CAST")
+  override fun <T : ViewModel?> create(modelClass: Class<T>) = AudioClientModel(context) as T
+}
 
 fun Fragment.audioClientModel(): AudioClientModel = activityViewModels<AudioClientModel> {
-  object : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) = AudioClientModel(requireContext()) as T
-  }
+  AudioClientModelFactory(requireContext())
 }.value
 
 
 fun ComponentActivity.audioClientModel(): AudioClientModel = viewModels<AudioClientModel> {
-  object : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) = AudioClientModel(this@audioClientModel) as T
-  }
+  AudioClientModelFactory(this)
 }.value
+
+
 
 private val log = danbroid.logging.getLog(AudioClientModel::class)
