@@ -1,4 +1,4 @@
-package danbroid.demo.media2.content
+package danbroid.demo.content
 
 import android.os.Bundle
 import androidx.core.os.bundleOf

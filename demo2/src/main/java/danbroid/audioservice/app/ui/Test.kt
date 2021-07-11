@@ -5,7 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import danbroid.audioservice.app.ui.theme.BrewAppTheme
+import danbroid.audioservice.app.ui.theme.DemoTheme
 
 
 @Preview("default")
@@ -13,7 +13,7 @@ import danbroid.audioservice.app.ui.theme.BrewAppTheme
 @Preview("large font", fontScale = 2f)
 @Composable
 fun Test() {
-  BrewAppTheme {
+  DemoTheme {
     Text("HEllo world!", style = MaterialTheme.typography.body1)
   }
 }

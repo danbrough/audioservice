@@ -4,7 +4,6 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.media2.common.MediaMetadata
 import androidx.navigation.NavController
@@ -13,10 +12,10 @@ import com.google.android.material.snackbar.Snackbar
 import danbroid.demo.media2.content.URI_CONTENT_ROOT
 import danbroid.demo.media2.content.rootContent
 import danbroid.demo.media2.model.ActivityModel
-import danbroid.demo.media2.model.AudioClientModel
 import danbroid.demo.media2.model.activityModel
-import danbroid.demo.media2.model.audioClientModel
 import danbroid.media.client.AudioClient
+import danbroid.media.client.AudioClientModel
+import danbroid.media.client.audioClientModel
 import danbroid.media.service.AudioService
 import danbroid.util.menu.MenuActivity
 import danbroid.util.menu.createMenuNavGraph
@@ -32,7 +31,7 @@ class MainActivity : MenuActivity() {
   lateinit var audioClientModel: AudioClientModel
 
   val activityModel: ActivityModel by lazy {
-    activityModel()
+    this@MainActivity.activityModel()
   }
 
   override fun getRootMenu() = rootContent

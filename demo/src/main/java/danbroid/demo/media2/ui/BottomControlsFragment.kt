@@ -12,8 +12,8 @@ import androidx.media2.common.MediaMetadata
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import danbroid.demo.media2.R
 import danbroid.demo.media2.databinding.FragmentBottomControlsBinding
-import danbroid.demo.media2.model.audioClientModel
 import danbroid.media.client.AudioClient
+import danbroid.media.client.audioClientModel
 import danbroid.media.service.AudioService
 import kotlinx.coroutines.flow.collect
 

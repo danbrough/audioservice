@@ -91,7 +91,9 @@ dependencies {
   implementation(Kotlin.stdlib.jdk8)
   implementation(AndroidX.annotation)
   implementation(AndroidX.lifecycle.liveDataKtx)
+  implementation("androidx.core:core-ktx:_")
 
+  implementation ("androidx.fragment:fragment-ktx:_")
   implementation("androidx.media2:media2-common:_")
   implementation("androidx.media2:media2-session:_")
 
@@ -102,7 +104,6 @@ dependencies {
 
   //implementation(AndroidX.media2.player)
   //implementation(project(":exomedia2"))
-  implementation("androidx.core:core-ktx:_")
 
 
   api(AndroidX.concurrent.futures)

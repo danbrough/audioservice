@@ -9,8 +9,6 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
-import danbroid.audioservice.app.ui.theme.Elevations
-import danbroid.audioservice.app.ui.theme.LocalElevations
 import danbroid.util.compose.MaterialColors
 
 /*
@@ -79,7 +77,7 @@ val Colors.progressIndicatorBackground: Color
   get() = if (isLight) Color.Black.copy(alpha = 0.12f) else Color.Black.copy(alpha = 0.24f)
 
 @Composable
-fun BrewAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
+fun DemoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
   val colors = if (darkTheme) DarkThemeColors else LightThemeColors
   CompositionLocalProvider(
     LocalElevations provides Elevations()
