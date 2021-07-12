@@ -7,26 +7,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Audiotrack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
-import danbroid.audioservice.app.ui.components.DemoImage
+import danbroid.audioservice.app.ui.menu.menuModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.demo.content.testTracks
-import danbroid.media.client.AudioClientModel
-import danbroid.media.client.AudioClientModelFactory
+
 
 @ExperimentalMaterialApi
 @Composable
 fun Home(navBackStackEntry: NavBackStackEntry? = null) {
   log.info("Home()")
-  val audioClientModel = viewModel<AudioClientModel>(factory = AudioClientModelFactory(LocalContext.current))
-  log.ddebug("audioClient: ${audioClientModel.client}")
+  val menuModel = menuModel("/")
+
+
+/*  val audioClientModel = viewModel<AudioClientModel>(factory = AudioClientModelFactory(LocalContext.current))
+  log.ddebug("audioClient: ${audioClientModel.client}")*/
   Column {
     Text("Home Page")
     LazyColumn {
@@ -36,10 +36,11 @@ fun Home(navBackStackEntry: NavBackStackEntry? = null) {
 
           ListItem(
               icon = {
-                testTrack.imageURI?.also {
+                /*testTrack.imageURI?.also {
                   DemoImage(imageUrl = it, testTrack.title)
-                } ?: Icon(
-                    Icons.Filled.Favorite,
+                } ?:*/
+                Icon(
+                    Icons.Filled.Audiotrack,
                     contentDescription = null,
                     modifier = Modifier.size(40.dp),
                     tint = MaterialTheme.colors.primary
@@ -61,7 +62,7 @@ fun Home(navBackStackEntry: NavBackStackEntry? = null) {
 @ExperimentalMaterialApi
 @Preview
 @Composable
-fun HomePreview(){
+fun HomePreview() {
   DemoTheme {
     Home()
   }

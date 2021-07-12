@@ -139,4 +139,3 @@ class TestDataLibrary : MediaLibrary {
 
 }
 
-private val log = danbroid.logging.getLog(TestData::class)

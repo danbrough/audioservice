@@ -12,17 +12,22 @@ import danbroid.media.service.AudioService
 
 class AudioClientModel(context: Context) : ViewModel() {
 
-  val client = AudioClient(context)
 
-  init {
-    log.derror("created AudioClientModel")
+  private val _client = lazy {
+    log.derror("starting audio service ..")
     context.startService(Intent(context, AudioService::class.java))
+    AudioClient(context)
   }
+
+  val client: AudioClient by _client
 
   override fun onCleared() {
     super.onCleared()
     log.info("onCleared()")
-    client.close()
+    if (_client.isInitialized()) {
+      log.debug("closing client..")
+      _client.value.close()
+    }
   }
 }
 
@@ -39,7 +44,6 @@ fun Fragment.audioClientModel(): AudioClientModel = activityViewModels<AudioClie
 fun ComponentActivity.audioClientModel(): AudioClientModel = viewModels<AudioClientModel> {
   AudioClientModelFactory(this)
 }.value
-
 
 
 private val log = danbroid.logging.getLog(AudioClientModel::class)
