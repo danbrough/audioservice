@@ -84,7 +84,7 @@ tasks.withType<Test> {
 dependencies {
 
   implementation(project(":service"))
-  implementation(project(":demo_content"))
+  implementation(project(":demo_common"))
 
   implementation(AndroidX.lifecycle.runtimeKtx)
   implementation(AndroidX.lifecycle.liveDataKtx)
