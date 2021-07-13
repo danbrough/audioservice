@@ -1,6 +1,8 @@
 package danbroid.audioservice.app.menu
 
-data class MenuItem(val id: String, val title: String, val subTitle: String, val imageURI: String? = null) {
+import androidx.annotation.StringRes
+
+data class MenuItem(val id: String, val title: String, val subTitle: String, val imageURI: String? = null, val playable: Boolean = false, val browsable: Boolean = false) {
 }
 
 //private val log = danbroid.logging.getLog(MenuItem::class)
@@ -8,20 +10,33 @@ data class MenuItem(val id: String, val title: String, val subTitle: String, val
 annotation class MenuDSL
 
 
-class MenuBuilderContext() {
-
+abstract class MenuBuilderContext {
+  abstract fun getString(@StringRes id: Int): String
 }
 
 class MenuBuilder(val context: MenuBuilderContext) {
   @MenuDSL
-  var id: String? = null
+  lateinit var id: String
+
+  @MenuDSL
+  lateinit var title: String
+
+  @MenuDSL
+  var subtitle: String = ""
+
+  @MenuDSL
+  var iconURI: String? = null
 
   var children: MutableList<MenuBuilder>? = null
+
+  var icon: (() -> Unit)? = null
 
   @MenuDSL
   var isBrowsable = false
     get() = field || !children.isNullOrEmpty()
 
+  @MenuDSL
+  var isPlayable: Boolean = false
 
   @MenuDSL
   var provides: ((String) -> MenuBuilder?) = {
@@ -30,7 +45,8 @@ class MenuBuilder(val context: MenuBuilderContext) {
 
   fun addChild(child: MenuBuilder) {
     // log.error("addChild() $id -> child: ${child.id}")
-    child.id = if (id?.endsWith('/') == true) "$id${children?.size ?: 0}" else "${id}/${children?.size ?: 0}"
+    if (!child::id.isInitialized)
+      child.id = if (id.endsWith('/')) "$id${children?.size ?: 0}" else "${id}/${children?.size ?: 0}"
 
     isBrowsable = true
     val childBuilders = children ?: mutableListOf<MenuBuilder>().also {
@@ -39,12 +55,12 @@ class MenuBuilder(val context: MenuBuilderContext) {
     childBuilders.add(child)
   }
 
-  fun traverse(): Sequence<MenuBuilder> = sequence {
+/*  fun traverse(): Sequence<MenuBuilder> = sequence {
     yield(this@MenuBuilder)
     children?.forEach {
       yieldAll(it.traverse())
     }
-  }
+  }*/
 
   fun find(id: String): MenuBuilder? {
     if (this.id == id) return this
@@ -54,10 +70,18 @@ class MenuBuilder(val context: MenuBuilderContext) {
     }
   }
 
+  fun buildItem(): MenuItem = MenuItem(id, title, subtitle, imageURI = iconURI, browsable = isBrowsable, playable = isPlayable)
+
+  fun buildChildren(): List<MenuItem> = children?.map { it.buildItem() } ?: emptyList()
+
   @MenuDSL
   suspend fun menu(child: MenuBuilder = MenuBuilder(context), block: suspend MenuBuilder.() -> Unit) {
-
+    addChild(child)
+    child.block()
   }
+
+  override fun toString() = "MenuBuilder[$id:$title]"
+
 }
 
 

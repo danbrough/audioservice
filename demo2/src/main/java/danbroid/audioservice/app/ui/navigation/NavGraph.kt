@@ -9,7 +9,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import danbroid.audioservice.app.content.CONTENT_ROOT
 import danbroid.audioservice.app.ui.home.Home
+import danbroid.audioservice.app.ui.menu.menuModel
 
 object Routes {
   const val HOME = "home"
@@ -17,12 +19,12 @@ object Routes {
 
 @Composable
 fun NavGraph(
-  modifier: Modifier = Modifier,
-  navController: NavHostController
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) = NavHost(
-  navController,
-  modifier = modifier,
-  startDestination = Routes.HOME
+    navController,
+    modifier = modifier,
+    startDestination = Routes.HOME
 ) {
 
   /*log.dinfo("screenContext: $screenContext")
@@ -31,8 +33,9 @@ fun NavGraph(
   }*/
 
   composable(Routes.HOME) {
+    val menuModel = menuModel(CONTENT_ROOT)
     NavPage {
-      Home(it)
+      Home(it, menuModel)
     }
   }
 }
@@ -40,7 +43,7 @@ fun NavGraph(
 
 @Composable
 fun NavPage(content: @Composable () -> Unit) =
-  Box(Modifier.fillMaxWidth().padding(8.dp)) {
-    content()
-  }
+    Box(Modifier.fillMaxWidth().padding(8.dp)) {
+      content()
+    }
 

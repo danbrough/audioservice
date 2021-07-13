@@ -1,8 +1,6 @@
 package danbroid.audioservice.app.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,7 +26,7 @@ fun DemoImage(
           previewPlaceholder = R.drawable.ic_launcher_foreground
       ),
       contentDescription = contentDescription,
-      modifier = Modifier.clip(RoundedCornerShape(8.dp)).width(40.dp).height(40.dp),
+      modifier = modifier.clip(RoundedCornerShape(8.dp)),
       contentScale = ContentScale.FillBounds,
 
   )

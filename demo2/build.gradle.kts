@@ -60,6 +60,7 @@ android {
     setOf(
         "kotlinx.serialization.ExperimentalSerializationApi",
         "androidx.compose.material.ExperimentalMaterialApi",
+        "kotlin.time.ExperimentalTime",
         //"kotlinx.coroutines.ExperimentalCoroutinesApi",
         //"kotlinx.coroutines.FlowPreview",
         //"androidx.compose.material.ExperimentalMaterialApi"
@@ -122,7 +123,7 @@ dependencies {
 
   implementation("com.github.danbrough.androidutils:logging_android:_")
   //implementation("com.github.danbrough.androidutils:menu:_")
-  //implementation("com.github.danbrough.androidutils:misc:_")
+  implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:compose:_")
 
 /*  implementation("com.mikepenz:iconics-core:5.0.3")

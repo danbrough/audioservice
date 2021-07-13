@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit
 
 const val SOMA_CHANNELS_URL = "https://somafm.com/channels.json"
 
+internal val log = danbroid.logging.getLog("danbroid.demo.content")
 
 @Serializable
 data class SomaChannel(

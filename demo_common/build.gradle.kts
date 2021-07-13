@@ -6,7 +6,7 @@ plugins {
 
 android {
   compileSdk = ProjectVersions.SDK_VERSION
-  buildToolsVersion =ProjectVersions.BUILD_TOOLS_VERSION
+  buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdk = ProjectVersions.MIN_SDK_VERSION
@@ -37,6 +37,7 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:logging_core:_")
+  compileOnly(AndroidX.compose.runtime)
 
   implementation(Square.okHttp3.okHttp)
 
