@@ -29,7 +29,8 @@ fun DemoImage(
       modifier = modifier.clip(RoundedCornerShape(8.dp)),
       contentScale = ContentScale.FillBounds,
 
-  )
+      )
 }
 
 private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.components")
+
