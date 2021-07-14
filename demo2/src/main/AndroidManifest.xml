@@ -16,7 +16,7 @@
 
       android:supportsRtl="true"
       android:theme="@style/Theme.AudioDemo">
-      android:usesCleartextTraffic="true">
+    android:usesCleartextTraffic="true">
 
     <activity
         android:name=".MainActivity"
@@ -27,6 +27,17 @@
         <action android:name="android.intent.action.MAIN" />
 
         <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:host="settings"
+            android:scheme="audiodemo" />
       </intent-filter>
     </activity>
 

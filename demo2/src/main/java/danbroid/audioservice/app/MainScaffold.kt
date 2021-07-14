@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import danbroid.audioservice.app.ui.navigation.NavGraph
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
 
@@ -49,7 +48,7 @@ fun MainScaffold(
     scaffoldState = scaffoldState,
   ) { innerPaddingModifier ->
     //log.derror("innerPadding ${innerPaddingModifier}")
-    NavGraph(Modifier.padding(innerPaddingModifier), navController)
+    DemoNavGraph(Modifier.padding(innerPaddingModifier), navController)
   }
 }
 

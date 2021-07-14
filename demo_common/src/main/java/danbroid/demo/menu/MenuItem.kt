@@ -1,17 +1,29 @@
 package danbroid.audioservice.app.menu
 
+import android.content.Context
 import androidx.annotation.StringRes
 
-data class MenuItem(val id: String, val title: String, val subTitle: String, val imageURI: String? = null, val playable: Boolean = false, val browsable: Boolean = false) {
+data class MenuItem(
+    val id: String,
+    val title: String,
+    val subTitle: String,
+    val imageURI: String? = null,
+    val playable: Boolean = false,
+    val browsable: Boolean = false) {
+  companion object {
+    val LOADING_ITEM = MenuItem("", "Loading...", "")
+  }
 }
 
-//private val log = danbroid.logging.getLog(MenuItem::class)
+
+private val log = danbroid.logging.getLog(MenuItem::class)
+
 @DslMarker
 annotation class MenuDSL
 
 
-abstract class MenuBuilderContext {
-  abstract fun getString(@StringRes id: Int): String
+open class MenuBuilderContext(val context: Context) {
+  open fun getString(@StringRes id: Int) = context.getString(id)
 }
 
 class MenuBuilder(val context: MenuBuilderContext) {
@@ -43,6 +55,10 @@ class MenuBuilder(val context: MenuBuilderContext) {
     if (it == id) this else null
   }
 
+
+  @MenuDSL
+  var onClicked: ((MenuItem) -> Unit)? = null
+
   fun addChild(child: MenuBuilder) {
     // log.error("addChild() $id -> child: ${child.id}")
     if (!child::id.isInitialized)
@@ -63,14 +79,21 @@ class MenuBuilder(val context: MenuBuilderContext) {
   }*/
 
   fun find(id: String): MenuBuilder? {
+    log.dtrace("find() ${this.id} -> $id")
     if (this.id == id) return this
-    provides(id)?.also { return it }
+    provides(id)?.also {
+      log.dtrace("returning provider")
+      return it
+    }
     return children?.firstNotNullOfOrNull {
       it.find(id)
     }
   }
 
-  fun buildItem(): MenuItem = MenuItem(id, title, subtitle, imageURI = iconURI, browsable = isBrowsable, playable = isPlayable)
+  fun buildItem(): MenuItem = MenuItem(
+      id, title, subtitle,
+      imageURI = iconURI, browsable = isBrowsable, playable = isPlayable
+  )
 
   fun buildChildren(): List<MenuItem> = children?.map { it.buildItem() } ?: emptyList()
 

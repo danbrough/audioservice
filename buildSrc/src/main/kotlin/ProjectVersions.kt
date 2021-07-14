@@ -13,7 +13,7 @@ object ProjectVersions {
   var GROUP_ID = "com.github.danbrough.audioservice"
   var KEYSTORE_PASSWORD = ""
   var VERSION_FORMAT = ""
-  val NDK_VERSION =  "21.3.6528147"
+  val NDK_VERSION = "21.3.6528147"
   const val COMPOSE_VERSION = "1.0.0-rc01"
   const val COMPOSE_TOOLS_VERSION = "1.0.0-beta09"
 
@@ -27,12 +27,12 @@ object ProjectVersions {
     VERSION_OFFSET = props.getProperty("versionOffset", "1").toInt()
     VERSION_FORMAT = props.getProperty("versionFormat", "0.0.%d")
     GROUP_ID = props.getProperty("groupID", "com.github.danbrough.audioservice")
-    KEYSTORE_PASSWORD = props.getProperty("keystorePassword", "")
+    KEYSTORE_PASSWORD = System.getenv("KEYSTORE_PASSWORD") ?: ""
   }
 
   fun getIncrementedVersionName() = getVersionName(BUILD_VERSION + 1)
 
 
   fun getVersionName(version: Int = BUILD_VERSION) =
-    VERSION_FORMAT.format(version - VERSION_OFFSET)
+      VERSION_FORMAT.format(version - VERSION_OFFSET)
 }
