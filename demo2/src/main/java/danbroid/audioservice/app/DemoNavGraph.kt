@@ -96,9 +96,11 @@ private fun Menu(menuID: String, navController: NavHostController) {
       if (navController.graph.hasDeepLink(menuItem.id.toUri())) {
         log.debug("FOUND DEEPLINK ${menuItem.id}")
         navController.navigate(menuItem.id.toUri())
-      } else if (menuItem.browsable) {
+      } else if (menuItem.isBrowsable) {
         log.debug("BROWING TO ${menuItem.id}")
         navController.navigate("${Routes.MENU}?id=${menuItem.id.uriEncode()}")
+      } else if (menuItem.isPlayable) {
+
       }
     }
   }

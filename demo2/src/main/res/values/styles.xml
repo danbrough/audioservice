@@ -14,8 +14,7 @@
 <resources>
 
   <style name="Theme.AudioDemo" parent="Theme.Material.DayNight.NoActionBar">
-    <item name="android:colorPrimary">#ff00ff</item>
-    <item name="android:colorAccent">#ff00ff</item>
+    <item name="android:colorPrimary">#FF6D4C41</item>
     <item name="android:statusBarColor">@android:color/transparent</item>
     <item name="android:navigationBarColor">@android:color/transparent</item>
   </style>

@@ -8,8 +8,8 @@ data class MenuItem(
     val title: String,
     val subTitle: String,
     val imageURI: String? = null,
-    val playable: Boolean = false,
-    val browsable: Boolean = false) {
+    val isPlayable: Boolean = false,
+    val isBrowsable: Boolean = false) {
   companion object {
     val LOADING_ITEM = MenuItem("", "Loading...", "")
   }
@@ -92,7 +92,7 @@ class MenuBuilder(val context: MenuBuilderContext) {
 
   fun buildItem(): MenuItem = MenuItem(
       id, title, subtitle,
-      imageURI = iconURI, browsable = isBrowsable, playable = isPlayable
+      imageURI = iconURI, isBrowsable = isBrowsable, isPlayable = isPlayable
   )
 
   fun buildChildren(): List<MenuItem> = children?.map { it.buildItem() } ?: emptyList()
