@@ -2,4 +2,8 @@
 <resources>
   <string name="app_name">AudioService Demo2</string>
   <string name="settings">Settings</string>
+  <string name="lbl_skip_prev">Skip to previous</string>
+  <string name="lbl_skip_next">Skip to next</string>
+  <string name="pause">Pause</string>
+  <string name="play">Play</string>
 </resources>

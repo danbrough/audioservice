@@ -50,6 +50,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
       title = audioTrack.title
       subtitle = audioTrack.subtitle
       isPlayable = true
+      iconURI = audioTrack.imageURI
     }
   }
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -83,13 +84,24 @@ private fun Menu(menuID: String, navController: NavHostController) {
   val menuModel = menuModel(menuID)
   val menuState by menuModel.state.collectAsState()
   log.dtrace("title: ${menuState.menuItem.title}")
+
+  val menuNavOptions: NavOptionsBuilder.() -> Unit = {
+    anim {
+      enter = R.anim.menu_enter
+      exit = R.anim.menu_exit
+      popEnter = R.anim.menu_pop_enter
+      popExit = R.anim.menu_pop_exit
+    }
+  }
+  val audioClientModel = audioClientModel()
+
   NavPage {
     MenuScreen(menuState.menuItem.title, menuState.children) { menuItem ->
       log.ddebug("CLICKED $menuItem")
 
       navController.findDestination(menuItem.id)?.also {
         log.dtrace("found destination $it")
-        navController.navigate(menuItem.id)
+        navController.navigate(menuItem.id, menuNavOptions)
         return@MenuScreen
       }
 
@@ -98,9 +110,9 @@ private fun Menu(menuID: String, navController: NavHostController) {
         navController.navigate(menuItem.id.toUri())
       } else if (menuItem.isBrowsable) {
         log.debug("BROWING TO ${menuItem.id}")
-        navController.navigate("${Routes.MENU}?id=${menuItem.id.uriEncode()}")
+        navController.navigate("${Routes.MENU}?id=${menuItem.id.uriEncode()}", menuNavOptions)
       } else if (menuItem.isPlayable) {
-
+        audioClientModel.client.playUri(menuItem.id)
       }
     }
   }

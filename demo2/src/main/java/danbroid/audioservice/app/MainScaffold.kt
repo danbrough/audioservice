@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import danbroid.audioservice.app.ui.controls.BottomControls
 
 @Composable
 fun TestScaffold(
@@ -41,12 +42,7 @@ fun TestScaffold(
             it.statusBarsPadding()
           else it
         }) {
-          Column {
-            Text(text = "Hello from sheet",
-                style = MaterialTheme.typography.subtitle2)
-
-
-          }
+          BottomControls()
         }
 
       },
