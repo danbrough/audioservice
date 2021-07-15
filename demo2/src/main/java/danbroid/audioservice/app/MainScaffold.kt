@@ -38,7 +38,7 @@ fun TestScaffold(
       sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetContent = {
         Box(Modifier.fillMaxWidth().fillMaxHeight().systemBarsPadding(bottomSheetScaffoldState.bottomSheetState.isExpanded)) {
-          BottomControls()
+          BottomControls(expanded = bottomSheetScaffoldState.bottomSheetState.isExpanded)
         }
 
       },

@@ -145,7 +145,7 @@ private fun Menu(menuID: String, navController: NavHostController) {
 
 @Composable
 fun NavPage(content: @Composable () -> Unit) =
-    Box(Modifier.fillMaxWidth().padding(8.dp)) {
+    Box(Modifier.fillMaxWidth().padding(start = 8.dp,end = 8.dp)) {
       content()
     }
 

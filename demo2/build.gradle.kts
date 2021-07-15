@@ -103,7 +103,7 @@ dependencies {
 
 
   implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
-  implementation("androidx.activity:activity-compose:1.3.0-rc01")
+  implementation("androidx.activity:activity-compose:1.3.0-rc02")
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
   implementation(AndroidX.compose.ui)
   implementation(AndroidX.compose.ui.text)
@@ -115,7 +115,7 @@ dependencies {
   implementation(AndroidX.compose.material.icons.extended)
   implementation("androidx.compose.ui:ui-tooling:${ProjectVersions.COMPOSE_TOOLS_VERSION}")
   implementation("com.github.danbrough.androidutils:compose:_")
-  implementation("com.github.fornewid:material-motion-compose:0.5.1-dan")
+  implementation("com.github.fornewid:material-motion-compose:0.5.2")
   implementation("com.google.accompanist:accompanist-systemuicontroller:_")
   implementation("com.google.accompanist:accompanist-insets:_")
   implementation("com.google.accompanist:accompanist-coil:_")

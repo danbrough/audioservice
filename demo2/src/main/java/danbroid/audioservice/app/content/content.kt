@@ -4,7 +4,10 @@ import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.menu.MenuBuilder
 import danbroid.audioservice.app.menu.MenuBuilderContext
+import danbroid.demo.content.ipfs_gateway
+import danbroid.demo.content.somaFM
 import danbroid.demo.content.testTracks
+import danbroid.util.format.uriEncode
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 
@@ -60,6 +63,24 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
     menu {
       id = Routes.SETTINGS
       title = "Navigate by ROUTE.SETTINGS to Settings"
+    }
+  }
+
+  menu {
+    id = "$URI_CONTENT/soma"
+    title = "Soma FM"
+    subtitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
+    iconURI = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
+    log.dwarn("SOMA MENU..")
+
+    context.context.somaFM.channels().forEach {
+      menu {
+        id = "somafm://${it.id.uriEncode()}"        //id = "$URI_CONTENT/soma/${it.id.uriEncode()}"
+        title = it.title
+        subtitle = it.description
+        iconURI = it.image
+        isPlayable = true
+      }
     }
   }
 
