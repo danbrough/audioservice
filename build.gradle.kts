@@ -30,6 +30,7 @@ subprojects {
     mavenCentral()
   //  maven("https://h1.danbrough.org/maven/")
     maven("https://jitpack.io")
+    mavenLocal()
   }
   /*configurations.all {
     if (name.toLowerCase().contains("test")) {

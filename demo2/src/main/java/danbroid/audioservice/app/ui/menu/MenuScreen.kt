@@ -29,9 +29,6 @@ fun MenuScreen(
 /*  val audioClientModel = viewModel<AudioClientModel>(factory = AudioClientModelFactory(LocalContext.current))
   log.ddebug("audioClient: ${audioClientModel.client}")*/
   Column {
-
-    Text(title, style = MaterialTheme.typography.caption)
-
     val imageModifier = Modifier.size(40.dp)
     LazyColumn {
       items(menus, { it.id }) { menu ->

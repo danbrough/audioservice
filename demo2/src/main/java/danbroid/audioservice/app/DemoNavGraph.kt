@@ -1,5 +1,6 @@
 package danbroid.audioservice.app
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,6 +30,22 @@ object Routes {
   const val SETTINGS = "settings"
 }
 
+
+@ExperimentalAnimationApi
+@Composable
+fun EnterAnimation(content: @Composable () -> Unit) {
+  AnimatedVisibility(
+      visible = true,
+      enter = slideInHorizontally(
+          initialOffsetX = { -40 }
+      ) + fadeIn(initialAlpha = 0.3f),
+      exit = slideOutHorizontally() + fadeOut(),
+      content = content,
+      initiallyVisible = false
+  )
+}
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DemoNavGraph(
     modifier: Modifier,
@@ -46,7 +63,10 @@ fun DemoNavGraph(
   }*/
 
   composable(Routes.HOME) {
-    Menu(URI_CONTENT, navController)
+    EnterAnimation {
+      Menu(URI_CONTENT, navController)
+    }
+
   }
 
 
@@ -58,7 +78,11 @@ fun DemoNavGraph(
   )) { entry ->
 
     val menuID = entry.arguments?.getString("id")!!
-    Menu(menuID, navController)
+
+    EnterAnimation {
+
+      Menu(menuID, navController)
+    }
 
 /*
     val backstackEntry = navController.currentBackStackEntryAsState()
@@ -101,7 +125,7 @@ private fun Menu(menuID: String, navController: NavHostController) {
 
       navController.findDestination(menuItem.id)?.also {
         log.dtrace("found destination $it")
-        navController.navigate(menuItem.id, menuNavOptions)
+        navController.navigate(menuItem.id)
         return@MenuScreen
       }
 

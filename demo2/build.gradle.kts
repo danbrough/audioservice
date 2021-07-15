@@ -60,6 +60,7 @@ android {
     setOf(
         "kotlinx.serialization.ExperimentalSerializationApi",
         "androidx.compose.material.ExperimentalMaterialApi",
+        "androidx.compose.animation.ExperimentalAnimationApi",
         "kotlin.time.ExperimentalTime",
         //"kotlinx.coroutines.ExperimentalCoroutinesApi",
         //"kotlinx.coroutines.FlowPreview",
@@ -93,6 +94,8 @@ dependencies {
   //implementation(AndroidX.coreKtx)
   implementation(Kotlin.stdlib.jdk8)
   implementation(KotlinX.coroutines.android)
+  implementation(AndroidX.media2.common)
+
   implementation("androidx.core:core-ktx:_")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
   //implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")
@@ -112,7 +115,7 @@ dependencies {
   implementation(AndroidX.compose.material.icons.extended)
   implementation("androidx.compose.ui:ui-tooling:${ProjectVersions.COMPOSE_TOOLS_VERSION}")
   implementation("com.github.danbrough.androidutils:compose:_")
-
+  implementation("com.github.fornewid:material-motion-compose:0.5.1-dan")
   implementation("com.google.accompanist:accompanist-systemuicontroller:_")
   implementation("com.google.accompanist:accompanist-insets:_")
   implementation("com.google.accompanist:accompanist-coil:_")

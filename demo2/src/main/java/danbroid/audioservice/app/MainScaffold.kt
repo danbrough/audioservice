@@ -12,7 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.systemBarsPadding
 import danbroid.audioservice.app.ui.controls.BottomControls
 
 @Composable
@@ -29,19 +29,15 @@ fun TestScaffold(
   log.trace("statusBarsTop: ${insets.statusBars.layoutInsets.top} bottom: ${insets.statusBars.layoutInsets.bottom}")
   BottomSheetScaffold(
       modifier = Modifier,
-      topBar = {
+/*      topBar = {
         Row {
           Text(title)
         }
-      },
+      },*/
       scaffoldState = bottomSheetScaffoldState,
       sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetContent = {
-        Box(Modifier.fillMaxWidth().fillMaxHeight().navigationBarsPadding(bottom = true).let {
-          if (bottomSheetScaffoldState.bottomSheetState.isExpanded)
-            it.statusBarsPadding()
-          else it
-        }) {
+        Box(Modifier.fillMaxWidth().fillMaxHeight().systemBarsPadding(bottomSheetScaffoldState.bottomSheetState.isExpanded)) {
           BottomControls()
         }
 
@@ -50,7 +46,7 @@ fun TestScaffold(
       sheetPeekHeight = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) 56.dp else 100.dp
   ) {
 
-    DemoNavGraph(Modifier.padding(it), navController)
+    DemoNavGraph(Modifier.navigationBarsPadding().padding(bottom = 56.dp), navController)
 
   }
 }

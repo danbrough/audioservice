@@ -28,8 +28,33 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
 
 
     menu {
-      title = "Child 2"
-      subtitle = "Second Child"
+      title = "Child 12"
+      subtitle = "Click for more"
+
+      menu {
+        title = "Child 21"
+        subtitle = "Click for more"
+
+        menu {
+          title = "Child 211"
+          subtitle = "Click for more"
+          menu {
+            title = "Child 211"
+            subtitle = "Click for more"
+          }
+        }
+      }
+
+
+      menu {
+        title = "Child 22"
+        subtitle = "Second Child"
+      }
+
+      menu {
+        id = Routes.SETTINGS
+        title = "Navigate by ROUTE.SETTINGS to Settings"
+      }
     }
 
     menu {
