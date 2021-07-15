@@ -20,7 +20,6 @@ import danbroid.audioservice.app.ui.components.DemoImage
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
 
-@ExperimentalMaterialApi
 @Composable
 fun MenuScreen(
     title: String,
@@ -67,7 +66,7 @@ fun MenuScreen(
 
 @Composable
 fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
-  Row(modifier = Modifier.height(62.dp).clickable { onClicked() }, verticalAlignment = Alignment.CenterVertically) {
+  Row(modifier = Modifier.height(62.dp).fillMaxWidth().clickable { onClicked() }, verticalAlignment = Alignment.CenterVertically) {
     //Spacer(Modifier.width(4.dp))
 
 
@@ -89,7 +88,7 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
           //modifier = Modifier.size(42.dp),
           colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
       )*/
-    Column(Modifier.padding(start = 16.dp), verticalArrangement = Arrangement.Bottom) {
+    Column(Modifier.padding(start = 16.dp).fillMaxWidth(), verticalArrangement = Arrangement.Bottom) {
       Text(menuItem.title, style = MaterialTheme.typography.subtitle1)
       Text(
           menuItem.subTitle,

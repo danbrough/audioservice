@@ -2,14 +2,16 @@ package danbroid.audioservice.app.ui.controls
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -72,15 +74,15 @@ private fun BottomControls(
   }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable()
-private fun Preview1() {
+private fun BottomControlsPreview() {
   DemoTheme {
-    CompositionLocalProvider(LocalContentColor provides contentColorFor(MaterialTheme.colors.primary)) {
+    //CompositionLocalProvider(LocalContentColor provides contentColorFor(MaterialTheme.colors.primary)) {
       Box(Modifier.background(MaterialTheme.colors.primary).width(300.dp)) {
         BottomControls("The Title", "The Subtitle", true, true, true, expanded = true)
       }
-    }
+    //}
   }
 }
 
