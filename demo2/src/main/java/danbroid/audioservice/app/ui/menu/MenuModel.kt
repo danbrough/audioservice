@@ -93,4 +93,4 @@ fun menuModel(menuID: String) = viewModel<MenuModel>(factory = MenuModelFactory(
 private val log = danbroid.logging.getLog(MenuModel::class)
 
 
-fun AudioTrack.toMenuItem(): MenuItem = MenuItem(id, title, subtitle, imageURI)
+fun AudioTrack.toMenuItem(): MenuItem = MenuItem(id, title, subTitle, iconURI)

@@ -23,7 +23,7 @@ class Config {
     var notificationID = 1438293
 
     @DrawableRes
-    var statusBarIcon = R.drawable.ic_audiotrack_light
+    var statusBarIcon = R.drawable.ic_audiotrack
 
     @ColorInt
     var notificationColour = 0
@@ -32,7 +32,7 @@ class Config {
     var notificationIconTint = 0
 
     @DrawableRes
-    var defaultNotificationIcon = R.drawable.ic_audiotrack_light
+    var defaultNotificationIcon = R.drawable.ic_audiotrack
 
     var notificationIconWidth = 128
 
@@ -64,10 +64,10 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
       notification: Notification,
       ongoing: Boolean
   ) {
-    log.warn("onNotificationPosted() ongoing:$ongoing")
+    //log.warn("onNotificationPosted() ongoing:$ongoing")
     if (ongoing) {
       if (!serviceForeground) {
-        //log.warn("starting foreground ..")
+        log.debug("starting foreground ..")
         ContextCompat.startForegroundService(
             service.applicationContext,
             Intent(service.applicationContext, service.javaClass)
@@ -77,7 +77,7 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
       }
     } else {
       if (serviceForeground) {
-        log.warn("stopping foreground ..")
+        log.debug("stopping foreground ..")
         service.stopForeground(false)
         serviceForeground = false
       }
@@ -180,8 +180,6 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
     return currentMetadata?.let {
       it.getText(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)
           ?: it.getText(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION)
-    }.also {
-      log.derror("RETURNING CONTENT TEXT: $it")
     }
   }
 /*
@@ -195,20 +193,20 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
       callback: PlayerNotificationManager.BitmapCallback
   ): Bitmap? {
 
-    log.dwarn("getCurrentLargeIcon(): $currentMetadata")
+    //log.dwarn("getCurrentLargeIcon(): $currentMetadata")
 
     currentMetadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)?.also {
-      log.derror("FOUND EXISTING DISPLAY ICON")
+   //   log.derror("FOUND EXISTING DISPLAY ICON")
       return it
     }
 
 
     currentMetadata?.extras?.getParcelable<Bitmap>(AudioService.METADATA_EXTRAS_KEY_CACHED_ICON)?.also {
-      log.derror("FOUND EXISTING CACHED ICON")
+    //  log.derror("FOUND EXISTING CACHED ICON")
       return it
     }
 
-    log.derror("returning null for large icon")
+    //log.derror("returning null for large icon")
     return null
   }
 

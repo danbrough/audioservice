@@ -2,27 +2,24 @@ package danbroid.audioservice.app.ui.controls
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media2.common.MediaMetadata
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
+import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.media.client.AudioClient
 
 private val playerButtonSize = 46.dp
@@ -43,8 +40,7 @@ private fun PlayerButton(imageVector: ImageVector, contentDescription: String = 
 private fun BottomControls(
     title: String? = "title", subTitle: String? = "subTitle",
     hasPrevious: Boolean, isPlaying: Boolean, hasNext: Boolean,
-    skipToPrev: () -> Unit = {}, togglePlay: () -> Unit = {}, skipToNext: () -> Unit = {},
-    expanded: Boolean = false) {
+    skipToPrev: () -> Unit = {}, togglePlay: () -> Unit = {}, skipToNext: () -> Unit = {}) {
 
   Column {
     Row {
@@ -63,14 +59,13 @@ private fun BottomControls(
       else
         Spacer(Modifier.width(playerButtonSize))
 
-      Column {
+      Column(Modifier.fillMaxWidth()) {
         Text(title ?: "", style = MaterialTheme.typography.subtitle1)
-        Text(subTitle ?: "", style = MaterialTheme.typography.subtitle2)
+        Text(subTitle
+            ?: "", style = MaterialTheme.typography.subtitle2, maxLines = 2, overflow = TextOverflow.Ellipsis)
       }
     }
 
-    if (!expanded) return
-    Text("EXPANDED")
   }
 }
 
@@ -78,11 +73,42 @@ private fun BottomControls(
 @Composable()
 private fun BottomControlsPreview() {
   DemoTheme {
-    //CompositionLocalProvider(LocalContentColor provides contentColorFor(MaterialTheme.colors.primary)) {
-      Box(Modifier.background(MaterialTheme.colors.primary).width(300.dp)) {
-        BottomControls("The Title", "The Subtitle", true, true, true, expanded = true)
+    CompositionLocalProvider(LocalContentColor provides contentColorFor(MaterialTheme.colors.primary)) {
+      Column(Modifier.background(MaterialTheme.colors.primary).width(300.dp)) {
+        BottomControls("The Title", "The Subtitle", true, true, true)
       }
-    //}
+    }
+  }
+}
+
+@Composable
+fun ExtraControls(value: Float, onValueChange: (Float) -> Unit) {
+  Text("Extra controls")
+
+  MaterialTheme(colors = LightThemeColors.copy(primary = LightThemeColors.onPrimary, onPrimary = LightThemeColors.primary)) {
+    Slider(
+        value,
+        onValueChange = onValueChange,
+        // steps = 5,
+        valueRange = 0f..600f,
+        modifier = Modifier.width(300.dp),
+    )
+
+  }
+
+}
+
+@Preview
+@Composable()
+private fun ExtraControlsPreview() {
+  DemoTheme {
+    Column(Modifier.background(MaterialTheme.colors.primary).width(300.dp)) {
+      var value by remember { mutableStateOf(120f) }
+      ExtraControls(value, {
+        value = it
+      })
+    }
+
   }
 }
 
@@ -95,13 +121,21 @@ fun BottomControls(expanded: Boolean = false) {
   val currentItem by player.currentItem.collectAsState()
   val title = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE) ?: ""
   val subTitle = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE) ?: ""
+  Column {
+    BottomControls(
+        title, subTitle,
+        queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext,
+        player::skipToPrev, player::togglePause, player::skipToNext
+    )
+    if (expanded) {
+      var value by remember { mutableStateOf(120f) }
+      ExtraControls(value, {
+        log.dtrace("value: $it")
+        value = it
+      })
 
-  BottomControls(
-      title, subTitle,
-      queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext,
-      player::skipToPrev, player::togglePause, player::skipToNext,
-      expanded = expanded
-  )
+    }
+  }
 
 }
 

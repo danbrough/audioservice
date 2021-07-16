@@ -70,7 +70,7 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
     //Spacer(Modifier.width(4.dp))
 
 
-    menuItem.imageURI?.also {
+    menuItem.iconURI?.also {
       DemoImage(
           imageUrl = it,
           menuItem.title,

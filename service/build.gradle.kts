@@ -93,7 +93,7 @@ dependencies {
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation("androidx.core:core-ktx:_")
 
-  implementation ("androidx.fragment:fragment-ktx:_")
+  implementation("androidx.fragment:fragment-ktx:_")
   implementation("androidx.media2:media2-common:_")
   implementation("androidx.media2:media2-session:_")
 
@@ -151,10 +151,10 @@ dependencies {
     implementation("com.github.danbrough.exoplayer:exoplayer-dash:_")
     implementation("com.github.danbrough.exoplayer:extension-media2:_")
 
-
-    implementation("com.github.danbrough.exoplayer:extension-cast:_")
-    implementation("com.github.danbrough.exoplayer:extension-opus:_")
-    implementation("com.github.danbrough.exoplayer:extension-flac:_")
+    //implementation("com.github.danbrough.exoplayer:extension-opus:_")
+    //implementation("com.github.danbrough.exoplayer:extension-cast:_")
+    //implementation("com.github.danbrough.exoplayer:extension-opus:_")
+    // implementation("com.github.danbrough.exoplayer:extension-flac:_")
   }
   implementation(Square.okHttp3.okHttp)
 

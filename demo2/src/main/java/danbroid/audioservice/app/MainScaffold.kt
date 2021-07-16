@@ -1,18 +1,16 @@
 package danbroid.audioservice.app
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.systemBarsPadding
 import danbroid.audioservice.app.ui.controls.BottomControls
 
 @Composable
@@ -27,6 +25,11 @@ fun TestScaffold(
 
   log.trace("navBarsTop: ${insets.navigationBars.layoutInsets.top} bottom: ${insets.navigationBars.layoutInsets.bottom}")
   log.trace("statusBarsTop: ${insets.statusBars.layoutInsets.top} bottom: ${insets.statusBars.layoutInsets.bottom}")
+
+
+  val navBottom = with(LocalDensity.current) { insets.navigationBars.bottom.toDp() }
+  log.trace("NAV BAR BOTTOM: ${navBottom}")
+
   BottomSheetScaffold(
       modifier = Modifier,
 /*      topBar = {
@@ -37,13 +40,13 @@ fun TestScaffold(
       scaffoldState = bottomSheetScaffoldState,
       sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetContent = {
-        Box(Modifier.fillMaxWidth().fillMaxHeight().systemBarsPadding(bottomSheetScaffoldState.bottomSheetState.isExpanded)) {
+        Box(Modifier.fillMaxWidth().fillMaxHeight()) {
           BottomControls(expanded = bottomSheetScaffoldState.bottomSheetState.isExpanded)
         }
 
       },
       //sheetPeekHeight = if (bottomSheetScaffoldState.bottomSheetState.isExpanded) 0.dp else 56.dp
-      sheetPeekHeight = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) 56.dp else 100.dp
+      sheetPeekHeight = 56.dp + navBottom
   ) {
 
     DemoNavGraph(Modifier.navigationBarsPadding().padding(bottom = 56.dp), navController)

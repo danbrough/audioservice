@@ -40,9 +40,9 @@ fun rootContent(context: Context) = context.rootMenu<MenuItemBuilder> {
       log.info("track $track")
       menu {
         title = track.title
-        subtitle = track.subtitle
+        subtitle = track.subTitle
         imageID = R.drawable.ic_music_note
-        imageURI = track.imageURI
+        imageURI = track.iconURI
 
         onClick = {
           audioClient.playUri(track.id)

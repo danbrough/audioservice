@@ -15,6 +15,7 @@ open class GenericMediaLibrary() : MediaLibrary {
 
   fun register(vararg libs: MediaLibrary) {
     libraries.addAll(libs)
+
   }
 
   override suspend fun loadItem(mediaID: String): MediaItem? =

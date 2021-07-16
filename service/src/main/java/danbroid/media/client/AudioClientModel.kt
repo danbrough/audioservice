@@ -15,6 +15,7 @@ class AudioClientModel(context: Context) : ViewModel() {
 
   private val _client = lazy {
     log.derror("starting audio service ..")
+
     context.startService(Intent(context, AudioService::class.java))
     AudioClient(context)
   }

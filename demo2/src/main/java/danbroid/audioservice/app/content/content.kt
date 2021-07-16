@@ -94,9 +94,11 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
     menu {
       id = audioTrack.id
       title = audioTrack.title
-      subtitle = audioTrack.subtitle
+      subtitle = audioTrack.subTitle
       isPlayable = true
-      iconURI = audioTrack.imageURI
+      iconURI = audioTrack.iconURI
     }
   }
+
+
 }

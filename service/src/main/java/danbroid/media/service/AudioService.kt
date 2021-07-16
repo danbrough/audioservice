@@ -97,6 +97,7 @@ class AudioService : MediaSessionService() {
 
 
     val sessionPlayer = SessionPlayerConnector(exoPlayer)
+
     sessionPlayer.setAudioAttributes(
         AudioAttributesCompat.Builder()
             .setUsage(AudioAttributesCompat.USAGE_MEDIA)
@@ -121,16 +122,21 @@ class AudioService : MediaSessionService() {
         log.warn("onCurrentMediaItemChanged() $item")
       }*/
 
+      override fun onBufferingStateChanged(player: SessionPlayer, item: MediaItem?, buffState: Int) {
+        super.onBufferingStateChanged(player, item, buffState)
+        log.warn("onBufferingStateChanged() endPosition:${item?.endPosition}")
+      }
+
       override fun onPlaybackCompleted(player: SessionPlayer) {
         log.warn("onPlaybackCompleted()")
       }
 
       override fun onPlayerStateChanged(player: SessionPlayer, playerState: Int) {
-        log.warn("onPlayerStateChanged() $playerState = ${playerState.playerState}")
+        log.warn("onPlayerStateChanged() $playerState = ${playerState.playerState} endPosition: ${player.currentMediaItem?.endPosition}")
       }
 
       override fun onPlaylistMetadataChanged(player: SessionPlayer, metadata: MediaMetadata?) {
-        log.warn("onPlaylistMetadataChanged() $metadata")
+        log.warn("onPlaylistMetadataChanged() $metadata position: ${player.currentPosition} endPosition:${player.currentMediaItem?.endPosition} duration:${player.duration}")
       }
 
       override fun onTrackSelected(player: SessionPlayer, trackInfo: SessionPlayer.TrackInfo) {
@@ -440,7 +446,7 @@ class AudioService : MediaSessionService() {
     }
 
     override fun onMetadata(eventTime: AnalyticsListener.EventTime, metadata: Metadata) {
-      log.derror("ANALYTICS: metadata $metadata")
+      log.derror("ANALYTICS: metadata $metadata pos:${exoPlayer.currentPosition} duration:${exoPlayer.duration}")
       var title: String? = null
       var album: String? = null
 //      val currentMetadata = player.currentMediaItem!!.metadata!!

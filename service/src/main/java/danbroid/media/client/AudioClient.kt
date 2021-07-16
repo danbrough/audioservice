@@ -23,7 +23,11 @@ import kotlinx.coroutines.flow.StateFlow
 open class AudioClient(context: Context) {
 
   enum class PlayerState {
-    IDLE, PAUSED, PLAYING, ERROR
+    IDLE, PAUSED, PLAYING, ERROR;
+  }
+
+  companion object {
+    const val INVALID_POSITION = 0x7ffffffffffffff
   }
 
   enum class BufferingState {
@@ -197,10 +201,11 @@ open class AudioClient(context: Context) {
     }
 
     override fun onCurrentMediaItemChanged(controller: MediaController, item: MediaItem?) {
-      log.info("onCurrentMediaItemChanged(): $item metadata: ${item?.metadata}")
+      log.info("onCurrentMediaItemChanged(): $item duration:${item.duration}")
 
       log.dtrace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
       log.dtrace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
+      log.dtrace("endposition: ${item?.endPosition}")
 
       _currentItem.value = item
       _metadata.value = item?.metadata
@@ -211,7 +216,7 @@ open class AudioClient(context: Context) {
     }
 
     override fun onBufferingStateChanged(controller: MediaController, item: MediaItem, state: Int) {
-      log.info("onBufferingStateChanged() ${state.buffState}")
+      log.info("onBufferingStateChanged() ${state.buffState} duration: ${item.duration}")
 
       _bufferingState.value = when (state) {
         SessionPlayer.BUFFERING_STATE_UNKNOWN -> BufferingState.UNKNOWN
@@ -224,6 +229,7 @@ open class AudioClient(context: Context) {
 
     override fun onPlayerStateChanged(controller: MediaController, state: Int) {
       log.debug("onPlayerStateChanged() state:$state = ${state.playerState}")
+
       _playState.value = when (state) {
         SessionPlayer.PLAYER_STATE_IDLE -> PlayerState.IDLE
         SessionPlayer.PLAYER_STATE_PLAYING -> PlayerState.PLAYING
@@ -281,6 +287,10 @@ open class AudioClient(context: Context) {
     }
   }
 }
+
+
+val MediaItem?.duration: Long
+  get() = this?.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L
 
 
 private val log = danbroid.logging.getLog(AudioClient::class)
