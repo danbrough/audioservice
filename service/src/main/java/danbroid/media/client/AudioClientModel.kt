@@ -9,7 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import danbroid.media.service.AudioService
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 class AudioClientModel(context: Context) : ViewModel() {
 
 
@@ -20,7 +22,9 @@ class AudioClientModel(context: Context) : ViewModel() {
     AudioClient(context)
   }
 
+
   val client: AudioClient by _client
+
 
   override fun onCleared() {
     super.onCleared()

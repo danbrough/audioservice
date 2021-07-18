@@ -34,7 +34,16 @@ open class AudioClient(context: Context) {
     UNKNOWN, BUFFERING_AND_PLAYABLE, BUFFERING_AND_STARVED, BUFFERING_COMPLETE;
   }
 
+  data class PlayPosition(val currentPos: Long, val duration: Long) {
+    companion object {
+      val NO_POSITION = PlayPosition(-1L, -1L)
+    }
+  }
+
   data class QueueState(val hasPrevious: Boolean, val hasNext: Boolean, val playState: PlayerState, val size: Int)
+
+  private val _playPosition = MutableStateFlow(PlayPosition.NO_POSITION)
+  val playPosition: StateFlow<PlayPosition> = _playPosition
 
   private val _queueState = MutableStateFlow(QueueState(false, false, PlayerState.IDLE, 0))
   val queueState: StateFlow<QueueState> = _queueState
@@ -201,12 +210,12 @@ open class AudioClient(context: Context) {
     }
 
     override fun onCurrentMediaItemChanged(controller: MediaController, item: MediaItem?) {
-      log.info("onCurrentMediaItemChanged(): $item duration:${item.duration}")
+      log.info("onCurrentMediaItemChanged(): $item currentPos: ${controller.currentPosition} duration:${controller.duration} ")
 
       log.dtrace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
       log.dtrace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
-      log.dtrace("endposition: ${item?.endPosition}")
 
+      _playPosition.value = PlayPosition(controller.currentPosition, controller.duration)
       _currentItem.value = item
       _metadata.value = item?.metadata
       _queueState.value = _queueState.value.copy(
@@ -228,7 +237,7 @@ open class AudioClient(context: Context) {
     }
 
     override fun onPlayerStateChanged(controller: MediaController, state: Int) {
-      log.debug("onPlayerStateChanged() state:$state = ${state.playerState}")
+      log.debug("onPlayerStateChanged() state:$state = ${state.playerState}  pos:${controller.currentPosition} duration:${controller.duration}")
 
       _playState.value = when (state) {
         SessionPlayer.PLAYER_STATE_IDLE -> PlayerState.IDLE
@@ -237,6 +246,8 @@ open class AudioClient(context: Context) {
         SessionPlayer.PLAYER_STATE_PAUSED -> PlayerState.PAUSED
         else -> error("Unknown player state: $state")
       }
+
+      _playPosition.value = PlayPosition(controller.currentPosition, controller.duration)
     }
 
     override fun onSubtitleData(
@@ -286,6 +297,7 @@ open class AudioClient(context: Context) {
       }
     }
   }
+
 }
 
 

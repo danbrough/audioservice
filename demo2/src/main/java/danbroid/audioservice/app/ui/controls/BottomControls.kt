@@ -82,16 +82,17 @@ private fun BottomControlsPreview() {
 }
 
 @Composable
-fun ExtraControls(value: Float, onValueChange: (Float) -> Unit) {
+fun ExtraControls(value: Float, onValueChange: (Float) -> Unit, onValueChangeFinished: () -> Unit = {}) {
   Text("Extra controls")
 
   MaterialTheme(colors = LightThemeColors.copy(primary = LightThemeColors.onPrimary, onPrimary = LightThemeColors.primary)) {
     Slider(
         value,
         onValueChange = onValueChange,
+        onValueChangeFinished = onValueChangeFinished,
         // steps = 5,
         valueRange = 0f..600f,
-        modifier = Modifier.width(300.dp),
+        modifier = Modifier.fillMaxWidth(),
     )
 
   }
@@ -114,13 +115,16 @@ private fun ExtraControlsPreview() {
 
 @Composable
 fun BottomControls(expanded: Boolean = false) {
+  log.ddebug("BottomControls() expanded: $expanded")
   val audioClientModel = audioClientModel()
   val player = audioClientModel.client
   val playerState by player.playState.collectAsState()
   val queueState by player.queueState.collectAsState()
   val currentItem by player.currentItem.collectAsState()
+
   val title = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE) ?: ""
   val subTitle = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE) ?: ""
+
   Column {
     BottomControls(
         title, subTitle,
@@ -132,11 +136,16 @@ fun BottomControls(expanded: Boolean = false) {
       ExtraControls(value, {
         log.dtrace("value: $it")
         value = it
+      }, onValueChangeFinished = {
+        log.dtrace("final value: $value")
       })
 
     }
   }
 
 }
+
+
+
 
 private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.controls")

@@ -46,7 +46,19 @@ android {
   kotlinOptions {
     jvmTarget = ProjectVersions.KOTLIN_VERSION
   }
-
+  kotlin.sourceSets.all {
+    setOf(
+        "kotlinx.serialization.ExperimentalSerializationApi",
+        "androidx.compose.material.ExperimentalMaterialApi",
+        "androidx.compose.animation.ExperimentalAnimationApi",
+        "kotlin.time.ExperimentalTime",
+        //"kotlinx.coroutines.ExperimentalCoroutinesApi",
+        //"kotlinx.coroutines.FlowPreview",
+        //"androidx.compose.material.ExperimentalMaterialApi"
+    ).forEach {
+      languageSettings.useExperimentalAnnotation(it)
+    }
+  }
   val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.getByName("main").java.srcDirs)
@@ -89,6 +101,7 @@ dependencies {
 
   // implementation(AndroidX.coreKtx)
   implementation(Kotlin.stdlib.jdk8)
+  implementation(KotlinX.coroutines.android)
   implementation(AndroidX.annotation)
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation("androidx.core:core-ktx:_")
