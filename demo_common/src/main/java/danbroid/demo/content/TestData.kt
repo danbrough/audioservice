@@ -144,9 +144,9 @@ class TestDataLibrary : MediaLibrary {
         UriMediaItem.Builder(mediaID.toUri())
             .setStartPosition(0L).setEndPosition(-1L)
             .setMetadata(it.toMediaMetadata().build()).build()
+      }.also {
+        log.dinfo("Found mediaID: $mediaID ${it != null}")
       }
-
-
 }
 
 fun main() {

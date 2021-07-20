@@ -76,9 +76,9 @@ data class SomaChannel(
 data class SomaChannels(val channels: List<SomaChannel>)
 
 
-class SomaFM(val context: Context) : MediaLibrary {
+class SomaFMLibrary(val context: Context) : MediaLibrary {
 
-  companion object : SingletonHolder<SomaFM, Context>(::SomaFM)
+  companion object : SingletonHolder<SomaFMLibrary, Context>(::SomaFMLibrary)
 
   val json = Json {
     ignoreUnknownKeys = true
@@ -96,9 +96,9 @@ class SomaFM(val context: Context) : MediaLibrary {
     val somaID = mediaID.toUri().host!!.uriDecode()
     log.trace("somaID: $somaID")
 
-    return channels().first {
+    return channels().firstOrNull{
       it.id == somaID
-    }.let {
+    }?.let {
 
 
       val metadata = it.mediaMetadata
@@ -117,8 +117,8 @@ class SomaFM(val context: Context) : MediaLibrary {
   }
 }
 
-val Context.somaFM: SomaFM
-  get() = SomaFM.getInstance(this)
+val Context.somaFM: SomaFMLibrary
+  get() = SomaFMLibrary.getInstance(this)
 
 
 val SomaChannel.mediaMetadata: MediaMetadata.Builder

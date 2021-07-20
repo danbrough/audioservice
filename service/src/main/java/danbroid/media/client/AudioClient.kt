@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
-open class AudioClient(context: Context) {
+class AudioClient(context: Context) {
 
   enum class PlayerState {
     IDLE, PAUSED, PLAYING, ERROR;
