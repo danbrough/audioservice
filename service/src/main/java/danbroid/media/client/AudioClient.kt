@@ -2,6 +2,8 @@ package danbroid.media.client
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
@@ -26,17 +28,13 @@ open class AudioClient(context: Context) {
     IDLE, PAUSED, PLAYING, ERROR;
   }
 
-  companion object {
-    const val INVALID_POSITION = 0x7ffffffffffffff
-  }
-
   enum class BufferingState {
     UNKNOWN, BUFFERING_AND_PLAYABLE, BUFFERING_AND_STARVED, BUFFERING_COMPLETE;
   }
 
-  data class PlayPosition(val currentPos: Long, val duration: Long) {
+  data class PlayPosition(val currentPos: Float, val duration: Float) {
     companion object {
-      val NO_POSITION = PlayPosition(-1L, -1L)
+      val NO_POSITION = PlayPosition(-1f, -1f)
     }
   }
 
@@ -126,6 +124,16 @@ open class AudioClient(context: Context) {
     }
   }
 
+  var seeking = false
+  
+  fun seekTo(seconds: Float) {
+    log.trace("seekTo() $seconds")
+    seeking = true
+    mediaController.seekTo((seconds * 1000L).toLong()).then {
+      seeking = false
+      updatePosition()
+    }
+  }
 
   fun togglePause() {
     log.debug("togglePause() state: ${mediaController.playerState.playerState}")
@@ -171,6 +179,25 @@ open class AudioClient(context: Context) {
       }*/
   }
 
+  private val handler = Handler(Looper.getMainLooper())
+  private val updatePositionJob: Runnable = Runnable {
+    updatePosition()
+  }
+
+
+  private fun updatePosition() {
+    val position = mediaController.currentPosition
+    val duration = mediaController.duration
+    log.dtrace("updatePosition():${hashCode()} $position:$duration seeking:$seeking")
+
+    handler.removeCallbacks(updatePositionJob)
+    if (seeking) return
+    _playPosition.value = PlayPosition(position / 1000f, duration / 1000f)
+
+    if (duration > 0 && mediaController.playerState == SessionPlayer.PLAYER_STATE_PLAYING)
+      handler.postDelayed(updatePositionJob, 1000L)
+
+  }
 
   protected inner class ControllerCallback : MediaBrowser.BrowserCallback() {
 
@@ -196,8 +223,10 @@ open class AudioClient(context: Context) {
         metadata: MediaMetadata?
     ) {
       val state = controller.playerState
-      log.info("onPlaylistChanged() size:${list?.size ?: "null"} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex}")
+
+      log.info("onPlaylistChanged() size:${list?.size ?: "null"} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex} duration:${controller.currentMediaItem?.duration}")
       log.info("metadata: ${metadata.toDebugString()}")
+      log.ddebug("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
       _queueState.value = _queueState.value.copy(
           hasPrevious = controller.previousMediaItemIndex != -1,
           hasNext = controller.nextMediaItemIndex != -1,
@@ -215,7 +244,8 @@ open class AudioClient(context: Context) {
       log.dtrace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
       log.dtrace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
 
-      _playPosition.value = PlayPosition(controller.currentPosition, controller.duration)
+      updatePosition()
+
       _currentItem.value = item
       _metadata.value = item?.metadata
       _queueState.value = _queueState.value.copy(
@@ -236,6 +266,7 @@ open class AudioClient(context: Context) {
       }
     }
 
+
     override fun onPlayerStateChanged(controller: MediaController, state: Int) {
       log.debug("onPlayerStateChanged() state:$state = ${state.playerState}  pos:${controller.currentPosition} duration:${controller.duration}")
 
@@ -247,8 +278,10 @@ open class AudioClient(context: Context) {
         else -> error("Unknown player state: $state")
       }
 
-      _playPosition.value = PlayPosition(controller.currentPosition, controller.duration)
+
+      updatePosition()
     }
+
 
     override fun onSubtitleData(
         controller: MediaController,
@@ -286,6 +319,7 @@ open class AudioClient(context: Context) {
 
   fun close() {
     log.info("close()")
+    handler.removeCallbacksAndMessages(null)
     mediaController.close()
   }
 

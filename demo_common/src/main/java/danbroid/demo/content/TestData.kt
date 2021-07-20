@@ -8,7 +8,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.FileWriter
 
-const val ipfs_gateway = "https://cloudflare-ipfs.com"
+//const val ipfs_gateway = "https://cloudflare-ipfs.com"
+const val ipfs_gateway = "https://h1.danbrough.org"
 
 val testTracks = testData {
 

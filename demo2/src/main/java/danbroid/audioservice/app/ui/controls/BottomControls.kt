@@ -20,6 +20,7 @@ import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
+import danbroid.demo.formatDurationFromSeconds
 import danbroid.media.client.AudioClient
 
 private val playerButtonSize = 46.dp
@@ -82,7 +83,7 @@ private fun BottomControlsPreview() {
 }
 
 @Composable
-fun ExtraControls(value: Float, onValueChange: (Float) -> Unit, onValueChangeFinished: () -> Unit = {}) {
+fun ExtraControls(value: Float, durationInSeconds: Float, onValueChange: (Float) -> Unit, onValueChangeFinished: () -> Unit = {}) {
   Text("Extra controls")
 
   MaterialTheme(colors = LightThemeColors.copy(primary = LightThemeColors.onPrimary, onPrimary = LightThemeColors.primary)) {
@@ -91,7 +92,7 @@ fun ExtraControls(value: Float, onValueChange: (Float) -> Unit, onValueChangeFin
         onValueChange = onValueChange,
         onValueChangeFinished = onValueChangeFinished,
         // steps = 5,
-        valueRange = 0f..600f,
+        valueRange = 0f..durationInSeconds,
         modifier = Modifier.fillMaxWidth(),
     )
 
@@ -105,7 +106,7 @@ private fun ExtraControlsPreview() {
   DemoTheme {
     Column(Modifier.background(MaterialTheme.colors.primary).width(300.dp)) {
       var value by remember { mutableStateOf(120f) }
-      ExtraControls(value, {
+      ExtraControls(value, 600f, {
         value = it
       })
     }
@@ -121,9 +122,15 @@ fun BottomControls(expanded: Boolean = false) {
   val playerState by player.playState.collectAsState()
   val queueState by player.queueState.collectAsState()
   val currentItem by player.currentItem.collectAsState()
+  val playPosition by player.playPosition.collectAsState()
 
   val title = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE) ?: ""
   val subTitle = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE) ?: ""
+
+  var dragging by remember { mutableStateOf(false) }
+  var value by remember { mutableStateOf(playPosition.currentPos) }
+  if (!dragging)
+    value = playPosition.currentPos
 
   Column {
     BottomControls(
@@ -132,20 +139,24 @@ fun BottomControls(expanded: Boolean = false) {
         player::skipToPrev, player::togglePause, player::skipToNext
     )
     if (expanded) {
-      var value by remember { mutableStateOf(120f) }
-      ExtraControls(value, {
-        log.dtrace("value: $it")
-        value = it
-      }, onValueChangeFinished = {
-        log.dtrace("final value: $value")
-      })
+      Text(playPosition.currentPos.formatDurationFromSeconds())
+      Text(playPosition.duration.formatDurationFromSeconds())
+      if (playPosition.duration > 0L) {
+        ExtraControls(value, playPosition.duration, {
+          log.dtrace("value: $it")
+          value = it
+          dragging = true
+        }, onValueChangeFinished = {
+          log.dtrace("on value change ")
+          player.seekTo(value)
+          dragging = false
+        })
+      }
 
     }
   }
 
 }
-
-
 
 
 private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.controls")

@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,13 +71,30 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
   Row(modifier = Modifier.height(62.dp).fillMaxWidth().clickable { onClicked() }, verticalAlignment = Alignment.CenterVertically) {
     //Spacer(Modifier.width(4.dp))
 
-
-    menuItem.iconURI?.also {
-      DemoImage(
-          imageUrl = it,
-          menuItem.title,
-          modifier = Modifier.size(52.dp).padding(start = 4.dp)
-      )
+    val imageModifier = Modifier.size(52.dp).padding(start = 4.dp)
+    menuItem.icon?.also {
+      when (it) {
+        is String -> DemoImage(
+            imageUrl = it,
+            menuItem.title,
+            modifier = imageModifier
+        )
+        is ImageVector ->
+          Icon(
+              it,
+              menuItem.title,
+              modifier = imageModifier,
+              tint = MaterialTheme.colors.primary,
+          )
+        is Int ->
+          Icon(
+              painterResource(it),
+              menuItem.title,
+              modifier = imageModifier,
+              tint = MaterialTheme.colors.primary,
+          )
+        else -> error("Unknown icon type: $it")
+      }
     } ?: Icon(
         Icons.Filled.Audiotrack,
         contentDescription = null,

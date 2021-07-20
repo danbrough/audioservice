@@ -1,5 +1,7 @@
 package danbroid.audioservice.app.content
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.menu.MenuBuilder
@@ -29,7 +31,6 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
       subtitle = "First Child"
     }
 
-
     menu {
       title = "Child 12"
       subtitle = "Click for more"
@@ -48,7 +49,6 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
         }
       }
 
-
       menu {
         title = "Child 22"
         subtitle = "Second Child"
@@ -62,6 +62,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
 
     menu {
       id = Routes.SETTINGS
+      icon = R.drawable.ic_play
       title = "Navigate by ROUTE.SETTINGS to Settings"
     }
   }
@@ -70,15 +71,14 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
     id = "$URI_CONTENT/soma"
     title = "Soma FM"
     subtitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
-    iconURI = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
-    log.dwarn("SOMA MENU..")
+    icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
 
     context.context.somaFM.channels().forEach {
       menu {
-        id = "somafm://${it.id.uriEncode()}"        //id = "$URI_CONTENT/soma/${it.id.uriEncode()}"
+        id = "somafm://${it.id.uriEncode()}"
         title = it.title
         subtitle = it.description
-        iconURI = it.image
+        icon = it.image
         isPlayable = true
       }
     }
@@ -86,6 +86,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
 
   menu {
     id = URI_SETTINGS
+    icon = Icons.Default.Settings
     title = context.getString(R.string.settings)
     subtitle = "Subtitle 2"
   }
@@ -96,7 +97,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
       title = audioTrack.title
       subtitle = audioTrack.subTitle
       isPlayable = true
-      iconURI = audioTrack.iconURI
+      icon = audioTrack.iconURI
     }
   }
 
