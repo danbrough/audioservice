@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media2.common.MediaMetadata
+import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
@@ -84,9 +85,12 @@ private fun BottomControlsPreview() {
 
 @Composable
 fun ExtraControls(value: Float, durationInSeconds: Float, onValueChange: (Float) -> Unit, onValueChangeFinished: () -> Unit = {}) {
-  Text("Extra controls")
 
-  MaterialTheme(colors = LightThemeColors.copy(primary = LightThemeColors.onPrimary, onPrimary = LightThemeColors.primary)) {
+  DemoTheme(colors = LightThemeColors.copy(primary = LightThemeColors.onPrimary, onPrimary = LightThemeColors.primary)) {
+    Row(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+      Text(value.formatDurationFromSeconds())
+      Text(durationInSeconds.formatDurationFromSeconds())
+    }
     Slider(
         value,
         onValueChange = onValueChange,
@@ -104,13 +108,10 @@ fun ExtraControls(value: Float, durationInSeconds: Float, onValueChange: (Float)
 @Composable()
 private fun ExtraControlsPreview() {
   DemoTheme {
-    Column(Modifier.background(MaterialTheme.colors.primary).width(300.dp)) {
-      var value by remember { mutableStateOf(120f) }
-      ExtraControls(value, 600f, {
-        value = it
-      })
-    }
-
+    var value by remember { mutableStateOf(120f) }
+    ExtraControls(value, 600f, {
+      value = it
+    })
   }
 }
 
@@ -132,15 +133,16 @@ fun BottomControls(expanded: Boolean = false) {
   if (!dragging)
     value = playPosition.currentPos
 
-  Column {
+  val modifier = if (expanded) Modifier.statusBarsPadding() else Modifier
+
+  Column(modifier = modifier) {
     BottomControls(
         title, subTitle,
         queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext,
         player::skipToPrev, player::togglePause, player::skipToNext
     )
     if (expanded) {
-      Text(playPosition.currentPos.formatDurationFromSeconds())
-      Text(playPosition.duration.formatDurationFromSeconds())
+
       if (playPosition.duration > 0L) {
         ExtraControls(value, playPosition.duration, {
           log.dtrace("value: $it")

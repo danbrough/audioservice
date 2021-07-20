@@ -125,7 +125,7 @@ open class AudioClient(context: Context) {
   }
 
   var seeking = false
-  
+
   fun seekTo(seconds: Float) {
     log.trace("seekTo() $seconds")
     seeking = true

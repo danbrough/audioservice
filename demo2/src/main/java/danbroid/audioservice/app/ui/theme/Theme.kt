@@ -26,19 +26,19 @@ import danbroid.util.compose.MaterialColors
     onError: Color = Color.White
  */
 val LightThemeColors = lightColors(
-  primary = MaterialColors.brown600,
-  primaryVariant = MaterialColors.brown900,
-  onPrimary = MaterialColors.amber100,
+    primary = MaterialColors.brown600,
+    primaryVariant = MaterialColors.brown900,
+    onPrimary = MaterialColors.amber100,
 
-  secondary = MaterialColors.amber600,
-  secondaryVariant = MaterialColors.amber900,
-  error = MaterialColors.red800,
+    secondary = MaterialColors.amber600,
+    secondaryVariant = MaterialColors.amber900,
+    error = MaterialColors.red800,
 //  surface = MaterialColors.amber50,
 //  onSurface = MaterialColors.red600,
 
-  background = MaterialColors.white,
+    background = MaterialColors.white,
 
-  )
+    )
 
 /*val LightThemeColors = lightColors(
     primary = Purple700,
@@ -55,17 +55,17 @@ val LightThemeColors = lightColors(
 )*/
 
 val DarkThemeColors = darkColors(
-  primary = MaterialColors.brown600,
-  primaryVariant = MaterialColors.brown900,
-  onPrimary = Color.Black,
-  secondary = Color.Black,
-  onSecondary = Color.White,
-  background = Color.Black,
-  onBackground = Color.White,
-  surface = Color.Black,
-  onSurface = Color.White,
-  error = MaterialColors.red300,
-  onError = Color.Black
+    primary = MaterialColors.brown600,
+    primaryVariant = MaterialColors.brown900,
+    onPrimary = Color.Black,
+    secondary = Color.Black,
+    onSecondary = Color.White,
+    background = Color.Black,
+    onBackground = Color.White,
+    surface = Color.Black,
+    onSurface = Color.White,
+    error = MaterialColors.red300,
+    onError = Color.Black
 )
 
 val Colors.snackbarAction: Color
@@ -77,16 +77,16 @@ val Colors.progressIndicatorBackground: Color
   get() = if (isLight) Color.Black.copy(alpha = 0.12f) else Color.Black.copy(alpha = 0.24f)
 
 @Composable
-fun DemoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
-  val colors = if (darkTheme) DarkThemeColors else LightThemeColors
+fun DemoTheme(darkTheme: Boolean = isSystemInDarkTheme(), colors: Colors = if (darkTheme) DarkThemeColors else LightThemeColors, content: @Composable() () -> Unit) {
+
   CompositionLocalProvider(
-    LocalElevations provides Elevations()
+      LocalElevations provides Elevations()
   ) {
     MaterialTheme(
-      colors = colors,
-      typography = Typography,
-      shapes = Shapes,
-      content = content
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
     )
   }
 }
