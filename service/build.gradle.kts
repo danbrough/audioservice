@@ -146,15 +146,20 @@ dependencies {
     implementation("$exo_package:extension-cast:$exo_version")
   } else {*/
 
-  val use_vanilla_exoplayer = false
+  val use_vanilla_exoplayer = true
   if (use_vanilla_exoplayer) {
 /*    implementation("com.google.android.exoplayer:exoplayer-core:_")
     implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:_")
     implementation("com.google.android.exoplayer:exoplayer-ui:_")
     implementation("com.google.android.exoplayer:exoplayer-hls:_")
     implementation("com.google.android.exoplayer:exoplayer-dash:_")*/
-    implementation("androidx.media2:media2-exoplayer:_")
+    //implementation("androidx.media2:media2-exoplayer:_")
+    implementation("com.google.android.exoplayer:exoplayer-core:_")
+    implementation("com.google.android.exoplayer:exoplayer-ui:_")
     implementation("com.google.android.exoplayer:extension-cast:_")
+    //implementation("com.google.android.exoplayer:exoplayer-media2:_")
+    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:_")
+
 
   } else {
     implementation("com.github.danbrough.exoplayer:exoplayer-core:_")
@@ -163,6 +168,7 @@ dependencies {
     implementation("com.github.danbrough.exoplayer:exoplayer-hls:_")
     implementation("com.github.danbrough.exoplayer:exoplayer-dash:_")
     implementation("com.github.danbrough.exoplayer:extension-media2:_")
+    implementation("com.github.danbrough.exoplayer:extension-cast:_")
 
     //implementation("com.github.danbrough.exoplayer:extension-opus:_")
     //implementation("com.github.danbrough.exoplayer:extension-cast:_")
