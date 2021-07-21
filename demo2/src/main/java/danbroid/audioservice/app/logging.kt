@@ -22,3 +22,8 @@ val log = LogConfig.let {
   }
   demoLog
 }
+
+
+object Logging {
+  val jlog = log
+}

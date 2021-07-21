@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import danbroid.audioservice.app.ui.controls.BottomControls
+import danbroid.media.client.AudioClientModel
 
 @Composable
 fun TestScaffold(
@@ -20,7 +21,7 @@ fun TestScaffold(
 ) {
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-
+  val audioClientModel: AudioClientModel = audioClientModel()
   val insets = LocalWindowInsets.current
 
   log.trace("navBarsTop: ${insets.navigationBars.layoutInsets.top} bottom: ${insets.navigationBars.layoutInsets.bottom}")
@@ -49,7 +50,7 @@ fun TestScaffold(
       sheetPeekHeight = 56.dp + navBottom
   ) {
 
-    DemoNavGraph(Modifier.navigationBarsPadding().padding(bottom = 56.dp), navController)
+    DemoNavGraph(Modifier.navigationBarsPadding().padding(bottom = 56.dp), navController, audioClientModel)
 
   }
 }
@@ -87,7 +88,7 @@ fun MainScaffold(
       scaffoldState = scaffoldState,
   ) { innerPaddingModifier ->
     //log.derror("innerPadding ${innerPaddingModifier}")
-    DemoNavGraph(Modifier.padding(innerPaddingModifier), navController)
+    //DemoNavGraph(Modifier.padding(innerPaddingModifier), navController,audioClientModel: AudioClientModel = audioClientModel())
   }
 }
 

@@ -17,6 +17,7 @@ android {
 
   defaultConfig {
     //buildToolsVersion("30.0.2")
+    vectorDrawables.useSupportLibrary = true
 
     minSdk = ProjectVersions.MIN_SDK_VERSION
     targetSdk = ProjectVersions.SDK_VERSION
@@ -27,7 +28,31 @@ android {
     //consumerProguardFiles("consumer-rules.pro")
 
     vectorDrawables {
-      useSupportLibrary = false
+      useSupportLibrary = true
+    }
+  }
+    signingConfigs {
+    register("release") {
+      storeFile = file("/home/dan/.android/busapp_keystore2")
+      keyAlias = "wellybusapp"
+      storePassword = project.property("KEYSTORE_PASSWORD")?.toString() ?: ""
+      keyPassword = project.property("KEYSTORE_PASSWORD")?.toString() ?: ""
+    }
+  }
+
+
+  buildTypes {
+
+    getByName("debug") {
+      //debuggable(true)
+    }
+
+    getByName("release") {
+      isMinifyEnabled = ProjectVersions.MINIFY_ENABLED
+      proguardFiles(
+          getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+      )
+      signingConfig = signingConfigs.getByName("release")
     }
   }
 
@@ -95,7 +120,7 @@ dependencies {
   implementation(Kotlin.stdlib.jdk8)
   implementation(KotlinX.coroutines.android)
   implementation(AndroidX.media2.common)
-  //implementation("org.jetbrains.kotlin:kotlin-reflect:_")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:_")
   implementation("androidx.core:core-ktx:_")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
   //implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")

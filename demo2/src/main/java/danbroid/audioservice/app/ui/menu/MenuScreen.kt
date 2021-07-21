@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import danbroid.audioservice.app.menu.MenuItem
+import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.components.DemoImage
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
@@ -72,13 +73,22 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
     //Spacer(Modifier.width(4.dp))
 
     val imageModifier = Modifier.size(52.dp).padding(start = 4.dp)
-    menuItem.icon?.also {
+    var icon: Any? = menuItem.iconURI
+
+
+    if (icon is AppIcon)
+      icon = AppIcon.lookup(icon)
+
+    log.warn("icon: $icon")
+
+    icon?.also {
       when (it) {
-        is String -> DemoImage(
-            imageUrl = it,
-            menuItem.title,
-            modifier = imageModifier
-        )
+        is String ->
+          DemoImage(
+              imageUrl = it,
+              menuItem.title,
+              modifier = imageModifier
+          )
         is ImageVector ->
           Icon(
               it,
@@ -93,7 +103,12 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
               modifier = imageModifier,
               tint = MaterialTheme.colors.primary,
           )
-        else -> error("Unknown icon type: $it")
+        else ->
+          DemoImage(
+              imageUrl = it.toString(),
+              menuItem.title,
+              modifier = imageModifier
+          )
       }
     } ?: Icon(
         Icons.Filled.Audiotrack,
@@ -119,6 +134,7 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
   }
   Divider()
 }
+
 
 @Preview
 @Composable

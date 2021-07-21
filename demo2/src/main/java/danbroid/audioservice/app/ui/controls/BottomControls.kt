@@ -23,6 +23,7 @@ import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.demo.formatDurationFromSeconds
 import danbroid.media.client.AudioClient
+import danbroid.media.client.AudioClientModel
 
 private val playerButtonSize = 46.dp
 
@@ -116,9 +117,9 @@ private fun ExtraControlsPreview() {
 }
 
 @Composable
-fun BottomControls(expanded: Boolean = false) {
+fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientModel = audioClientModel()) {
   log.ddebug("BottomControls() expanded: $expanded")
-  val audioClientModel = audioClientModel()
+
   val player = audioClientModel.client
   val playerState by player.playState.collectAsState()
   val queueState by player.queueState.collectAsState()

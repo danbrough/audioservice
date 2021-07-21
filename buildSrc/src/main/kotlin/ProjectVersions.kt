@@ -16,6 +16,7 @@ object ProjectVersions {
   val NDK_VERSION = "21.3.6528147"
   const val COMPOSE_VERSION = "1.0.0-rc02"
   const val COMPOSE_TOOLS_VERSION = "1.0.0-rc02" //"1.0.0-beta09"
+  const val MINIFY_ENABLED = true
 
   val VERSION_NAME: String
     get() = getVersionName()

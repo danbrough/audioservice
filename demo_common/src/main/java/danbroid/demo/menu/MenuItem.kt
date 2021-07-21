@@ -7,7 +7,7 @@ data class MenuItem(
     val id: String,
     val title: String,
     val subTitle: String,
-    val icon: Any? = null,
+    val iconURI: Any? = null,
     val isPlayable: Boolean = false,
     val isBrowsable: Boolean = false) {
   companion object {
@@ -37,7 +37,7 @@ class MenuBuilder(val context: MenuBuilderContext) {
   var subtitle: String = ""
 
   @MenuDSL
-  var icon: Any? = null
+  var iconURI: Any? = null
 
   var children: MutableList<MenuBuilder>? = null
 
@@ -91,7 +91,7 @@ class MenuBuilder(val context: MenuBuilderContext) {
 
   fun buildItem(): MenuItem = MenuItem(
       id, title, subtitle,
-      icon = icon, isBrowsable = isBrowsable, isPlayable = isPlayable
+      iconURI = iconURI, isBrowsable = isBrowsable, isPlayable = isPlayable
   )
 
   fun buildChildren(): List<MenuItem> = children?.map { it.buildItem() } ?: emptyList()

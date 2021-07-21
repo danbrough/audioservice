@@ -1,11 +1,12 @@
 package danbroid.audioservice.app.content
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.menu.MenuBuilder
 import danbroid.audioservice.app.menu.MenuBuilderContext
+import danbroid.audioservice.app.rnz.rnz
+import danbroid.audioservice.app.rnz.toMenuItem
+import danbroid.audioservice.app.ui.AppIcon
 import danbroid.demo.content.ipfs_gateway
 import danbroid.demo.content.somaFM
 import danbroid.demo.content.testTracks
@@ -17,6 +18,7 @@ const val URI_PREFIX = "audiodemo:/"
 const val URI_CONTENT = "$URI_PREFIX/content"
 
 const val URI_SETTINGS = "$URI_PREFIX/settings"
+const val URI_BROWSER = "$URI_PREFIX/browser"
 
 suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBuilder(this).apply {
   id = URI_CONTENT
@@ -25,10 +27,12 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
   menu {
     title = context.getString(R.string.test)
     subtitle = "Menu with Children"
+    iconURI = AppIcon.SAVINGS
 
     menu {
       title = "Child 1"
       subtitle = "First Child"
+      iconURI = AppIcon.PANORAMA
     }
 
     menu {
@@ -62,31 +66,59 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
 
     menu {
       id = Routes.SETTINGS
-      icon = R.drawable.ic_play
+      iconURI = AppIcon.SETTINGS
       title = "Navigate by ROUTE.SETTINGS to Settings"
     }
+  }
+
+  menu {
+    id = URI_BROWSER
+    iconURI = AppIcon.BROWSER
+    title = "Web Browser"
   }
 
   menu {
     id = "$URI_CONTENT/soma"
     title = "Soma FM"
     subtitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
-    icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
+    iconURI = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
 
     context.context.somaFM.channels().forEach {
       menu {
         id = "somafm://${it.id.uriEncode()}"
         title = it.title
         subtitle = it.description
-        icon = it.image
+        iconURI = it.image
         isPlayable = true
       }
     }
   }
 
+
+  context.context.rnz.loadProgramme(2018805053L).toMenuItem().also {
+    menu {
+      id = it.id
+      title = it.title
+      subtitle = it.subTitle
+      iconURI = it.iconURI
+      isPlayable = it.isPlayable
+    }
+  }
+
+  context.context.rnz.loadProgramme(2582485L).toMenuItem().also {
+    menu {
+      id = it.id
+      title = it.title
+      subtitle = it.subTitle
+      iconURI = it.iconURI
+      isPlayable = it.isPlayable
+    }
+  }
+
+
   menu {
     id = URI_SETTINGS
-    icon = Icons.Default.Settings
+    iconURI = AppIcon.SETTINGS
     title = context.getString(R.string.settings)
     subtitle = "Subtitle 2"
   }
@@ -97,7 +129,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
       title = audioTrack.title
       subtitle = audioTrack.subTitle
       isPlayable = true
-      icon = audioTrack.iconURI
+      iconURI = audioTrack.iconURI
     }
   }
 

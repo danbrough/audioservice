@@ -17,17 +17,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.navDeepLink
+import com.google.accompanist.insets.statusBarsPadding
+import danbroid.audioservice.app.content.URI_BROWSER
 import danbroid.audioservice.app.content.URI_CONTENT
 import danbroid.audioservice.app.content.URI_SETTINGS
+import danbroid.audioservice.app.ui.browser.BrowserScreen
 import danbroid.audioservice.app.ui.home.MenuScreen
 import danbroid.audioservice.app.ui.menu.menuModel
 import danbroid.audioservice.app.ui.settings.SettingsScreen
+import danbroid.media.client.AudioClientModel
 import danbroid.util.format.uriEncode
 
 object Routes {
   const val HOME = "home"
   const val MENU = "menu"
   const val SETTINGS = "settings"
+  const val BROWSER = "browser"
 }
 
 
@@ -49,7 +54,8 @@ fun EnterAnimation(content: @Composable () -> Unit) {
 @Composable
 fun DemoNavGraph(
     modifier: Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    audioClientModel: AudioClientModel
 ) = NavHost(
     navController,
     modifier = modifier,
@@ -63,12 +69,8 @@ fun DemoNavGraph(
   }*/
 
   composable(Routes.HOME) {
-    EnterAnimation {
-      Menu(URI_CONTENT, navController)
-    }
-
+    Menu(URI_CONTENT, navController, audioClientModel)
   }
-
 
   composable("${Routes.MENU}?id={id}", arguments = listOf(
       navArgument("id") {
@@ -80,8 +82,7 @@ fun DemoNavGraph(
     val menuID = entry.arguments?.getString("id")!!
 
     EnterAnimation {
-
-      Menu(menuID, navController)
+      Menu(menuID, navController, audioClientModel)
     }
 
 /*
@@ -99,11 +100,19 @@ fun DemoNavGraph(
       })) { entry ->
     SettingsScreen()
   }
+
+  composable(
+      Routes.BROWSER,
+      deepLinks = listOf(navDeepLink {
+        uriPattern = URI_BROWSER
+      })) { entry ->
+    BrowserScreen(audioClientModel)
+  }
 }
 
 
 @Composable
-private fun Menu(menuID: String, navController: NavHostController) {
+private fun Menu(menuID: String, navController: NavHostController, audioClientModel: AudioClientModel) {
   log.dwarn("Showing Menu screen id:${menuID}")
   val menuModel = menuModel(menuID)
   val menuState by menuModel.state.collectAsState()
@@ -117,7 +126,6 @@ private fun Menu(menuID: String, navController: NavHostController) {
       popExit = R.anim.menu_pop_exit
     }
   }
-  val audioClientModel = audioClientModel()
 
   NavPage {
     MenuScreen(menuState.menuItem.title, menuState.children) { menuItem ->
@@ -145,7 +153,7 @@ private fun Menu(menuID: String, navController: NavHostController) {
 
 @Composable
 fun NavPage(content: @Composable () -> Unit) =
-    Box(Modifier.fillMaxWidth().padding(start = 8.dp,end = 8.dp)) {
+    Box(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp).statusBarsPadding()) {
       content()
     }
 
