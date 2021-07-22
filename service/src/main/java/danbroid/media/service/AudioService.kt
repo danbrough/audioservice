@@ -12,10 +12,7 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.media.AudioAttributesCompat
-import androidx.media2.common.BaseResult
-import androidx.media2.common.MediaItem
-import androidx.media2.common.MediaMetadata
-import androidx.media2.common.SessionPlayer
+import androidx.media2.common.*
 import androidx.media2.session.*
 import androidx.palette.graphics.Palette
 import androidx.versionedparcelable.ParcelUtils
@@ -42,23 +39,25 @@ class AudioService : MediaSessionService() {
 
   companion object {
     const val PACKAGE = "danbroid.media.service"
+    const val ACTION_PLAY_ITEM = "$PACKAGE.PLAY_ITEM"
+
     const val METADATA_EXTRAS_KEY_CACHED_ICON = "$PACKAGE.METADATA_EXTRAS_KEY_CACHED_ICON"
     //const val COMMAND_CLEAR_PLAYLIST = "$PACKAGE.CLEAR_PLAYLIST"
 
     const val MEDIA_METADATA_KEY_BITRATE =
-        "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_BITRATE"
+        "$PACKAGE.MEDIA_METADATA_KEY_BITRATE"
     const val MEDIA_METADATA_KEY_LIGHT_COLOR =
-        "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_LIGHT_COLOR"
+        "$PACKAGE.MEDIA_METADATA_KEY_LIGHT_COLOR"
     const val MEDIA_METADATA_KEY_DARK_COLOR =
-        "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_DARK_COLOR"
+        "$PACKAGE.MEDIA_METADATA_KEY_DARK_COLOR"
     const val MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR =
-        "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR"
+        "$PACKAGE.MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR"
     const val MEDIA_METADATA_KEY_DARK_MUTED_COLOR =
-        "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_DARK_MUTED_COLOR"
+        "$PACKAGE.MEDIA_METADATA_KEY_DARK_MUTED_COLOR"
     const val MEDIA_METADATA_KEY_DOMINANT_COLOR =
-        "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_DOMINANT_COLOR"
+        "$PACKAGE.MEDIA_METADATA_KEY_DOMINANT_COLOR"
     const val MEDIA_METADATA_KEY_VIBRANT_COLOR =
-        "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_VIBRANT_COLOR"
+        "$PACKAGE.MEDIA_METADATA_KEY_VIBRANT_COLOR"
   }
 
 
@@ -122,6 +121,12 @@ class AudioService : MediaSessionService() {
 /*      override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem) {
         log.warn("onCurrentMediaItemChanged() $item")
       }*/
+
+      override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem?) {
+        item ?: return
+        log.debug("onCurrentMediaItemChanged() $item")
+        loadIcon(item)
+      }
 
       override fun onBufferingStateChanged(player: SessionPlayer, item: MediaItem?, buffState: Int) {
         super.onBufferingStateChanged(player, item, buffState)
@@ -316,6 +321,45 @@ class AudioService : MediaSessionService() {
     return session
   }
 
+  private fun loadIcon(mediaItem: MediaItem) {
+    log.error("loadIcon() $mediaItem")
+
+    lifecycleScope.launch {
+      fun updateMetadata(bitmap: Bitmap) {
+        log.dwarn("updateMetadata()")
+
+        val builder = MediaMetadata.Builder(mediaItem.metadata!!)
+
+        val extras = mediaItem.metadata?.extras ?: bundleOf().also {
+          builder.setExtras(it)
+        }
+
+        if (bitmap != defaultIcon && !extras.containsKey(METADATA_EXTRAS_KEY_CACHED_ICON)) {
+          log.dwarn("generating palette............................................")
+
+          val palette = Palette.from(bitmap).generate()
+
+          extras.putInt(MEDIA_METADATA_KEY_LIGHT_COLOR, palette.getLightVibrantColor(Color.TRANSPARENT))
+          extras.putInt(MEDIA_METADATA_KEY_DARK_COLOR, palette.getDarkVibrantColor(Color.TRANSPARENT))
+          extras.putInt(MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR, palette.getLightMutedColor(Color.TRANSPARENT))
+          extras.putInt(MEDIA_METADATA_KEY_DARK_MUTED_COLOR, palette.getDarkMutedColor(Color.TRANSPARENT))
+          extras.putInt(MEDIA_METADATA_KEY_DOMINANT_COLOR, palette.getDominantColor(Color.TRANSPARENT))
+          extras.putInt(MEDIA_METADATA_KEY_VIBRANT_COLOR, palette.getVibrantColor(Color.TRANSPARENT))
+        }
+
+        extras.putParcelable(METADATA_EXTRAS_KEY_CACHED_ICON, bitmap)
+        builder.putBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON, bitmap)
+        mediaItem.metadata = builder.build()
+      }
+
+      iconUtils.loadIcon(mediaItem.metadata, defaultIcon) {
+        updateMetadata(it)
+      }?.also {
+        updateMetadata(it)
+      }
+    }
+  }
+
 
   inner class SessionCallback : MediaSession.SessionCallback() {
 
@@ -326,6 +370,18 @@ class AudioService : MediaSessionService() {
 
       val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, "item") }
       log.ddebug("metadata: ${metadata.toDebugString()}")
+
+      val item = UriMediaItem.Builder(uri).setStartPosition(-1L)
+          .setEndPosition(-1L)
+          .setMetadata(metadata)
+          .build()
+
+
+      session.player.addPlaylistItem(Integer.MAX_VALUE, item).then {
+        log.dtrace("added item to playlist: $it")
+      }
+
+
 /*
       val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, "item") }
       log.ddebug("metadata: ${metadata.toDebugString()}")
@@ -365,46 +421,6 @@ class AudioService : MediaSessionService() {
     }
 
 
-    fun loadIcon(mediaItem: MediaItem) {
-      log.error("loadIcon() $mediaItem")
-
-      lifecycleScope.launch {
-        fun updateMetadata(bitmap: Bitmap) {
-          log.dwarn("updateMetadata()")
-
-          val builder = MediaMetadata.Builder(mediaItem.metadata!!)
-
-          val extras = mediaItem.metadata?.extras ?: bundleOf().also {
-            builder.setExtras(it)
-          }
-
-          if (bitmap != defaultIcon && !extras.containsKey(METADATA_EXTRAS_KEY_CACHED_ICON)) {
-            log.dwarn("generating palette............................................")
-
-            val palette = Palette.from(bitmap).generate()
-
-            extras.putInt(MEDIA_METADATA_KEY_LIGHT_COLOR, palette.getLightVibrantColor(Color.TRANSPARENT))
-            extras.putInt(MEDIA_METADATA_KEY_DARK_COLOR, palette.getDarkVibrantColor(Color.TRANSPARENT))
-            extras.putInt(MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR, palette.getLightMutedColor(Color.TRANSPARENT))
-            extras.putInt(MEDIA_METADATA_KEY_DARK_MUTED_COLOR, palette.getDarkMutedColor(Color.TRANSPARENT))
-            extras.putInt(MEDIA_METADATA_KEY_DOMINANT_COLOR, palette.getDominantColor(Color.TRANSPARENT))
-            extras.putInt(MEDIA_METADATA_KEY_VIBRANT_COLOR, palette.getVibrantColor(Color.TRANSPARENT))
-          }
-
-          extras.putParcelable(METADATA_EXTRAS_KEY_CACHED_ICON, bitmap)
-          builder.putBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON, bitmap)
-          mediaItem.metadata = builder.build()
-        }
-
-        iconUtils.loadIcon(mediaItem.metadata, defaultIcon) {
-          updateMetadata(it)
-        }?.also {
-          updateMetadata(it)
-        }
-      }
-    }
-
-
     override fun onCommandRequest(session: MediaSession, controller: MediaSession.ControllerInfo, command: SessionCommand): Int {
       log.debug("onCommandRequest() ${command.commandCode}:${command.customAction}:extras:${command.customExtras}")
       if (session.player.playerState == SessionPlayer.PLAYER_STATE_ERROR) {
@@ -420,7 +436,7 @@ class AudioService : MediaSessionService() {
 
         super.onConnect(session, controller)!!.let {
           SessionCommandGroup.Builder(it)
-              .addCommand(SessionCommand("test", null))
+              .addCommand(SessionCommand(ACTION_PLAY_ITEM, null))
               .build()
         }
 

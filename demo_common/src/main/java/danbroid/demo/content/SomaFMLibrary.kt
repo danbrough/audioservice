@@ -96,7 +96,7 @@ class SomaFMLibrary(val context: Context) : MediaLibrary {
     val somaID = mediaID.toUri().host!!.uriDecode()
     log.trace("somaID: $somaID")
 
-    return channels().firstOrNull{
+    return channels().firstOrNull {
       it.id == somaID
     }?.let {
 
@@ -111,7 +111,9 @@ class SomaFMLibrary(val context: Context) : MediaLibrary {
       log.dtrace("playlist: $playlistURL -> $audioURL")
       UriMediaItem.Builder(audioURL.toUri())
           .setStartPosition(0L).setEndPosition(-1L)
-          .setMetadata(metadata.build())
+          .setMetadata(metadata
+              .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audioURL)
+              .build())
           .build()
     }
   }

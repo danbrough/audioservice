@@ -5,12 +5,14 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.common.SubtitleData
 import androidx.media2.session.*
+import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.media.service.AudioService
 import danbroid.media.service.buffState
@@ -67,7 +69,7 @@ class AudioClient(context: Context) {
   val mediaController: MediaBrowser = run {
 
 
-    log.debug("starting service ..")
+    log.info("starting service ..")
     context.startService(Intent(context, AudioService::class.java))
 
 
@@ -76,7 +78,7 @@ class AudioClient(context: Context) {
       it.serviceName == AudioService::class.qualifiedName
     }
 
-    log.derror("serviceToken: $serviceToken.")
+    log.dtrace("serviceToken: $serviceToken.")
 
 
     MediaBrowser.Builder(context)
@@ -150,37 +152,41 @@ class AudioClient(context: Context) {
     mediaController.skipToPreviousPlaylistItem()
   }
 
+  fun close() {
+    log.info("close()")
+    handler.removeCallbacksAndMessages(null)
+    mediaController.close()
+  }
+
+  fun clearPlaylist() {
+    log.trace("clearPlaylist()")
+    if (!mediaController.playlist.isNullOrEmpty()) {
+      mediaController.removePlaylistItem(0).then {
+        clearPlaylist()
+      }
+    }
+  }
+
   private fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
       addListener({
         job.invoke(get())
       }, mainExecutor)
 
 
-  fun test(item: MediaMetadata) {
-    log.dinfo("test()")
+  fun test(item: MediaItem) {
+    log.dinfo("test(): $item")
 
-    val metadata = mediaController.playlistMetadata
-    log.trace("metadata: ${metadata.toDebugString()}")
-    val playlist = mediaController.playlist ?: mutableListOf()
-    playlist.forEach {
-      log.error("playlist item: $it")
-    }
 
-    mediaController.sendCustomCommand(SessionCommand("test", null), bundleOf("count" to 3)).then {
+    val metadata = item.metadata
+    val args = bundleOf()
+
+    ParcelUtils.putVersionedParcelable(args, "item", item.metadata)
+    mediaController.sendCustomCommand(SessionCommand(AudioService.ACTION_PLAY_ITEM, null), args).then {
       log.debug("cmd sent")
     }
-/*
-    mediaController.setMediaUri(item.mediaId!!.toUri(), bundleOf().also {
-      ParcelUtils.putVersionedParcelable(it, "item", item)
-    }).then {
-      log.debug("finished setting media uri")
-    }
-*/
-
-
-    /*  mediaController.sendCustomCommand(SessionCommand("test", bundleOf("id" to "thang")), bundleOf("count" to 3)).then {
-        log.debug("cmd sent")
-      }*/
+    val mediaURI =item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()
+    log.debug("mediaURI: $mediaURI")
+    mediaController.setMediaUri(mediaURI,args)
   }
 
   private val handler = Handler(Looper.getMainLooper())
@@ -209,15 +215,15 @@ class AudioClient(context: Context) {
         controller: MediaController,
         info: MediaController.PlaybackInfo
     ) {
-      log.info("onPlaybackInfoChanged(): $info")
+      log.trace("onPlaybackInfoChanged(): $info")
     }
 
     override fun onPlaybackCompleted(controller: MediaController) {
-      log.info("onPlaybackCompleted()")
+      log.trace("onPlaybackCompleted()")
     }
 
     override fun onPlaylistMetadataChanged(controller: MediaController, metadata: MediaMetadata?) {
-      log.debug("onPlaylistMetadataChanged() metadata: ${metadata.toDebugString()}")
+      log.trace("onPlaylistMetadataChanged() metadata: ${metadata.toDebugString()}")
       _metadata.value = metadata
     }
 
@@ -228,9 +234,9 @@ class AudioClient(context: Context) {
     ) {
       val state = controller.playerState
 
-      log.info("onPlaylistChanged() size:${list?.size ?: "null"} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex} duration:${controller.currentMediaItem?.duration}")
-      log.info("metadata: ${metadata.toDebugString()}")
-      log.ddebug("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
+      log.trace("onPlaylistChanged() size:${list?.size ?: "null"} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex} duration:${controller.currentMediaItem?.duration}")
+      log.dtrace("metadata: ${metadata.toDebugString()}")
+      log.dtrace("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
       _queueState.value = _queueState.value.copy(
           hasPrevious = controller.previousMediaItemIndex != -1,
           hasNext = controller.nextMediaItemIndex != -1,
@@ -239,11 +245,11 @@ class AudioClient(context: Context) {
     }
 
     override fun onTrackSelected(controller: MediaController, trackInfo: SessionPlayer.TrackInfo) {
-      log.info("onTrackSelected() ${controller.currentMediaItem?.metadata}")
+      log.trace("onTrackSelected() ${controller.currentMediaItem?.metadata}")
     }
 
     override fun onCurrentMediaItemChanged(controller: MediaController, item: MediaItem?) {
-      log.info("onCurrentMediaItemChanged(): $item currentPos: ${controller.currentPosition} duration:${controller.duration} ")
+      log.trace("onCurrentMediaItemChanged(): $item currentPos: ${controller.currentPosition} duration:${controller.duration} ")
 
       log.dtrace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
       log.dtrace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
@@ -259,7 +265,7 @@ class AudioClient(context: Context) {
     }
 
     override fun onBufferingStateChanged(controller: MediaController, item: MediaItem, state: Int) {
-      log.info("onBufferingStateChanged() ${state.buffState} duration: ${item.duration}")
+      log.trace("onBufferingStateChanged() ${state.buffState} duration: ${item.duration}")
 
       _bufferingState.value = when (state) {
         SessionPlayer.BUFFERING_STATE_UNKNOWN -> BufferingState.UNKNOWN
@@ -272,7 +278,7 @@ class AudioClient(context: Context) {
 
 
     override fun onPlayerStateChanged(controller: MediaController, state: Int) {
-      log.debug("onPlayerStateChanged() state:$state = ${state.playerState}  pos:${controller.currentPosition} duration:${controller.duration}")
+      log.trace("onPlayerStateChanged() state:$state = ${state.playerState}  pos:${controller.currentPosition} duration:${controller.duration}")
 
       _playState.value = when (state) {
         SessionPlayer.PLAYER_STATE_IDLE -> PlayerState.IDLE
@@ -293,7 +299,7 @@ class AudioClient(context: Context) {
         track: SessionPlayer.TrackInfo,
         data: SubtitleData
     ) {
-      log.info("onSubtitleData() $track data: $data")
+      log.trace("onSubtitleData() $track data: $data")
     }
 
     override fun onTracksChanged(
@@ -301,7 +307,7 @@ class AudioClient(context: Context) {
         tracks: MutableList<SessionPlayer.TrackInfo>
     ) {
       val state = controller.playerState
-      log.info("onTracksChanged() tracks:${tracks} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex}")
+      log.trace("onTracksChanged() tracks:${tracks} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex}")
 
     }
 
@@ -310,31 +316,14 @@ class AudioClient(context: Context) {
       _connected.value = true
       _currentItem.value = controller.currentMediaItem
       _metadata.value = controller.currentMediaItem?.metadata
-
     }
 
     override fun onDisconnected(controller: MediaController) {
       log.info("onDisconnected()")
       _connected.value = false
     }
-
-
   }
 
-  fun close() {
-    log.info("close()")
-    handler.removeCallbacksAndMessages(null)
-    mediaController.close()
-  }
-
-  fun clearPlaylist() {
-    log.trace("clearPlaylist()")
-    if (!mediaController.playlist.isNullOrEmpty()) {
-      mediaController.removePlaylistItem(0).then {
-        clearPlaylist()
-      }
-    }
-  }
 
 }
 

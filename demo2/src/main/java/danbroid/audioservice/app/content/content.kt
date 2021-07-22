@@ -34,7 +34,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
       runBlocking {
         context.context.somaFM.loadItem("somafm://poptron")
       }?.also {
-        client.test(it.metadata!!)
+        client.test(it)
       }
 
     }
