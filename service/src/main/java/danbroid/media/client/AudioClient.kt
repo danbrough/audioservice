@@ -158,6 +158,11 @@ class AudioClient(context: Context) {
       }, mainExecutor)
 
 
+  fun test() {
+    log.info("test(): ${hashCode()}")
+  }
+
+
   fun test(item: MediaMetadata) {
     log.dinfo("test()")
     val metadata = mediaController.playlistMetadata

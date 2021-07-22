@@ -127,27 +127,33 @@ private fun Menu(menuID: String, navController: NavHostController, audioClientMo
     }
   }
 
-  NavPage {
-    MenuScreen(menuState.menuItem.title, menuState.children) { menuItem ->
-      log.ddebug("CLICKED $menuItem")
+  MenuScreen(menuState.menuItem.title, menuState.children) { menuItem ->
+    log.dtrace("clicked $menuItem")
 
-      navController.findDestination(menuItem.id)?.also {
-        log.dtrace("found destination $it")
-        navController.navigate(menuItem.id)
-        return@MenuScreen
-      }
+    menuItem.onClicked?.also {
+      log.dtrace("calling click handler for ${menuItem.id}")
+      it.invoke(menuItem)
+      return@MenuScreen
+    }
 
-      if (navController.graph.hasDeepLink(menuItem.id.toUri())) {
-        log.debug("FOUND DEEPLINK ${menuItem.id}")
-        navController.navigate(menuItem.id.toUri())
-      } else if (menuItem.isBrowsable) {
-        log.debug("BROWING TO ${menuItem.id}")
-        navController.navigate("${Routes.MENU}?id=${menuItem.id.uriEncode()}", menuNavOptions)
-      } else if (menuItem.isPlayable) {
-        audioClientModel.client.playUri(menuItem.id)
-      }
+    navController.findDestination(menuItem.id)?.also {
+      log.dtrace("found destination $it")
+      navController.navigate(menuItem.id)
+      return@MenuScreen
+    }
+
+    if (navController.graph.hasDeepLink(menuItem.id.toUri())) {
+      log.trace("Navigating to deeplink:${menuItem.id}")
+      navController.navigate(menuItem.id.toUri())
+    } else if (menuItem.isBrowsable) {
+      log.trace("Opening menu ${menuItem.id}")
+      navController.navigate("${Routes.MENU}?id=${menuItem.id.uriEncode()}", menuNavOptions)
+    } else if (menuItem.isPlayable) {
+      log.trace("Playing item ${menuItem.id}")
+      audioClientModel.client.playUri(menuItem.id)
     }
   }
+  
 }
 
 

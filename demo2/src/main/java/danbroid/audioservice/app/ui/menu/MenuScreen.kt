@@ -1,5 +1,6 @@
 package danbroid.audioservice.app.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audioservice.app.menu.MenuItem
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.components.DemoImage
@@ -35,7 +37,8 @@ fun MenuScreen(
 /*  val audioClientModel = viewModel<AudioClientModel>(factory = AudioClientModelFactory(LocalContext.current))
   log.ddebug("audioClient: ${audioClientModel.client}")*/
   Column {
-    val imageModifier = Modifier.size(52.dp)
+    //val imageModifier = Modifier.size(52.dp)
+    Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     LazyColumn {
       items(menus, { it.id }) { menu ->
 
@@ -78,8 +81,6 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
 
     if (icon is AppIcon)
       icon = AppIcon.lookup(icon)
-
-    log.warn("icon: $icon")
 
     icon?.also {
       when (it) {
