@@ -13,6 +13,7 @@ import danbroid.demo.content.somaFM
 import danbroid.demo.content.testTracks
 import danbroid.media.client.audioClientModel
 import danbroid.util.format.uriEncode
+import kotlinx.coroutines.runBlocking
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 
@@ -29,7 +30,13 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
   menu {
     title = "Test"
     onClicked = {
-      (context.context as ComponentActivity).audioClientModel().client.test()
+      val client = (context.context as ComponentActivity).audioClientModel().client
+      runBlocking {
+        context.context.somaFM.loadItem("somafm://poptron")
+      }?.also {
+        client.test(it.metadata!!)
+      }
+
     }
     iconURI = AppIcon.RADIO
   }

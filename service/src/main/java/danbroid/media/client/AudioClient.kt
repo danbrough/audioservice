@@ -5,14 +5,12 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.common.SubtitleData
 import androidx.media2.session.*
-import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.media.service.AudioService
 import danbroid.media.service.buffState
@@ -158,25 +156,26 @@ class AudioClient(context: Context) {
       }, mainExecutor)
 
 
-  fun test() {
-    log.info("test(): ${hashCode()}")
-  }
-
-
   fun test(item: MediaMetadata) {
     log.dinfo("test()")
+
     val metadata = mediaController.playlistMetadata
     log.trace("metadata: ${metadata.toDebugString()}")
     val playlist = mediaController.playlist ?: mutableListOf()
     playlist.forEach {
-      log.debug("playlist item: $it")
+      log.error("playlist item: $it")
     }
 
+    mediaController.sendCustomCommand(SessionCommand("test", null), bundleOf("count" to 3)).then {
+      log.debug("cmd sent")
+    }
+/*
     mediaController.setMediaUri(item.mediaId!!.toUri(), bundleOf().also {
       ParcelUtils.putVersionedParcelable(it, "item", item)
     }).then {
       log.debug("finished setting media uri")
     }
+*/
 
 
     /*  mediaController.sendCustomCommand(SessionCommand("test", bundleOf("id" to "thang")), bundleOf("count" to 3)).then {

@@ -28,7 +28,7 @@ subprojects {
     google()
    // jcenter()
     mavenCentral()
-  //  maven("https://h1.danbrough.org/maven/")
+  //maven("https://h1.danbrough.org/maven/")
     maven("https://jitpack.io")
     mavenLocal()
   }

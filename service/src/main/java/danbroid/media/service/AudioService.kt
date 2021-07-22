@@ -18,6 +18,7 @@ import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.session.*
 import androidx.palette.graphics.Palette
+import androidx.versionedparcelable.ParcelUtils
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo
@@ -60,7 +61,6 @@ class AudioService : MediaSessionService() {
         "danbroid.media.service.AudioService.MEDIA_METADATA_KEY_VIBRANT_COLOR"
   }
 
-  val sessionCallback = SessionCallback()
 
   //lateinit var player: SessionPlayerConnector
   lateinit var exoPlayer: SimpleExoPlayer
@@ -98,6 +98,7 @@ class AudioService : MediaSessionService() {
 
     val sessionPlayer = SessionPlayerConnector(exoPlayer)
 
+
     sessionPlayer.setAudioAttributes(
         AudioAttributesCompat.Builder()
             .setUsage(AudioAttributesCompat.USAGE_MEDIA)
@@ -107,7 +108,7 @@ class AudioService : MediaSessionService() {
 
     session =
         MediaSession.Builder(this, sessionPlayer)
-            .setSessionCallback(callbackExecutor, sessionCallback)
+            .setSessionCallback(callbackExecutor, SessionCallback())
             // .setId("danbroid.media.session")
             .build()
 
@@ -155,7 +156,6 @@ class AudioService : MediaSessionService() {
       }
     })
   }
-
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     log.dwarn("onStartCommand() hashCode:${hashCode()}")
@@ -312,15 +312,20 @@ class AudioService : MediaSessionService() {
 
   override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession {
     log.ddebug("onGetSession() controllerInfo: $controllerInfo")
+
     return session
   }
 
 
   inner class SessionCallback : MediaSession.SessionCallback() {
 
+
     override fun onSetMediaUri(session: MediaSession, controller: MediaSession.ControllerInfo, uri: Uri, extras: Bundle?): Int {
       log.ddebug("onSetMediaUri() $uri")
 
+
+      val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, "item") }
+      log.ddebug("metadata: ${metadata.toDebugString()}")
 /*
       val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, "item") }
       log.ddebug("metadata: ${metadata.toDebugString()}")
@@ -411,12 +416,21 @@ class AudioService : MediaSessionService() {
     }
 
 
-    override fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo): SessionCommandGroup = SessionCommandGroup.Builder().let { builder ->
-      super.onConnect(session, controller)?.commands?.forEach {
-        builder.addCommand(it)
-      }
-      builder.build()
-    }
+    override fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo) =
+
+        super.onConnect(session, controller)!!.let {
+          SessionCommandGroup.Builder(it)
+              .addCommand(SessionCommand("test", null))
+              .build()
+        }
+
+
+/*        SessionCommandGroup.Builder().let { builder ->
+          super.onConnect(session, controller)?.commands?.forEach {
+            builder.addCommand(it)
+          }
+          builder.build()
+        }*/
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
       log.info("onPostConnect() session:$session controller:$controller")
