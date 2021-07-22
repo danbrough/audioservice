@@ -20,16 +20,24 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 
-class RNZSupport(context: Context) : MediaLibrary {
+class RNZLibrary(context: Context) : MediaLibrary {
   val httpSupport = context.httpSupport
 
-  override suspend fun loadItem(mediaID: String): MediaItem? = getIDFromProgrammeURI(mediaID)?.let {
-    loadProgramme(it).toMediaItem()
+  override suspend fun loadItem(mediaID: String): MediaItem? {
+    log.dtrace("loadItem() $mediaID")
+    val progID = if (mediaID == URI_RNZ_NEWS) rnzNewsProgrammeID() else
+      getIDFromProgrammeURI(mediaID)
+    log.dtrace("progID: $progID")
+    return if (progID != null) loadProgramme(progID).toMediaItem().also {
+      log.dtrace("MediaItem: $it")
+    } else null
   }
 
-  companion object : SingletonHolder<RNZSupport, Context>(::RNZSupport) {
+  companion object : SingletonHolder<RNZLibrary, Context>(::RNZLibrary) {
     const val SCHEME_RNZ = "rnz"
     const val URI_PREFIX_RNZ_PROGRAMME = "$SCHEME_RNZ://programme"
+    const val URI_RNZ_NEWS = "$SCHEME_RNZ://news"
+    const val URL_RNZ_NEWS = "https://www.rnz.co.nz/news"
 
     fun getProgrammeURI(id: Long) = "$URI_PREFIX_RNZ_PROGRAMME/$id"
     fun getIDFromProgrammeURI(uri: String): Long? =
@@ -42,6 +50,30 @@ class RNZSupport(context: Context) : MediaLibrary {
   }
 
 
+  @Throws(IOException::class)
+  suspend fun rnzNewsProgrammeID(): Long {
+    val content = httpSupport.requestString(URL_RNZ_NEWS)
+
+    content.lines().forEach { line ->
+      if (line.contains("radio-new-zealand-news")) {
+        line.substringAfter("href=\"").split('/').forEach { part ->
+          try {
+            return part.toLong()
+          } catch (err: NumberFormatException) {
+            //try again with next line
+          }
+        }
+      }
+    }
+
+    throw IOException("Failed to parse $URL_RNZ_NEWS")
+  }
+
+  @Throws(IOException::class)
+  suspend fun rnzNews(): RNZProgramme = loadProgramme(rnzNewsProgrammeID()).also {
+    log.dtrace("LOADED NEWS: $it")
+  }
+
   @Serializable
   private data class RNZItem(val item: RNZProgramme)
 
@@ -52,6 +84,8 @@ class RNZSupport(context: Context) : MediaLibrary {
     log.trace("loadProgramme() $progID")
 
     val progURL = RNZProgramme.getProgrammeURL(progID)
+
+    log.dtrace("progURL: $progURL")
 
     val response = httpSupport.requestString(
         progURL,
@@ -64,7 +98,7 @@ class RNZSupport(context: Context) : MediaLibrary {
 
 
 fun RNZProgramme.toMenuItem(): MenuItem = MenuItem(
-    id = RNZSupport.getProgrammeURI(id),
+    id = RNZLibrary.getProgrammeURI(id),
     title = programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
     subTitle = body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
     iconURI = if (thumbnail != null) "http://www.rnz.co.nz$thumbnail" else null,
@@ -82,14 +116,14 @@ fun RNZProgramme.toMediaItem(): MediaItem =
 
 val RNZProgramme.mediaMetadata: MediaMetadata.Builder
   get() = MediaMetadata.Builder()
-      .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZSupport.getProgrammeURI(id))
+      .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZLibrary.getProgrammeURI(id))
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, if (thumbnail != null) "http://www.rnz.co.nz$thumbnail" else null)
       .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)
       .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audio.mp3?.url ?: audio.ogg!!.url)
 
-val Context.rnz: RNZSupport
-  get() = RNZSupport.getInstance(this)
+val Context.rnz: RNZLibrary
+  get() = RNZLibrary.getInstance(this)
 
-private val log = danbroid.logging.getLog(RNZSupport::class)
+private val log = danbroid.logging.getLog(RNZLibrary::class)

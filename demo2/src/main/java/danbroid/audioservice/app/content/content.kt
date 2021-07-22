@@ -95,16 +95,6 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
   }
 
 
-  context.context.rnz.loadProgramme(2018805053L).toMenuItem().also {
-    menu {
-      id = it.id
-      title = it.title
-      subtitle = it.subTitle
-      iconURI = it.iconURI
-      isPlayable = it.isPlayable
-    }
-  }
-
   context.context.rnz.loadProgramme(2582485L).toMenuItem().also {
     menu {
       id = it.id
@@ -115,6 +105,15 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
     }
   }
 
+  context.context.rnz.rnzNews().toMenuItem().also {
+    menu {
+      id = it.id
+      title = it.title
+      subtitle = it.subTitle
+      iconURI = AppIcon.RNZ_NEWS
+      isPlayable = it.isPlayable
+    }
+  }
 
   menu {
     id = URI_SETTINGS

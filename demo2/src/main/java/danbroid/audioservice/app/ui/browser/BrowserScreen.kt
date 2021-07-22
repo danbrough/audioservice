@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audioservice.app.R
-import danbroid.audioservice.app.rnz.RNZSupport
+import danbroid.audioservice.app.rnz.RNZLibrary
 import danbroid.media.client.AudioClientModel
 
 
@@ -128,7 +128,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientModel):
       if (progID == 0L) return
 
       activity.runOnUiThread {
-        audioClientModel.client.playUri(RNZSupport.getProgrammeURI(progID))
+        audioClientModel.client.playUri(RNZLibrary.getProgrammeURI(progID))
         //TODO
         /* val progID = java.lang.Long.parseLong(data.substring(data.indexOf('X') + 1))
          MediaControllerCompat.getMediaController(activity).transportControls
