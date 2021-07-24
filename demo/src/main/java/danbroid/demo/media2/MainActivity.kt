@@ -55,8 +55,7 @@ class MainActivity : MenuActivity() {
         }
       }
     }
-
-
+    
   }
 
 /*
