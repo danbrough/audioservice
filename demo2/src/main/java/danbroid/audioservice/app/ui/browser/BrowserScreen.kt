@@ -25,6 +25,8 @@ import danbroid.audioservice.app.rnz.RNZLibrary
 
 private fun createWebView(context: Context, audioClientModel: DemoAudioClientModel): WebView {
   val webView = WebView(context)
+//  val jsData = context.resources.openRawResource(R.raw.rnz).readBytes()
+
 
   // val cssRegex = "https://www.rnz.co.nz/x/application.*\\.css".toRegex().toPattern()
   val jsRegex = "https://www.rnz.co.nz/x/application.*\\.js".toRegex().toPattern()
