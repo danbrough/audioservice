@@ -38,7 +38,6 @@ dependencies {
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:logging_core:_")
   compileOnly(AndroidX.compose.runtime)
-
   implementation(Square.okHttp3.okHttp)
 
 }

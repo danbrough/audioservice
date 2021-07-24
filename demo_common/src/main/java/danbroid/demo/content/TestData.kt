@@ -3,7 +3,7 @@ package danbroid.demo.content
 import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.UriMediaItem
-import danbroid.media.service.MediaLibrary
+import danbroid.audio.library.AudioLibrary
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.FileWriter
@@ -136,7 +136,7 @@ fun TestData.item(block: AudioTrack.() -> Unit) = AudioTrack("").also {
 }
 
 
-class TestDataLibrary : MediaLibrary {
+class TestDataLibrary : AudioLibrary {
   override suspend fun loadItem(mediaID: String): MediaItem? =
       testTracks.testData.firstOrNull {
         it.id == mediaID

@@ -1,7 +1,10 @@
 package danbroid.media.service
 
 import android.content.Context
+import androidx.media2.common.MediaItem
+import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
+import androidx.media2.session.SessionResult
 import com.google.android.exoplayer2.Player
 import danbroid.media.service.util.httpSupport
 import okhttp3.CacheControl
@@ -106,4 +109,13 @@ val Int.playWhenReadyChangeReason: String
     Player.PLAY_WHEN_READY_CHANGE_REASON_END_OF_MEDIA_ITEM -> "PLAY_WHEN_READY_CHANGE_REASON_END_OF_MEDIA_ITEM"
     else -> "ERROR: Invalid PlayWhenReadyChangeReason: $this"
   }
+
+val SessionResult.successfull: Boolean
+  get() = resultCode == SessionResult.RESULT_SUCCESS
+
+val SessionPlayer.PlayerResult.successfull: Boolean
+  get() = resultCode == SessionPlayer.PlayerResult.RESULT_SUCCESS
+
+val MediaItem?.duration: Long
+  get() = this?.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L
 

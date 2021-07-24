@@ -7,9 +7,9 @@ import androidx.core.text.parseAsHtml
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
+import danbroid.audio.library.AudioLibrary
 import danbroid.audioservice.app.menu.MenuItem
 import danbroid.demo.rnz.RNZProgramme
-import danbroid.media.service.MediaLibrary
 import danbroid.media.service.util.httpSupport
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable
@@ -20,7 +20,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 
-class RNZLibrary(context: Context) : MediaLibrary {
+class RNZLibrary(context: Context) : AudioLibrary {
   val httpSupport = context.httpSupport
 
   override suspend fun loadItem(mediaID: String): MediaItem? {

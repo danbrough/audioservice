@@ -5,7 +5,7 @@ import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
-import danbroid.media.service.MediaLibrary
+import danbroid.audio.library.AudioLibrary
 import danbroid.media.service.parsePlaylistURL
 import danbroid.media.service.util.httpSupport
 import danbroid.util.format.uriDecode
@@ -76,7 +76,7 @@ data class SomaChannel(
 data class SomaChannels(val channels: List<SomaChannel>)
 
 
-class SomaFMLibrary(val context: Context) : MediaLibrary {
+class SomaFMLibrary(val context: Context) : AudioLibrary {
 
   companion object : SingletonHolder<SomaFMLibrary, Context>(::SomaFMLibrary)
 
@@ -109,7 +109,7 @@ class SomaFMLibrary(val context: Context) : MediaLibrary {
         return null
       }
       log.dtrace("playlist: $playlistURL -> $audioURL")
-      UriMediaItem.Builder(audioURL.toUri())
+      UriMediaItem.Builder(mediaID.toUri())
           .setStartPosition(0L).setEndPosition(-1L)
           .setMetadata(metadata
               .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audioURL)

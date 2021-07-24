@@ -27,6 +27,7 @@ data class AudioTrack(
 
 fun AudioTrack.toMediaMetadata(): MediaMetadata.Builder = MediaMetadata.Builder()
     .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, id)
+    .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, id)
     .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title)
     .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, subTitle)
     .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)

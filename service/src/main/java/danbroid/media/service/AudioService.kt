@@ -10,9 +10,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.media.AudioAttributesCompat
-import androidx.media2.common.*
+import androidx.media2.common.MediaItem
+import androidx.media2.common.MediaMetadata
+import androidx.media2.common.SessionPlayer
+import androidx.media2.common.UriMediaItem
 import androidx.media2.session.*
 import androidx.palette.graphics.Palette
 import androidx.versionedparcelable.ParcelUtils
@@ -40,6 +44,7 @@ class AudioService : MediaSessionService() {
   companion object {
     const val PACKAGE = "danbroid.media.service"
     const val ACTION_PLAY_ITEM = "$PACKAGE.PLAY_ITEM"
+    const val ACTION_ARG_MEDIA_ITEM = "$PACKAGE.MEDIA_ITEM"
 
     const val METADATA_EXTRAS_KEY_CACHED_ICON = "$PACKAGE.METADATA_EXTRAS_KEY_CACHED_ICON"
     //const val COMMAND_CLEAR_PLAYLIST = "$PACKAGE.CLEAR_PLAYLIST"
@@ -365,22 +370,28 @@ class AudioService : MediaSessionService() {
 
 
     override fun onSetMediaUri(session: MediaSession, controller: MediaSession.ControllerInfo, uri: Uri, extras: Bundle?): Int {
-      log.ddebug("onSetMediaUri() $uri")
+      log.debug("onSetMediaUri() $uri")
 
+      val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, ACTION_ARG_MEDIA_ITEM) }
+      //log.ddebug("metadata: ${metadata.toDebugString()}")
 
-      val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, "item") }
-      log.ddebug("metadata: ${metadata.toDebugString()}")
-
-      val item = UriMediaItem.Builder(uri).setStartPosition(-1L)
+      val item = UriMediaItem.Builder(uri).setStartPosition(0L)
           .setEndPosition(-1L)
           .setMetadata(metadata)
           .build()
 
-
-      session.player.addPlaylistItem(Integer.MAX_VALUE, item).then {
+      loadIcon(item)
+      log.trace("adding playlist item ...")
+      session.player.addPlaylistItem(0, item).then {
         log.dtrace("added item to playlist: $it")
+        session.player.prepare().then {
+          log.trace("got $it calling play:")
+          session.player.play().then {
+            log.trace("play received $it")
+          }
+        }
       }
-
+      return SessionResult.RESULT_SUCCESS
 
 /*
       val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, "item") }
@@ -409,20 +420,21 @@ class AudioService : MediaSessionService() {
       }
 */
 
-      return super.onSetMediaUri(session, controller, uri, extras)
+      // return super.onSetMediaUri(session, controller, uri, extras)
     }
 
     override fun onCreateMediaItem(session: MediaSession, controller: MediaSession.ControllerInfo, mediaId: String): MediaItem? {
-      log.debug("onCreateMediaItem() $mediaId")
-
+      log.error("onCreateMediaItem() $mediaId")
+      return super.onCreateMediaItem(session, controller, mediaId)
+/*
       return runBlocking {
         audioServiceConfig.library.loadItem(mediaId)
-      }?.also { loadIcon(it) } ?: super.onCreateMediaItem(session, controller, mediaId)
+      }?.also { loadIcon(it) } ?: super.onCreateMediaItem(session, controller, mediaId)*/
     }
 
 
     override fun onCommandRequest(session: MediaSession, controller: MediaSession.ControllerInfo, command: SessionCommand): Int {
-      log.debug("onCommandRequest() ${command.commandCode}:${command.customAction}:extras:${command.customExtras}")
+      //log.debug("onCommandRequest() ${command.commandCode}:${command.customAction}:extras:${command.customExtras}")
       if (session.player.playerState == SessionPlayer.PLAYER_STATE_ERROR) {
         log.info("in the error state suppresion reason: ${exoPlayer.playbackSuppressionReason} error: ${exoPlayer.playerError}")
         //session.player.prepare()
@@ -457,8 +469,32 @@ class AudioService : MediaSessionService() {
     override fun onCustomCommand(session: MediaSession, controller: MediaSession.ControllerInfo, customCommand: SessionCommand, args: Bundle?): SessionResult {
       log.debug("onCustomCommand(): ${customCommand.commandCode}:${customCommand.customAction}:extras:${customCommand.customExtras.toDebugString()} args: ${args.toDebugString()}")
 
+      if (customCommand.customAction == ACTION_PLAY_ITEM) {
+        val metadata = ParcelUtils.getVersionedParcelable<MediaMetadata>(args!!, ACTION_ARG_MEDIA_ITEM)!!
+        log.dtrace("found metadata $metadata")
+        val uri = metadata.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()
+        //val uri = metadata.getString(MediaMetadata.METADATA_KEY_MEDIA_ID)!!.toUri()
 
-      return SessionResult(BaseResult.RESULT_ERROR_NOT_SUPPORTED, null)
+
+        val mediaItem = UriMediaItem.Builder(uri)
+            .setStartPosition(0).setEndPosition(-1L)
+            .setMetadata(metadata)
+            .build()
+
+        loadIcon(mediaItem)
+
+        log.dtrace("adding playlist item.. with uri: ${mediaItem.uri}")
+        session.player.addPlaylistItem(Int.MAX_VALUE, mediaItem).then {
+          log.dtrace("addToPlaylistItem returned ${it.successfull}")
+        }
+
+
+        return SessionResult(SessionResult.RESULT_SUCCESS, null)
+      }
+
+      return super.onCustomCommand(session, controller, customCommand, args)
+
+      //return SessionResult(BaseResult.RESULT_ERROR_NOT_SUPPORTED, null)
       //     return SessionResult(SessionResult.RESULT_SUCCESS, null)
     }
   }

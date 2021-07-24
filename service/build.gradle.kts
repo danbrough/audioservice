@@ -108,9 +108,10 @@ dependencies {
   implementation("androidx.core:core-ktx:_")
 
   implementation("androidx.fragment:fragment-ktx:_")
-  implementation("androidx.media2:media2-common:_")
-  implementation("androidx.media2:media2-session:_")
+  api("androidx.media2:media2-common:_")
+  api("androidx.media2:media2-session:_")
 
+  implementation("org.jetbrains.kotlin:kotlin-reflect:_")
 
   //implementation(AndroidX.media2.session)
 //  implementation(project(":session"))
@@ -120,7 +121,9 @@ dependencies {
   //implementation(project(":exomedia2"))
 
 
-  api(AndroidX.concurrent.futures)
+  //api(AndroidX.concurrent.futures)
+  api("com.google.guava:guava:30.1.1-android")
+
   //api(AndroidX.media2.exoplayer)
   implementation(Google.android.material)
   // implementation("com.google.guava:guava:_")

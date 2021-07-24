@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
@@ -14,15 +13,12 @@ import androidx.media2.common.SubtitleData
 import androidx.media2.session.*
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.media.service.AudioService
-import danbroid.media.service.buffState
-import danbroid.media.service.playerState
-import danbroid.media.service.toDebugString
+import danbroid.media.service.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
-class AudioClient(context: Context) {
+open class AudioClient(context: Context) {
 
   enum class PlayerState {
     IDLE, PAUSED, PLAYING, ERROR;
@@ -87,43 +83,8 @@ class AudioClient(context: Context) {
         .build()
   }
 
-
-  fun playUri(uri: String) {
-    log.info("playUri() $uri")
-
-    mediaController.playlist?.indexOfFirst {
-      it.metadata?.mediaId == uri
-    }?.also {
-      if (it != -1) {
-        if (it != mediaController.currentMediaItemIndex) {
-          log.dtrace("skipping to existing item $it")
-
-          mediaController.skipToPlaylistItem(it).then {
-            if (it.resultCode == SessionResult.RESULT_SUCCESS) {
-              log.trace("calling play")
-              mediaController.play()
-            } else {
-              log.error("failed to skip to existing playlist item: ${it.customCommandResult}")
-            }
-          }
-        } else {
-          mediaController.play()
-        }
-        return
-      }
-    }
-
-    log.dinfo("adding to playlist")
-
-
-    mediaController.addPlaylistItem(Integer.MAX_VALUE, uri).then {
-      log.ddebug("result: $it code: ${it.resultCode} item:${it.mediaItem}")
-      if (mediaController.playerState != SessionPlayer.PLAYER_STATE_PLAYING) {
-        mediaController.play()
-      }
-    }
-  }
-
+  val playlist: List<MediaItem> = mediaController.playlist ?: emptyList()
+  val playlistIndex: Int = mediaController.currentMediaItemIndex
   var seeking = false
 
   fun seekTo(seconds: Float) {
@@ -134,6 +95,8 @@ class AudioClient(context: Context) {
       updatePosition()
     }
   }
+
+  fun play() = mediaController.play()
 
   fun togglePause() {
     log.debug("togglePause() state: ${mediaController.playerState.playerState}")
@@ -173,20 +136,19 @@ class AudioClient(context: Context) {
       }, mainExecutor)
 
 
-  fun test(item: MediaItem) {
-    log.dinfo("test(): $item")
+  fun addToPlaylist(item: MediaItem): ListenableFuture<SessionResult> {
+    log.debug("addToPlaylist(): $item")
 
-
-    val metadata = item.metadata
     val args = bundleOf()
 
-    ParcelUtils.putVersionedParcelable(args, "item", item.metadata)
-    mediaController.sendCustomCommand(SessionCommand(AudioService.ACTION_PLAY_ITEM, null), args).then {
-      log.debug("cmd sent")
-    }
-    val mediaURI =item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()
-    log.debug("mediaURI: $mediaURI")
-    mediaController.setMediaUri(mediaURI,args)
+
+
+    ParcelUtils.putVersionedParcelable(args, AudioService.ACTION_ARG_MEDIA_ITEM, item.metadata)
+    //return mediaController.setMediaUri(item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri(),args)
+    return mediaController.sendCustomCommand(SessionCommand(AudioService.ACTION_PLAY_ITEM, null), args)
+    /*val mediaURI = item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()
+    log.ddebug("mediaURI: $mediaURI")
+    mediaController.setMediaUri(mediaURI, args)*/
   }
 
   private val handler = Handler(Looper.getMainLooper())
@@ -207,6 +169,12 @@ class AudioClient(context: Context) {
     if (duration > 0 && mediaController.playerState == SessionPlayer.PLAYER_STATE_PLAYING)
       handler.postDelayed(updatePositionJob, 1000L)
 
+  }
+
+  fun playIfNotPlaying() {
+    log.trace("playIfNotPlaying()")
+    if (mediaController.playerState != SessionPlayer.PLAYER_STATE_PLAYING)
+      mediaController.play()
   }
 
   protected inner class ControllerCallback : MediaBrowser.BrowserCallback() {
@@ -326,10 +294,6 @@ class AudioClient(context: Context) {
 
 
 }
-
-
-val MediaItem?.duration: Long
-  get() = this?.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L
 
 
 private val log = danbroid.logging.getLog(AudioClient::class)

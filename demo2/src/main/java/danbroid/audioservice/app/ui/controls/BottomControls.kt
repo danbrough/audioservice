@@ -17,13 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media2.common.MediaMetadata
 import com.google.accompanist.insets.statusBarsPadding
+import danbroid.audioservice.app.DemoAudioClientModel
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.demo.formatDurationFromSeconds
 import danbroid.media.client.AudioClient
-import danbroid.media.client.AudioClientModel
 
 private val playerButtonSize = 46.dp
 
@@ -117,7 +117,7 @@ private fun ExtraControlsPreview() {
 }
 
 @Composable
-fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientModel = audioClientModel()) {
+fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientModel = audioClientModel()) {
   log.ddebug("BottomControls() expanded: $expanded")
 
   val player = audioClientModel.client

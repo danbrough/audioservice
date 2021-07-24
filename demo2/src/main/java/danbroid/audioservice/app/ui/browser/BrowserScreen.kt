@@ -18,12 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsHeight
+import danbroid.audioservice.app.DemoAudioClientModel
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.rnz.RNZLibrary
-import danbroid.media.client.AudioClientModel
 
 
-private fun createWebView(context: Context, audioClientModel: AudioClientModel): WebView {
+private fun createWebView(context: Context, audioClientModel: DemoAudioClientModel): WebView {
   val webView = WebView(context)
 
   // val cssRegex = "https://www.rnz.co.nz/x/application.*\\.css".toRegex().toPattern()
@@ -60,7 +60,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientModel):
         return WebResourceResponse(
             "text/javascript",
             "UTF-8",
-            context.resources.openRawResource(R.raw.rnzjs)
+            context.resources.openRawResource(R.raw.rnz)
         )
       }
       return null
@@ -128,7 +128,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientModel):
       if (progID == 0L) return
 
       activity.runOnUiThread {
-        audioClientModel.client.playUri(RNZLibrary.getProgrammeURI(progID))
+        audioClientModel.play(RNZLibrary.getProgrammeURI(progID))
         //TODO
         /* val progID = java.lang.Long.parseLong(data.substring(data.indexOf('X') + 1))
          MediaControllerCompat.getMediaController(activity).transportControls
@@ -150,7 +150,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientModel):
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun BrowserScreen(audioClientModel: AudioClientModel) {
+fun BrowserScreen(audioClientModel: DemoAudioClientModel) {
   log.dtrace("BrowserScreen()")
   Column {
     Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))

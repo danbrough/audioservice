@@ -25,7 +25,6 @@ import danbroid.audioservice.app.ui.browser.BrowserScreen
 import danbroid.audioservice.app.ui.home.MenuScreen
 import danbroid.audioservice.app.ui.menu.menuModel
 import danbroid.audioservice.app.ui.settings.SettingsScreen
-import danbroid.media.client.AudioClientModel
 import danbroid.util.format.uriEncode
 
 object Routes {
@@ -55,7 +54,7 @@ fun EnterAnimation(content: @Composable () -> Unit) {
 fun DemoNavGraph(
     modifier: Modifier,
     navController: NavHostController,
-    audioClientModel: AudioClientModel
+    audioClientModel: DemoAudioClientModel
 ) = NavHost(
     navController,
     modifier = modifier,
@@ -112,7 +111,7 @@ fun DemoNavGraph(
 
 
 @Composable
-private fun Menu(menuID: String, navController: NavHostController, audioClientModel: AudioClientModel) {
+private fun Menu(menuID: String, navController: NavHostController, audioClientModel: DemoAudioClientModel) {
   log.dwarn("Showing Menu screen id:${menuID}")
   val menuModel = menuModel(menuID)
   val menuState by menuModel.state.collectAsState()
@@ -149,12 +148,11 @@ private fun Menu(menuID: String, navController: NavHostController, audioClientMo
       log.trace("Opening menu ${menuItem.id}")
       navController.navigate("${Routes.MENU}?id=${menuItem.id.uriEncode()}", menuNavOptions)
     } else if (menuItem.isPlayable) {
-      log.trace("Playing item ${menuItem.id}")
-      audioClientModel.client.playUri(menuItem.id)
+      audioClientModel.play(menuItem.id)
     }
   }
-
 }
+
 
 
 @Composable
