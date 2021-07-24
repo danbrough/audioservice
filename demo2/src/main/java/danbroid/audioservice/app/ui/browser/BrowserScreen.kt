@@ -20,6 +20,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audioservice.app.DemoAudioClientModel
 import danbroid.audioservice.app.R
+import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.rnz.RNZLibrary
 
 
@@ -113,6 +114,7 @@ private fun createWebView(context: Context, audioClientModel: DemoAudioClientMod
         //activity.activityModel().playMedia("RNZ:${data.substring(data.indexOf('X') + 1)}")
         val code = data.substring(data.indexOf('X') + 1)
         //log.trace("playing $code")
+        context.audioClientModel().play("${RNZLibrary.URI_PREFIX_RNZ_PROGRAMME}/$code")
         // (activity as ActivityInterface).open("$URI_RNZ_PROGRAMME_PREFIX/$code")
       }
     }

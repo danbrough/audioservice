@@ -1,12 +1,9 @@
 package danbroid.demo.media2
 
 import android.app.Application
-import danbroid.demo.content.SomaFMLibrary
-import danbroid.demo.content.TestDataLibrary
 import danbroid.logging.AndroidLog
 import danbroid.logging.LogConfig
 import danbroid.media.service.Config
-import danbroid.media.service.audioServiceConfig
 import danbroid.util.resource.toResourceColour
 
 class DemoApplication : Application() {
@@ -33,7 +30,6 @@ class DemoApplication : Application() {
 
   override fun onCreate() {
     log.info("onCreate()")
-    audioServiceConfig.library.register(TestDataLibrary(), SomaFMLibrary.getInstance(this))
     Config.Notifications.apply {
       notificationColour = R.color.colorPrimary.toResourceColour(applicationContext)
       notificationIconTint = R.color.colorPrimaryLight.toResourceColour(applicationContext)
