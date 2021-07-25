@@ -195,19 +195,19 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
       callback: PlayerNotificationManager.BitmapCallback
   ): Bitmap? {
 
-    log.dwarn("getCurrentLargeIcon(): $currentMetadata")
+   // log.dwarn("getCurrentLargeIcon(): $currentMetadata")
     val metadata = service.session.player.currentMediaItem?.metadata
 
     metadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)?.also {
-      log.dwarn("FOUND EXISTING DISPLAY ICON")
+   //   log.dwarn("FOUND EXISTING DISPLAY ICON")
       return it
     }
 
 
-    metadata?.extras?.getParcelable<Bitmap>(AudioService.METADATA_EXTRAS_KEY_CACHED_ICON)?.also {
+/*    metadata?.extras?.getParcelable<Bitmap>(AudioService.METADATA_EXTRAS_KEY_CACHED_ICON)?.also {
       log.dwarn("FOUND EXISTING CACHED ICON")
       return it
-    }
+    }*/
 
     //log.derror("returning null for large icon")
     return null

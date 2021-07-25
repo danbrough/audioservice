@@ -6,4 +6,5 @@
   <string name="lbl_skip_next">Skip to next</string>
   <string name="pause">Pause</string>
   <string name="play">Play</string>
+  <string name="swipe_up">Swipe up</string>
 </resources>

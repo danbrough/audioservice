@@ -9,21 +9,23 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media2.common.MediaMetadata
 import com.google.accompanist.insets.statusBarsPadding
+import danbroid.audio.client.AudioClient
 import danbroid.audioservice.app.DemoAudioClientModel
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.demo.formatDurationFromSeconds
-import danbroid.audio.client.AudioClient
 
 private val playerButtonSize = 46.dp
 
@@ -46,27 +48,40 @@ private fun BottomControls(
     skipToPrev: () -> Unit = {}, togglePlay: () -> Unit = {}, skipToNext: () -> Unit = {}) {
 
   Column {
-    Row {
-      if (hasPrevious)
-        PlayerButton(Icons.Default.SkipPrevious, stringResource(R.string.lbl_skip_prev), skipToPrev)
-      else
-        Spacer(Modifier.width(playerButtonSize))
+    Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
 
-      if (isPlaying)
-        PlayerButton(Icons.Default.Pause, stringResource(R.string.pause), togglePlay)
-      else
-        PlayerButton(Icons.Default.PlayArrow, stringResource(R.string.play), togglePlay)
+      Row {
+        if (hasPrevious)
+          PlayerButton(Icons.Default.SkipPrevious, stringResource(R.string.lbl_skip_prev), skipToPrev)
+        else
+          Spacer(Modifier.width(playerButtonSize))
 
-      if (hasNext)
-        PlayerButton(Icons.Default.SkipNext, stringResource(R.string.lbl_skip_next), skipToNext)
-      else
-        Spacer(Modifier.width(playerButtonSize))
+        if (isPlaying)
+          PlayerButton(Icons.Default.Pause, stringResource(R.string.pause), togglePlay)
+        else
+          PlayerButton(Icons.Default.PlayArrow, stringResource(R.string.play), togglePlay)
 
-      Column(Modifier.fillMaxWidth()) {
-        Text(title ?: "", style = MaterialTheme.typography.subtitle1)
-        Text(subTitle
-            ?: "", style = MaterialTheme.typography.subtitle2, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        if (hasNext)
+          PlayerButton(Icons.Default.SkipNext, stringResource(R.string.lbl_skip_next), skipToNext)
+        else
+          Spacer(Modifier.width(playerButtonSize))
+
+        Column(horizontalAlignment = Alignment.Start) {
+          Text(title ?: "", style = MaterialTheme.typography.subtitle1)
+          Text(subTitle
+              ?: "", style = MaterialTheme.typography.subtitle2, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        }
+
       }
+
+
+
+      Icon(
+          painterResource(R.drawable.ic_arrow_up),
+          stringResource(R.string.swipe_up),
+          tint = MaterialTheme.colors.secondary,
+          modifier = Modifier.size(24.dp).padding(end=4.dp)
+      )
     }
 
   }
@@ -77,7 +92,7 @@ private fun BottomControls(
 private fun BottomControlsPreview() {
   DemoTheme {
     CompositionLocalProvider(LocalContentColor provides contentColorFor(MaterialTheme.colors.primary)) {
-      Column(Modifier.background(MaterialTheme.colors.primary).width(300.dp)) {
+      Column(Modifier.background(MaterialTheme.colors.primary).width(400.dp)) {
         BottomControls("The Title", "The Subtitle", true, true, true)
       }
     }

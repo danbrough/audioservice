@@ -15,8 +15,8 @@ val log = LogConfig.let {
 
   it.GET_LOG = {
     when{
-      it.startsWith("danbroid.media.client") -> clientLog
-      it.startsWith("danbroid.media.service") -> serviceLog
+      it.startsWith("danbroid.audio.client") -> clientLog
+      it.startsWith("danbroid.audio.service") -> serviceLog
       else -> demoLog
     }
   }
@@ -24,6 +24,3 @@ val log = LogConfig.let {
 }
 
 
-object Logging {
-  val jlog = log
-}

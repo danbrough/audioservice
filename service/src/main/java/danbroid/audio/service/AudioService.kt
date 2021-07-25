@@ -46,7 +46,7 @@ class AudioService : MediaSessionService() {
     const val ACTION_PLAY_ITEM = "$PACKAGE.PLAY_ITEM"
     const val ACTION_ARG_MEDIA_ITEM = "$PACKAGE.MEDIA_ITEM"
 
-    const val METADATA_EXTRAS_KEY_CACHED_ICON = "$PACKAGE.METADATA_EXTRAS_KEY_CACHED_ICON"
+    //const val METADATA_EXTRAS_KEY_CACHED_ICON = "$PACKAGE.METADATA_EXTRAS_KEY_CACHED_ICON"
     //const val COMMAND_CLEAR_PLAYLIST = "$PACKAGE.CLEAR_PLAYLIST"
 
     const val MEDIA_METADATA_KEY_BITRATE =
@@ -248,7 +248,7 @@ class AudioService : MediaSessionService() {
               notification: Notification,
               ongoing: Boolean
           ) {
-            log.warn("onNotificationPosted() ongoing:$ongoing")
+            log.warn("onNotificationPosted() ongoing:$ongoing mediaItem:${session.player.currentMediaItem?.metadata?.mediaId}")
             if (ongoing) {
               if (!foreground) {
                 log.warn("starting foreground ..")
@@ -267,6 +267,14 @@ class AudioService : MediaSessionService() {
                 foreground = false
               }
             }
+
+            notificationManager.setColorized(true)
+            log.dtrace("metadata: ${session.player.currentMediaItem?.metadata.toDebugString()}")
+            val dominantColor = session.player.currentMediaItem?.metadata?.extras?.getInt(MEDIA_METADATA_KEY_DOMINANT_COLOR, Config.Notifications.notificationColour)
+                ?: Config.Notifications.notificationColour
+            log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
+            notificationManager.setUseChronometer(session.player.currentMediaItem.duration.let {  it > 0L && it != Long.MAX_VALUE })
+            notificationManager.setColor(dominantColor)
           }
         })
 
@@ -314,8 +322,8 @@ class AudioService : MediaSessionService() {
 
 
   override fun onUpdateNotification(session: MediaSession): MediaNotification? {
-    val notification = super.onUpdateNotification(session)
-    log.derror("onUpdateNotification() $notification")
+    log.dtrace("onUpdateNotification()")
+    //val notification = super.onUpdateNotification(session)
 
     return null
   }
@@ -352,7 +360,7 @@ class AudioService : MediaSessionService() {
           extras.putInt(MEDIA_METADATA_KEY_VIBRANT_COLOR, palette.getVibrantColor(Color.TRANSPARENT))
         }
 
-        extras.putParcelable(METADATA_EXTRAS_KEY_CACHED_ICON, bitmap)
+        //extras.putParcelable(METADATA_EXTRAS_KEY_CACHED_ICON, bitmap)
         builder.putBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON, bitmap)
         mediaItem.metadata = builder.build()
       }
