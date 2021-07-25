@@ -138,17 +138,9 @@ open class AudioClient(context: Context) {
 
   fun addToPlaylist(item: MediaItem): ListenableFuture<SessionResult> {
     log.debug("addToPlaylist(): $item")
-
     val args = bundleOf()
-
-
-
     ParcelUtils.putVersionedParcelable(args, AudioService.ACTION_ARG_MEDIA_ITEM, item.metadata)
-    //return mediaController.setMediaUri(item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri(),args)
-    return mediaController.sendCustomCommand(SessionCommand(AudioService.ACTION_PLAY_ITEM, null), args)
-    /*val mediaURI = item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()
-    log.ddebug("mediaURI: $mediaURI")
-    mediaController.setMediaUri(mediaURI, args)*/
+    return mediaController.sendCustomCommand(SessionCommand(AudioService.ACTION_ADD_TO_PLAYLIST, null), args)
   }
 
   private val handler = Handler(Looper.getMainLooper())

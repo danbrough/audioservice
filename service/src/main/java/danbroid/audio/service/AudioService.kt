@@ -43,7 +43,7 @@ class AudioService : MediaSessionService() {
 
   companion object {
     const val PACKAGE = "danbroid.media.service"
-    const val ACTION_PLAY_ITEM = "$PACKAGE.PLAY_ITEM"
+    const val ACTION_ADD_TO_PLAYLIST = "$PACKAGE.ACTION_ADD_TO_PLAYLIST"
     const val ACTION_ARG_MEDIA_ITEM = "$PACKAGE.MEDIA_ITEM"
 
     //const val METADATA_EXTRAS_KEY_CACHED_ICON = "$PACKAGE.METADATA_EXTRAS_KEY_CACHED_ICON"
@@ -122,6 +122,7 @@ class AudioService : MediaSessionService() {
 
     sessionPlayer.registerPlayerCallback(callbackExecutor, object : SessionPlayer.PlayerCallback() {
 
+      val debug = false
 
 /*      override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem) {
         log.warn("onCurrentMediaItemChanged() $item")
@@ -129,40 +130,40 @@ class AudioService : MediaSessionService() {
 
       override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem?) {
         item ?: return
-        log.debug("onCurrentMediaItemChanged() $item")
-        loadIcon(item)
+        if (debug) log.debug("onCurrentMediaItemChanged() $item")
+      //  loadIcon(item)
       }
 
       override fun onBufferingStateChanged(player: SessionPlayer, item: MediaItem?, buffState: Int) {
         super.onBufferingStateChanged(player, item, buffState)
-        log.warn("onBufferingStateChanged() endPosition:${item?.endPosition}")
+        if (debug) log.debug("onBufferingStateChanged() endPosition:${item?.endPosition}")
       }
 
       override fun onPlaybackCompleted(player: SessionPlayer) {
-        log.warn("onPlaybackCompleted()")
+        if (debug) log.debug("onPlaybackCompleted()")
       }
 
       override fun onPlayerStateChanged(player: SessionPlayer, playerState: Int) {
-        log.warn("onPlayerStateChanged() $playerState = ${playerState.playerState} endPosition: ${player.currentMediaItem?.endPosition}")
+        if (debug) log.debug("onPlayerStateChanged() $playerState = ${playerState.playerState} endPosition: ${player.currentMediaItem?.endPosition}")
       }
 
       override fun onPlaylistMetadataChanged(player: SessionPlayer, metadata: MediaMetadata?) {
-        log.warn("onPlaylistMetadataChanged() $metadata position: ${player.currentPosition} endPosition:${player.currentMediaItem?.endPosition} duration:${player.duration}")
+        if (debug) log.debug("onPlaylistMetadataChanged() $metadata position: ${player.currentPosition} endPosition:${player.currentMediaItem?.endPosition} duration:${player.duration}")
       }
 
       override fun onTrackSelected(player: SessionPlayer, trackInfo: SessionPlayer.TrackInfo) {
-        log.warn("onTrackSelected() ${trackInfo.format}")
+        if (debug) log.debug("onTrackSelected() ${trackInfo.format}")
       }
 
       override fun onTrackDeselected(player: SessionPlayer, trackInfo: SessionPlayer.TrackInfo) {
-        log.warn("onTrackDeselected() $trackInfo")
+        if (debug) log.debug("onTrackDeselected() $trackInfo")
       }
 
       override fun onTracksChanged(
           player: SessionPlayer,
           tracks: MutableList<SessionPlayer.TrackInfo>
       ) {
-        log.warn("onTracksChanged()")
+        if (debug) log.debug("onTracksChanged()")
       }
     })
   }
@@ -273,7 +274,7 @@ class AudioService : MediaSessionService() {
             val dominantColor = session.player.currentMediaItem?.metadata?.extras?.getInt(MEDIA_METADATA_KEY_DOMINANT_COLOR, Config.Notifications.notificationColour)
                 ?: Config.Notifications.notificationColour
             log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
-            notificationManager.setUseChronometer(session.player.currentMediaItem.duration.let {  it > 0L && it != Long.MAX_VALUE })
+            notificationManager.setUseChronometer(session.player.currentMediaItem.duration.let { it > 0L && it != Long.MAX_VALUE })
             notificationManager.setColor(dominantColor)
           }
         })
@@ -456,7 +457,7 @@ class AudioService : MediaSessionService() {
 
         super.onConnect(session, controller)!!.let {
           SessionCommandGroup.Builder(it)
-              .addCommand(SessionCommand(ACTION_PLAY_ITEM, null))
+              .addCommand(SessionCommand(ACTION_ADD_TO_PLAYLIST, null))
               .build()
         }
 
@@ -477,7 +478,7 @@ class AudioService : MediaSessionService() {
     override fun onCustomCommand(session: MediaSession, controller: MediaSession.ControllerInfo, customCommand: SessionCommand, args: Bundle?): SessionResult {
       log.debug("onCustomCommand(): ${customCommand.commandCode}:${customCommand.customAction}:extras:${customCommand.customExtras.toDebugString()} args: ${args.toDebugString()}")
 
-      if (customCommand.customAction == ACTION_PLAY_ITEM) {
+      if (customCommand.customAction == ACTION_ADD_TO_PLAYLIST) {
         val metadata = ParcelUtils.getVersionedParcelable<MediaMetadata>(args!!, ACTION_ARG_MEDIA_ITEM)!!
         log.dtrace("found metadata $metadata")
         val uri = metadata.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()

@@ -31,7 +31,7 @@ android {
       useSupportLibrary = true
     }
   }
-    signingConfigs {
+  signingConfigs {
     register("release") {
       storeFile = file("/home/dan/.android/busapp_keystore2")
       keyAlias = "wellybusapp"
@@ -131,6 +131,7 @@ dependencies {
   implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
   implementation("androidx.activity:activity-compose:1.3.0-rc02")
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+  implementation("androidx.constraintlayout:constraintlayout-compose:_")
 
   implementation(AndroidX.compose.ui)
   implementation(AndroidX.compose.ui.text)
