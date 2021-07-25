@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="test">Test</string>
+  <string name="playlist">Playlist</string>
+  <string name="playlist_current">Current Playlist</string>
+  <string name="playlist_empty">Playlist is empty</string>
 </resources>

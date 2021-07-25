@@ -18,24 +18,25 @@ const val URI_CONTENT = "$URI_PREFIX/content"
 
 const val URI_SETTINGS = "$URI_PREFIX/settings"
 const val URI_BROWSER = "$URI_PREFIX/browser"
+const val URI_PLAYLIST = "$URI_PREFIX/playlist"
 
 suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBuilder(this).apply {
   id = URI_CONTENT
   title = rootTitle
 
   menu {
+    id = "somafm://poptron"
     title = "PopTron"
-    onClicked = {
-      context.context.audioClientModel().play("somafm://poptron")
-    }
+    isPlayable = true
     iconURI = AppIcon.RADIO
   }
+
   menu {
-    title = "BRFM"
-    onClicked = {
-      context.context.audioClientModel().play("somafm://brfm")
-    }
-    iconURI = AppIcon.RADIO
+    id = URI_PLAYLIST
+    title = getString(R.string.playlist)
+    subtitle = if (context.context.audioClientModel().client.playlist.isEmpty())
+      getString(R.string.playlist_empty) else getString(R.string.playlist_current)
+    iconURI = AppIcon.PLAYLIST
   }
 
   menu {

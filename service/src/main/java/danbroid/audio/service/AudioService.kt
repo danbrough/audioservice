@@ -131,7 +131,7 @@ class AudioService : MediaSessionService() {
       override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem?) {
         item ?: return
         if (debug) log.debug("onCurrentMediaItemChanged() $item")
-      //  loadIcon(item)
+        //  loadIcon(item)
       }
 
       override fun onBufferingStateChanged(player: SessionPlayer, item: MediaItem?, buffState: Int) {
@@ -268,11 +268,17 @@ class AudioService : MediaSessionService() {
                 foreground = false
               }
             }
-
-            notificationManager.setColorized(true)
+            //etStyle(androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle())
+            // notificationManager.setColorized(true)
             log.dtrace("metadata: ${session.player.currentMediaItem?.metadata.toDebugString()}")
-            val dominantColor = session.player.currentMediaItem?.metadata?.extras?.getInt(MEDIA_METADATA_KEY_DOMINANT_COLOR, Config.Notifications.notificationColour)
-                ?: Config.Notifications.notificationColour
+            val extras = session.player.currentMediaItem?.metadata?.extras
+            var dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_MUTED_COLOR,Color.TRANSPARENT)
+                ?: Color.TRANSPARENT
+            if (dominantColor == Color.TRANSPARENT)
+              dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_COLOR, Color.TRANSPARENT)
+                  ?: Color.TRANSPARENT
+            if (dominantColor == Color.TRANSPARENT) dominantColor = Config.Notifications.notificationColour
+
             log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
             notificationManager.setUseChronometer(session.player.currentMediaItem.duration.let { it > 0L && it != Long.MAX_VALUE })
             notificationManager.setColor(dominantColor)
@@ -282,35 +288,6 @@ class AudioService : MediaSessionService() {
     notificationManager.setPlayer(exoPlayer)
 
     exoPlayer.addAnalyticsListener(ExoAnalyticsListener())
-
-
-    /* exoPlayer.addListener(
-         object : Player.Listener {
-           val listenerDebug = false
-
-           override fun onMetadata(metadata: Metadata) {
-             if (listenerDebug) log.debug("Listener.onMetadata() $metadata")
-           }
-
-           override fun onPlayWhenReadyChanged(
-               playWhenReady: Boolean, @Player.PlayWhenReadyChangeReason
-               reason: Int
-           ) {
-             if (listenerDebug) log.debug("Listener.onPlayWhenReadyChanged(): ready:$playWhenReady} reason:$reason : ${reason.playWhenReadyChangeReason}")
-           }
-
-           override fun onPlaybackStateChanged(@Player.State state: Int) {
-             if (listenerDebug) log.debug("Listener.onPlaybackStateChanged(): state:$state = ${state.exoPlayerState}")
-           }
-
-           override fun onIsLoadingChanged(isLoading: Boolean) {
-             if (listenerDebug) log.debug("Listener.onIsLoadingChanged() $isLoading")
-           }
-         })
-         )
- */
-
-
 
 
     return exoPlayer

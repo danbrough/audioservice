@@ -113,6 +113,7 @@ fun createNotificationManager(
         }
         it.setUseNextActionInCompactView(true)
         it.setUsePreviousActionInCompactView(true)
+        it.setColorized(true)
       }
 
 /*  return object : PlayerNotificationManager(

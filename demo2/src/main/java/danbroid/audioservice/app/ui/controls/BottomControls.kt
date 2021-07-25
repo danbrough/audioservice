@@ -9,7 +9,9 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,6 +22,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.media2.common.MediaMetadata
 import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audio.client.AudioClient
+import danbroid.audio.service.AudioService
 import danbroid.audioservice.app.DemoAudioClientModel
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
@@ -51,15 +54,15 @@ private fun BottomControls(
     val (button1, button2, button3, text1, text2, upArrow) = createRefs()
 
     val buttonModifier = Modifier.size(46.dp)
-    val button1Modifier = buttonModifier.constrainAs(button1){
-      start.linkTo(parent.start,margin = 4.dp)
+    val button1Modifier = buttonModifier.constrainAs(button1) {
+      start.linkTo(parent.start, margin = 4.dp)
       top.linkTo(parent.top)
     }
-    val button2Modifier = buttonModifier.constrainAs(button2){
+    val button2Modifier = buttonModifier.constrainAs(button2) {
       start.linkTo(button1.end)
       top.linkTo(button1.top)
     }
-    val button3Modifier = buttonModifier.constrainAs(button3){
+    val button3Modifier = buttonModifier.constrainAs(button3) {
       start.linkTo(button2.end)
       top.linkTo(button2.top)
     }
@@ -102,7 +105,7 @@ private fun BottomControls(
         painterResource(if (expanded) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up),
         stringResource(R.string.swipe_up),
         tint = MaterialTheme.colors.secondary,
-        modifier = Modifier.size(24.dp).constrainAs(upArrow) {
+        modifier = Modifier.size(28.dp).constrainAs(upArrow) {
           end.linkTo(parent.end, margin = 4.dp)
           top.linkTo(parent.top)
         }
@@ -174,14 +177,35 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientM
 
   val modifier = if (expanded) Modifier.statusBarsPadding() else Modifier
 
+
+
   Column(modifier = modifier) {
     BottomControls(
         title, subTitle,
         queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext, expanded,
         player::skipToPrev, player::togglePause, player::skipToNext
     )
-    if (expanded) {
 
+
+    if (false)
+      currentItem?.metadata?.extras?.also { extras ->
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(20.dp)) {
+          val colorModifier = Modifier.size(12.dp)
+          listOf(
+              AudioService.MEDIA_METADATA_KEY_DARK_COLOR,
+              AudioService.MEDIA_METADATA_KEY_LIGHT_COLOR,
+              AudioService.MEDIA_METADATA_KEY_DARK_MUTED_COLOR,
+              AudioService.MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR,
+              AudioService.MEDIA_METADATA_KEY_DOMINANT_COLOR,
+              AudioService.MEDIA_METADATA_KEY_VIBRANT_COLOR,
+          ).forEach {
+            Box(modifier = colorModifier.background(Color(extras.getInt(it, android.graphics.Color.TRANSPARENT))))
+          }
+        }
+      }
+
+
+    if (expanded) {
       if (playPosition.duration > 0L) {
         ExtraControls(value, playPosition.duration, {
           log.dtrace("value: $it")
@@ -196,7 +220,6 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientM
 
     }
   }
-
 }
 
 
