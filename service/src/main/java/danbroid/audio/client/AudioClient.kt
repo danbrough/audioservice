@@ -1,4 +1,4 @@
-package danbroid.media.client
+package danbroid.audio.client
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,7 @@ import androidx.media2.common.SubtitleData
 import androidx.media2.session.*
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.media.service.*
+import danbroid.audio.service.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

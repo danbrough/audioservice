@@ -23,7 +23,7 @@ import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.demo.formatDurationFromSeconds
-import danbroid.media.client.AudioClient
+import danbroid.audio.client.AudioClient
 
 private val playerButtonSize = 46.dp
 

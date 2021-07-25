@@ -10,7 +10,7 @@ import androidx.media2.common.UriMediaItem
 import danbroid.audio.library.AudioLibrary
 import danbroid.audioservice.app.menu.MenuItem
 import danbroid.demo.rnz.RNZProgramme
-import danbroid.media.service.util.httpSupport
+import danbroid.audio.service.util.httpSupport
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString

@@ -3,7 +3,7 @@ package danbroid.demo.content
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.media2.common.MediaMetadata
-import danbroid.media.service.AudioService
+import danbroid.audio.service.AudioService
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -35,7 +35,6 @@ fun AudioTrack.toMediaMetadata(): MediaMetadata.Builder = MediaMetadata.Builder(
     .setExtras(bundleOf())
 
     .also { builder ->
-
       if (iconURI != null) builder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, iconURI)
 
       var _bundle: Bundle? = null
@@ -47,34 +46,7 @@ fun AudioTrack.toMediaMetadata(): MediaMetadata.Builder = MediaMetadata.Builder(
       }
       if (bitrate != -1)
         bundle().putInt(AudioService.MEDIA_METADATA_KEY_BITRATE, bitrate)
-
     }
 
 
-/*
-private fun Metadata.parseMetadata(audioTrackMD: AudioTrack): AudioTrack {
-  (0 until this.length()).forEach {
-    val entry = get(it)
-    when (entry) {
-      is IcyInfo -> {
-        entry.title.also {
-          if (!it.isNullOrEmpty())
-            audioTrackMD.subtitle = it
-        }
-      }
-      is IcyHeaders -> {
-        entry.name.also {
-          if (!it.isNullOrEmpty())
-            audioTrackMD.subtitle = it
-        }
-        entry.bitrate.also {
-          if (it != -1)
-            audioTrackMD.bitrate = it
-        }
-      }
-    }
-  }
-  return audioTrackMD
-}
 
-fun Metadata.toTrackMetadata(md: MediaMetadata) = parseMetadata(AudioTrack(md))*/

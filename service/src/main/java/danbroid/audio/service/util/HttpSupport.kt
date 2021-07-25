@@ -1,7 +1,7 @@
-package danbroid.media.service.util
+package danbroid.audio.service.util
 
 import android.content.Context
-import danbroid.media.service.audioServiceConfig
+import danbroid.audio.service.audioServiceConfig
 import danbroid.util.misc.SingletonHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

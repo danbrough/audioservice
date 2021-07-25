@@ -1,4 +1,4 @@
-package danbroid.media.service
+package danbroid.audio.service
 
 import android.content.Context
 import androidx.media2.common.MediaItem
@@ -6,7 +6,7 @@ import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.session.SessionResult
 import com.google.android.exoplayer2.Player
-import danbroid.media.service.util.httpSupport
+import danbroid.audio.service.util.httpSupport
 import okhttp3.CacheControl
 import java.util.concurrent.TimeUnit
 

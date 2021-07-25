@@ -1,4 +1,4 @@
-package danbroid.media.service
+package danbroid.audio.service
 
 import android.content.Context
 import android.graphics.Bitmap

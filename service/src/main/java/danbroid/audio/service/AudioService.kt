@@ -1,4 +1,4 @@
-package danbroid.media.service
+package danbroid.audio.service
 
 import android.app.Notification
 import android.content.ComponentName
@@ -35,7 +35,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationLi
 import com.google.android.exoplayer2.upstream.BandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.media.BuildConfig
+import danbroid.audio.BuildConfig
 import kotlinx.coroutines.*
 import java.util.concurrent.Executor
 
@@ -339,7 +339,7 @@ class AudioService : MediaSessionService() {
           builder.setExtras(it)
         }
 
-        if (bitmap != defaultIcon && !extras.containsKey(METADATA_EXTRAS_KEY_CACHED_ICON)) {
+        if (bitmap != defaultIcon && !extras.containsKey(MEDIA_METADATA_KEY_LIGHT_COLOR)) {
           log.dwarn("generating palette............................................")
 
           val palette = Palette.from(bitmap).generate()

@@ -1,4 +1,4 @@
-package danbroid.media.service
+package danbroid.audio.service
 
 
 import android.app.Notification
@@ -13,10 +13,11 @@ import androidx.media2.common.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.util.NotificationUtil
-import danbroid.media.R
+import danbroid.audio.R
 
-class Config {
+object Config {
 
+  var PROJECT_VERSION = "0.0.0"
 
   object Notifications {
 
@@ -47,12 +48,12 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
 
 
   override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-    log.warn("onNotificationCancelled() byUser:$dismissedByUser")
+    log.dwarn("onNotificationCancelled() byUser:$dismissedByUser")
     if (dismissedByUser) {
-      log.warn("SHOULD STOP PLAYBACK")
+      log.dwarn("SHOULD STOP PLAYBACK")
     } else {
       if (serviceForeground) {
-        log.warn("stopping foreground ..")
+        log.dwarn("stopping foreground ..")
         service.stopForeground(true)
         serviceForeground = false
       }
@@ -67,7 +68,7 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
     //log.warn("onNotificationPosted() ongoing:$ongoing")
     if (ongoing) {
       if (!serviceForeground) {
-        log.debug("starting foreground ..")
+        log.dwarn("starting foreground ..")
         ContextCompat.startForegroundService(
             service.applicationContext,
             Intent(service.applicationContext, service.javaClass)
@@ -77,7 +78,7 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
       }
     } else {
       if (serviceForeground) {
-        log.debug("stopping foreground ..")
+        log.dwarn("stopping foreground ..")
         service.stopForeground(false)
         serviceForeground = false
       }
@@ -90,6 +91,7 @@ fun createNotificationManager(
     notificationID: Int = Config.Notifications.notificationID,
     notificationListener: PlayerNotificationManager.NotificationListener = NotificationListener(service)
 ): PlayerNotificationManager {
+  log.dwarn("createNotificationManager()")
 
   NotificationUtil.createNotificationChannel(
       service.applicationContext,
@@ -105,7 +107,7 @@ fun createNotificationManager(
       .setNotificationListener(notificationListener)
       .setSmallIconResourceId(Config.Notifications.statusBarIcon)
       .build().also {
-        it.setUseChronometer(true)
+        //it.setUseChronometer(true)
         if (Config.Notifications.notificationColour != 0) {
           it.setColor(Config.Notifications.notificationColour)
         }
@@ -193,16 +195,17 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
       callback: PlayerNotificationManager.BitmapCallback
   ): Bitmap? {
 
-    //log.dwarn("getCurrentLargeIcon(): $currentMetadata")
+    log.dwarn("getCurrentLargeIcon(): $currentMetadata")
+    val metadata = service.session.player.currentMediaItem?.metadata
 
-    currentMetadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)?.also {
-   //   log.derror("FOUND EXISTING DISPLAY ICON")
+    metadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)?.also {
+      log.dwarn("FOUND EXISTING DISPLAY ICON")
       return it
     }
 
 
-    currentMetadata?.extras?.getParcelable<Bitmap>(AudioService.METADATA_EXTRAS_KEY_CACHED_ICON)?.also {
-    //  log.derror("FOUND EXISTING CACHED ICON")
+    metadata?.extras?.getParcelable<Bitmap>(AudioService.METADATA_EXTRAS_KEY_CACHED_ICON)?.also {
+      log.dwarn("FOUND EXISTING CACHED ICON")
       return it
     }
 

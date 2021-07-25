@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.media2.common.SessionPlayer
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.library.RootAudioLibrary
-import danbroid.media.service.playerState
-import danbroid.media.service.successfull
+import danbroid.audio.service.playerState
+import danbroid.audio.service.successfull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

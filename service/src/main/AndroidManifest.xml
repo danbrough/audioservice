@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="danbroid.media">
+    package="danbroid.audio">
 
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.INTERNET" />
@@ -12,9 +12,9 @@
       android:usesCleartextTraffic="true"
       tools:targetApi="n">
     <service
-        android:name=".service.AudioService"
+        android:name="danbroid.audio.service.AudioService"
         android:exported="true"
-        android:process=":danbroid.media.service"
+        android:process=":danbroid.audio.service"
         tools:ignore="ExportedService">
       <intent-filter>
         <action android:name="androidx.media2.session.MediaSessionService" />

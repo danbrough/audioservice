@@ -1,4 +1,4 @@
-package danbroid.media.service
+package danbroid.audio.service
 
 import android.content.Context
 import danbroid.util.misc.SingletonHolder
