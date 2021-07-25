@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AppIcon {
-  SETTINGS, SAVINGS, AUDIO_TRACK, PANORAMA, BROWSER, RNZ_NEWS, FOLDER, RADIO;
+  SETTINGS, SAVINGS, AUDIO_TRACK, PANORAMA, BROWSER, RNZ_NEWS, FOLDER, RADIO,PLAYLIST;
 
   companion object {
     fun lookup(key: AppIcon) = when (key) {
@@ -23,6 +23,7 @@ enum class AppIcon {
       AppIcon.RNZ_NEWS -> "https://www.rnz.co.nz/brand-images/rnz-news.jpg"
       AppIcon.FOLDER -> R.drawable.ic_folder
       AppIcon.RADIO -> R.drawable.ic_radio
+      AppIcon.PLAYLIST -> R.drawable.ic_playlist
     }
   }
 }

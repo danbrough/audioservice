@@ -6,8 +6,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.media.client.AudioClient
-import danbroid.media.service.AudioService
+import danbroid.audio.client.AudioClient
+import danbroid.audio.service.AudioService
 
 open class AudioClientViewModel(context: Context) : ViewModel() {
 
@@ -27,8 +27,6 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
       _client.value.close()
     }
   }
-
-
 
 
   private val mainExecutor = ContextCompat.getMainExecutor(context)

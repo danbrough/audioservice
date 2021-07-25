@@ -81,7 +81,6 @@ class MenuBuilder(val context: MenuBuilderContext) {
 
   fun find(id: String): MenuBuilder? {
     log.dtrace("find() ${this.id} -> $id")
-    if (this.id == id) return this
     provides(id)?.also {
       log.dtrace("returning provider")
       return it

@@ -1,7 +1,7 @@
 package danbroid.audioservice.app
 
 import android.app.Application
-import danbroid.media.service.Config
+import danbroid.audio.service.Config
 import danbroid.util.resource.toResourceColour
 
 

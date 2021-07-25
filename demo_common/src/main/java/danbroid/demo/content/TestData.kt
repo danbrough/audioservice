@@ -100,6 +100,7 @@ val testTracks = testData {
     title = "Local OGG2"
     subTitle = "Local ogg file that wont play for you"
     id = "http://192.168.1.2/music/Wilco/2011%20The%20Whole%20Love/11%20-%20Whole%20Love.opus"
+    iconURI = "https://h1.danbrough.org/ipns/kitty.danbrough.org/cat6.jpg"
   }
 
 

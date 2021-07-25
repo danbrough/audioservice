@@ -41,29 +41,7 @@ fun MenuScreen(
     Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     LazyColumn {
       items(menus, { it.id }) { menu ->
-
         MenuListItem(menu, { menuItemClicked.invoke(menu) })
-        /* ListItem(
-             icon = {
-               menu.imageURI?.also {
-                 DemoImage(
-                     imageUrl = it,
-                     menu.title,
-                     modifier = imageModifier.background(Color.Green),
-                 )
-               } ?: Icon(
-                   Icons.Filled.Audiotrack,
-                   contentDescription = null,
-                   modifier = imageModifier,
-                   tint = MaterialTheme.colors.primary
-               )
-             },
-             text = { Text(menu.title) },
-             secondaryText = { Text(menu.subTitle, overflow = TextOverflow.Ellipsis, maxLines = 2) },
-             modifier = Modifier.clickable {
-               menuItemClicked.invoke(menu)
-             }
-         )*/
       }
     }
   }

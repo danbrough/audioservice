@@ -1,4 +1,4 @@
-package danbroid.media.client
+package danbroid.audio.client
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,7 @@ import androidx.media2.common.SubtitleData
 import androidx.media2.session.*
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.media.service.*
+import danbroid.audio.service.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -138,17 +138,9 @@ open class AudioClient(context: Context) {
 
   fun addToPlaylist(item: MediaItem): ListenableFuture<SessionResult> {
     log.debug("addToPlaylist(): $item")
-
     val args = bundleOf()
-
-
-
     ParcelUtils.putVersionedParcelable(args, AudioService.ACTION_ARG_MEDIA_ITEM, item.metadata)
-    //return mediaController.setMediaUri(item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri(),args)
-    return mediaController.sendCustomCommand(SessionCommand(AudioService.ACTION_PLAY_ITEM, null), args)
-    /*val mediaURI = item.metadata!!.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()
-    log.ddebug("mediaURI: $mediaURI")
-    mediaController.setMediaUri(mediaURI, args)*/
+    return mediaController.sendCustomCommand(SessionCommand(AudioService.ACTION_ADD_TO_PLAYLIST, null), args)
   }
 
   private val handler = Handler(Looper.getMainLooper())
