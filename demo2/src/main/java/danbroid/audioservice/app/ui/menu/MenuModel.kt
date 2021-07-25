@@ -13,7 +13,6 @@ import danbroid.audioservice.app.content.demoMenu
 import danbroid.audioservice.app.menu.MenuBuilder
 import danbroid.audioservice.app.menu.MenuBuilderContext
 import danbroid.audioservice.app.menu.MenuItem
-import danbroid.demo.content.AudioTrack
 import danbroid.util.misc.SingletonHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,4 +92,3 @@ fun menuModel(menuID: String) = viewModel<MenuModel>(factory = MenuModelFactory(
 private val log = danbroid.logging.getLog(MenuModel::class)
 
 
-fun AudioTrack.toMenuItem(): MenuItem = MenuItem(id, title, subTitle, iconURI)

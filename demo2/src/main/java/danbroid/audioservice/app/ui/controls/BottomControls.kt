@@ -27,15 +27,14 @@ import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.demo.formatDurationFromSeconds
 
-private val playerButtonSize = 46.dp
 
 @Composable
-private fun PlayerButton(imageVector: ImageVector, contentDescription: String = "", onClicked: () -> Unit = {}) {
-  IconButton(onClicked, modifier = Modifier.size(playerButtonSize)) {
+private fun PlayerButton(imageVector: ImageVector, contentDescription: String = "", modifier: Modifier = Modifier.size(42.dp), onClicked: () -> Unit = {}) {
+  IconButton(onClicked, modifier = modifier) {
     Icon(imageVector = imageVector,
         contentDescription = contentDescription,
         tint = MaterialTheme.colors.secondary,
-        modifier = Modifier.size(42.dp)
+        modifier = modifier
     )
   }
 }
@@ -47,59 +46,67 @@ private fun BottomControls(
     hasPrevious: Boolean, isPlaying: Boolean, hasNext: Boolean, expanded: Boolean,
     skipToPrev: () -> Unit = {}, togglePlay: () -> Unit = {}, skipToNext: () -> Unit = {}) {
 
-  Column {
 
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+  ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+    val (button1, button2, button3, text1, text2, upArrow) = createRefs()
 
-      if (hasPrevious)
-        PlayerButton(Icons.Default.SkipPrevious, stringResource(R.string.lbl_skip_prev), skipToPrev)
-      else
-        Spacer(Modifier.width(playerButtonSize))
-
-      if (isPlaying)
-        PlayerButton(Icons.Default.Pause, stringResource(R.string.pause), togglePlay)
-      else
-        PlayerButton(Icons.Default.PlayArrow, stringResource(R.string.play), togglePlay)
-
-      if (hasNext)
-        PlayerButton(Icons.Default.SkipNext, stringResource(R.string.lbl_skip_next), skipToNext)
-      else
-        Spacer(Modifier.width(playerButtonSize))
-
-      ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-        val (text1, text2, upArrow) = createRefs()
-
-
-        Text(
-            title ?: "",
-            style = MaterialTheme.typography.subtitle1,
-            modifier = Modifier.constrainAs(text1) {
-              start.linkTo(parent.start)
-              top.linkTo(parent.top)
-            }
-        )
-        Text(
-            subTitle ?: "",
-            style = MaterialTheme.typography.subtitle2,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.constrainAs(text2) {
-              start.linkTo(text1.start)
-              top.linkTo(text1.bottom, margin = 2.dp)
-            }
-        )
-        Icon(
-            painterResource(if (expanded) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up),
-            stringResource(R.string.swipe_up),
-            tint = MaterialTheme.colors.secondary,
-            modifier = Modifier.size(24.dp).constrainAs(upArrow) {
-              end.linkTo(parent.end, margin = 4.dp)
-              top.linkTo(parent.top)
-            }
-        )
-      }
+    val buttonModifier = Modifier.size(46.dp)
+    val button1Modifier = buttonModifier.constrainAs(button1){
+      start.linkTo(parent.start,margin = 4.dp)
+      top.linkTo(parent.top)
     }
+    val button2Modifier = buttonModifier.constrainAs(button2){
+      start.linkTo(button1.end)
+      top.linkTo(button1.top)
+    }
+    val button3Modifier = buttonModifier.constrainAs(button3){
+      start.linkTo(button2.end)
+      top.linkTo(button2.top)
+    }
+    if (hasPrevious)
+      PlayerButton(Icons.Default.SkipPrevious, stringResource(R.string.lbl_skip_prev), button1Modifier, skipToPrev)
+    else
+      Spacer(button1Modifier)
 
+    if (isPlaying)
+      PlayerButton(Icons.Default.Pause, stringResource(R.string.pause), button2Modifier, togglePlay)
+    else
+      PlayerButton(Icons.Default.PlayArrow, stringResource(R.string.play), button2Modifier, togglePlay)
+
+    if (hasNext)
+      PlayerButton(Icons.Default.SkipNext, stringResource(R.string.lbl_skip_next), button3Modifier, skipToNext)
+    else
+      Spacer(button3Modifier)
+
+    Text(
+        title ?: "",
+        style = MaterialTheme.typography.subtitle1,
+        modifier = Modifier.constrainAs(text1) {
+          start.linkTo(button3.end)
+          top.linkTo(parent.top)
+        }
+    )
+
+    Text(
+        subTitle ?: "",
+        style = MaterialTheme.typography.subtitle2,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.constrainAs(text2) {
+          start.linkTo(text1.start)
+          top.linkTo(text1.bottom, margin = 2.dp)
+        }
+    )
+
+    Icon(
+        painterResource(if (expanded) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up),
+        stringResource(R.string.swipe_up),
+        tint = MaterialTheme.colors.secondary,
+        modifier = Modifier.size(24.dp).constrainAs(upArrow) {
+          end.linkTo(parent.end, margin = 4.dp)
+          top.linkTo(parent.top)
+        }
+    )
   }
 }
 

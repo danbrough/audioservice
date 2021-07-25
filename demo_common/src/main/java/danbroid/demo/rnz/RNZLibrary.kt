@@ -8,9 +8,8 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.library.AudioLibrary
-import danbroid.audioservice.app.menu.MenuItem
-import danbroid.demo.rnz.RNZProgramme
 import danbroid.audio.service.util.httpSupport
+import danbroid.demo.rnz.RNZProgramme
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -27,8 +26,10 @@ class RNZLibrary(context: Context) : AudioLibrary {
     log.dtrace("loadItem() $mediaID")
     val progID = if (mediaID == URI_RNZ_NEWS) rnzNewsProgrammeID() else
       getIDFromProgrammeURI(mediaID)
+
+    val defaultIcon = if (mediaID == URI_RNZ_NEWS) rnzNewsIcon else rnzNationalIcon
     log.dtrace("progID: $progID")
-    return if (progID != null) loadProgramme(progID).toMediaItem().also {
+    return if (progID != null) loadProgramme(progID).toMediaItem(defaultIcon).also {
       log.dtrace("MediaItem: $it")
     } else null
   }
@@ -38,6 +39,8 @@ class RNZLibrary(context: Context) : AudioLibrary {
     const val URI_PREFIX_RNZ_PROGRAMME = "$SCHEME_RNZ://programme"
     const val URI_RNZ_NEWS = "$SCHEME_RNZ://news"
     const val URL_RNZ_NEWS = "https://www.rnz.co.nz/news"
+    private const val rnzNationalIcon = "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz-national.jpg"
+    private const val rnzNewsIcon = "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz_news.jpg"
 
     fun getProgrammeURI(id: Long) = "$URI_PREFIX_RNZ_PROGRAMME/$id"
     fun getIDFromProgrammeURI(uri: String): Long? =
@@ -69,10 +72,6 @@ class RNZLibrary(context: Context) : AudioLibrary {
     throw IOException("Failed to parse $URL_RNZ_NEWS")
   }
 
-  @Throws(IOException::class)
-  suspend fun rnzNews(): RNZProgramme = loadProgramme(rnzNewsProgrammeID()).also {
-    log.dtrace("LOADED NEWS: $it")
-  }
 
   @Serializable
   private data class RNZItem(val item: RNZProgramme)
@@ -97,16 +96,16 @@ class RNZLibrary(context: Context) : AudioLibrary {
 }
 
 
-fun RNZProgramme.toMenuItem(): MenuItem = MenuItem(
+/*fun RNZProgramme.toMenuItem(): MenuItem = MenuItem(
     id = RNZLibrary.getProgrammeURI(id),
     title = programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
     subTitle = body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
     iconURI = if (thumbnail != null) "http://www.rnz.co.nz$thumbnail" else null,
     isPlayable = true
-)
+)*/
 
-fun RNZProgramme.toMediaItem(): MediaItem =
-    mediaMetadata.build().let {
+fun RNZProgramme.toMediaItem(defaultIcon: String): MediaItem =
+    getMetadata(defaultIcon).build().let {
       UriMediaItem.Builder(it.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri())
           .setStartPosition(0L).setEndPosition(-1L)
           .setMetadata(it)
@@ -114,14 +113,13 @@ fun RNZProgramme.toMediaItem(): MediaItem =
     }
 
 
-val RNZProgramme.mediaMetadata: MediaMetadata.Builder
-  get() = MediaMetadata.Builder()
-      .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZLibrary.getProgrammeURI(id))
-      .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
-      .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
-      .putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, if (thumbnail != null) "http://www.rnz.co.nz$thumbnail" else null)
-      .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)
-      .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audio.mp3?.url ?: audio.ogg!!.url)
+fun RNZProgramme.getMetadata(defaultIcon:String): MediaMetadata.Builder = MediaMetadata.Builder()
+    .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZLibrary.getProgrammeURI(id))
+    .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
+    .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
+    .putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, if (thumbnail != null) "http://www.rnz.co.nz$thumbnail" else defaultIcon)
+    .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)
+    .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audio.mp3?.url ?: audio.ogg!!.url)
 
 val Context.rnz: RNZLibrary
   get() = RNZLibrary.getInstance(this)
