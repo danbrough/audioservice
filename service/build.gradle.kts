@@ -166,6 +166,9 @@ dependencies {
     implementation("com.github.danbrough.exoplayer:exoplayer-ui:_")
     implementation("com.github.danbrough.exoplayer:exoplayer-hls:_")
     implementation("com.github.danbrough.exoplayer:exoplayer-dash:_")
+    implementation("com.github.danbrough.exoplayer:extension-flac:_")
+    implementation("com.github.danbrough.exoplayer:extension-opus:_")
+
     implementation("com.github.danbrough.exoplayer:extension-media2:_")
 
     //implementation("com.github.danbrough.exoplayer:extension-opus:_")

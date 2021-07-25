@@ -20,18 +20,16 @@ import androidx.media2.common.UriMediaItem
 import androidx.media2.session.*
 import androidx.palette.graphics.Palette
 import androidx.versionedparcelable.ParcelUtils
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.ext.media2.SessionPlayerConnector
 import com.google.android.exoplayer2.metadata.Metadata
 import com.google.android.exoplayer2.metadata.flac.VorbisComment
 import com.google.android.exoplayer2.metadata.icy.IcyInfo
 import com.google.android.exoplayer2.metadata.id3.TextInformationFrame
+import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
 import com.google.android.exoplayer2.upstream.BandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.common.util.concurrent.ListenableFuture
@@ -45,9 +43,6 @@ class AudioService : MediaSessionService() {
     const val PACKAGE = "danbroid.media.service"
     const val ACTION_ADD_TO_PLAYLIST = "$PACKAGE.ACTION_ADD_TO_PLAYLIST"
     const val ACTION_ARG_MEDIA_ITEM = "$PACKAGE.MEDIA_ITEM"
-
-    //const val METADATA_EXTRAS_KEY_CACHED_ICON = "$PACKAGE.METADATA_EXTRAS_KEY_CACHED_ICON"
-    //const val COMMAND_CLEAR_PLAYLIST = "$PACKAGE.CLEAR_PLAYLIST"
 
     const val MEDIA_METADATA_KEY_BITRATE =
         "$PACKAGE.MEDIA_METADATA_KEY_BITRATE"
@@ -66,7 +61,6 @@ class AudioService : MediaSessionService() {
   }
 
 
-  //lateinit var player: SessionPlayerConnector
   lateinit var exoPlayer: SimpleExoPlayer
   lateinit var session: MediaSession
 
@@ -77,6 +71,7 @@ class AudioService : MediaSessionService() {
   val defaultIcon: Bitmap by lazy {
     iconUtils.drawableToBitmapIcon(Config.Notifications.defaultNotificationIcon)
   }
+
   private val lifecycleScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
   override fun onCreate() {
@@ -225,69 +220,43 @@ class AudioService : MediaSessionService() {
         .build()
 
 
-    var foreground = false
 
     notificationManager =
-        createNotificationManager(this, notificationListener = object : NotificationListener {
-
-          override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-            log.warn("onNotificationCancelled() byUser:$dismissedByUser")
-            if (dismissedByUser) {
-              log.warn("SHOULD STOP PLAYBACK")
-            } else {
-              if (foreground) {
-                log.warn("stopping foreground ..")
-                stopForeground(true)
-                foreground = false
-              }
-            }
-          }
-
-
-          override fun onNotificationPosted(
-              notificationId: Int,
-              notification: Notification,
-              ongoing: Boolean
-          ) {
-            log.warn("onNotificationPosted() ongoing:$ongoing mediaItem:${session.player.currentMediaItem?.metadata?.mediaId}")
-            if (ongoing) {
-              if (!foreground) {
-                log.warn("starting foreground ..")
-                // startForegroundService(Intent(applicationContext, javaClass))
-                ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, javaClass))
-                /*startForegroundService(
-                     Intent(applicationContext, javaClass)
-                 )*/
-                startForeground(notificationId, notification)
-                foreground = true
-              }
-            } else {
-              if (foreground) {
-                log.warn("stopping foreground ..")
-                stopForeground(false)
-                foreground = false
-              }
-            }
-            //etStyle(androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle())
-            // notificationManager.setColorized(true)
-            log.dtrace("metadata: ${session.player.currentMediaItem?.metadata.toDebugString()}")
-            val extras = session.player.currentMediaItem?.metadata?.extras
-            var dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_MUTED_COLOR,Color.TRANSPARENT)
-                ?: Color.TRANSPARENT
-            if (dominantColor == Color.TRANSPARENT)
-              dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_COLOR, Color.TRANSPARENT)
-                  ?: Color.TRANSPARENT
-            if (dominantColor == Color.TRANSPARENT) dominantColor = Config.Notifications.notificationColour
-
-            log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
-            notificationManager.setUseChronometer(session.player.currentMediaItem.duration.let { it > 0L && it != Long.MAX_VALUE })
-            notificationManager.setColor(dominantColor)
-          }
-        })
+        createNotificationManager(this, notificationListener = ServiceNotificationListener())
 
     notificationManager.setPlayer(exoPlayer)
 
     exoPlayer.addAnalyticsListener(ExoAnalyticsListener())
+    exoPlayer.addListener(object : Player.Listener {
+
+
+      override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
+        log.derror("onTracksChanged()")
+      }
+
+      override fun onMetadata(metadata: Metadata) {
+        (0 until metadata.length()).forEach {
+          log.derror("onMetadata() ${metadata[it]}")
+        }
+      }
+
+      override fun onMediaMetadataChanged(mediaMetadata: com.google.android.exoplayer2.MediaMetadata) {
+        log.derror("onMediaMetadataChanged() $mediaMetadata")
+        log.derror("MediaMetadata: title:${mediaMetadata.title}")
+        log.derror("MediaMetadata: artist:${mediaMetadata.artist}")
+        log.derror("MediaMetadata: albumArtist:${mediaMetadata.albumArtist}")
+        log.derror("MediaMetadata: year:${mediaMetadata.year}")
+
+        mediaMetadata.extras?.keySet()?.forEach {
+          log.derror("MediaMetadata: EXTRA KEY:${it}")
+        }
+
+      }
+
+      override fun onStaticMetadataChanged(metadataList: MutableList<Metadata>) {
+        log.derror("onStaticMetadataChanged() $metadataList")
+      }
+    })
 
 
     return exoPlayer
@@ -351,6 +320,63 @@ class AudioService : MediaSessionService() {
     }
   }
 
+  inner class ServiceNotificationListener() : PlayerNotificationManager.NotificationListener {
+    var foreground = false
+
+    override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+      log.warn("onNotificationCancelled() byUser:$dismissedByUser")
+      if (dismissedByUser) {
+        log.warn("SHOULD STOP PLAYBACK")
+      } else {
+        if (foreground) {
+          log.warn("stopping foreground ..")
+          stopForeground(true)
+          foreground = false
+        }
+      }
+    }
+
+
+    override fun onNotificationPosted(
+        notificationId: Int,
+        notification: Notification,
+        ongoing: Boolean
+    ) {
+      log.warn("onNotificationPosted() ongoing:$ongoing mediaItem:${session.player.currentMediaItem?.metadata?.mediaId}")
+      if (ongoing) {
+        if (!foreground) {
+          log.warn("starting foreground ..")
+          // startForegroundService(Intent(applicationContext, javaClass))
+          ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, javaClass))
+          /*startForegroundService(
+               Intent(applicationContext, javaClass)
+           )*/
+          startForeground(notificationId, notification)
+          foreground = true
+        }
+      } else {
+        if (foreground) {
+          log.warn("stopping foreground ..")
+          stopForeground(false)
+          foreground = false
+        }
+      }
+      //etStyle(androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle())
+      // notificationManager.setColorized(true)
+      log.dtrace("metadata: ${session.player.currentMediaItem?.metadata.toDebugString()}")
+      val extras = session.player.currentMediaItem?.metadata?.extras
+      var dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_MUTED_COLOR, Color.TRANSPARENT)
+          ?: Color.TRANSPARENT
+      if (dominantColor == Color.TRANSPARENT)
+        dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_COLOR, Color.TRANSPARENT)
+            ?: Color.TRANSPARENT
+      if (dominantColor == Color.TRANSPARENT) dominantColor = Config.Notifications.notificationColour
+
+      log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
+      notificationManager.setUseChronometer(session.player.currentMediaItem.duration.let { it > 0L && it != Long.MAX_VALUE })
+      notificationManager.setColor(dominantColor)
+    }
+  }
 
   inner class SessionCallback : MediaSession.SessionCallback() {
 
@@ -653,13 +679,7 @@ else this.toString()
 fun MediaMetadata?.toDebugString(): String = if (BuildConfig.DEBUG) this.run {
   if (this != null) {
     keySet().joinToString {
-      var s: String? = null
-      runCatching {
-        s = getString(it)
-      }.exceptionOrNull()?.also {
-        s = "<$it>"
-      }
-      s ?: "null"
+      it
     }.let { "MediaMetadata<${mediaId}:$it:extras:${extras.toDebugString()}>" }
   } else "MediaMetadata<null>"
 } else "Metadata"
