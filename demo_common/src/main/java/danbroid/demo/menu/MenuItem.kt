@@ -43,7 +43,6 @@ class MenuBuilder(val context: MenuBuilderContext) {
 
   var children: MutableList<MenuBuilder>? = null
 
-
   @MenuDSL
   var isBrowsable = false
     get() = field || !children.isNullOrEmpty()
@@ -55,7 +54,6 @@ class MenuBuilder(val context: MenuBuilderContext) {
   var provides: ((String) -> MenuBuilder?) = {
     if (it == id) this else null
   }
-
 
   @MenuDSL
   var onClicked: ((MenuItem) -> Unit)? = null
@@ -71,13 +69,6 @@ class MenuBuilder(val context: MenuBuilderContext) {
     }
     childBuilders.add(child)
   }
-
-/*  fun traverse(): Sequence<MenuBuilder> = sequence {
-    yield(this@MenuBuilder)
-    children?.forEach {
-      yieldAll(it.traverse())
-    }
-  }*/
 
   fun find(id: String): MenuBuilder? {
     log.dtrace("find() ${this.id} -> $id")
