@@ -71,9 +71,9 @@ class MenuBuilder(val context: MenuBuilderContext) {
   }
 
   fun find(id: String): MenuBuilder? {
-    log.dtrace("find() ${this.id} -> $id")
+    //log.dtrace("find() ${this.id} -> $id")
     provides(id)?.also {
-      log.dtrace("returning provider")
+     // log.dtrace("returning provider")
       return it
     }
     return children?.firstNotNullOfOrNull {
