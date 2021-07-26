@@ -91,14 +91,14 @@ val testTracks = testData {
   }
 
   item {
-    title = "Local OGG"
-    subTitle = "Local ogg file that wont play for you"
+    title = "Local ogg file that wont play for you and has a really long title"
+    subTitle = "Local ogg file that wont play for you and has a really long subtitle"
     id = "http://192.168.1.2/music/Electric%20Youth/Innerworld/02%20-%20Runaway.ogg"
   }
 
   item {
-    title = "Local OGG2"
-    subTitle = "Local ogg file that wont play for you"
+    title = "Local opus"
+    subTitle = "Local opus file that wont play for you"
     id = "http://192.168.1.2/music/Wilco/2011%20The%20Whole%20Love/11%20-%20Whole%20Love.opus"
     iconURI = "https://h1.danbrough.org/ipns/kitty.danbrough.org/cat6.jpg"
   }

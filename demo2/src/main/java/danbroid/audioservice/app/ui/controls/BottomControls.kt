@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.media2.common.MediaMetadata
 import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audio.client.AudioClient
@@ -53,9 +54,10 @@ private fun BottomControls(
   ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
     val (button1, button2, button3, text1, text2, upArrow) = createRefs()
 
+    val buttonsEnd = createAbsoluteRightBarrier(button1,button2,button3)
     val buttonModifier = Modifier.size(46.dp)
     val button1Modifier = buttonModifier.constrainAs(button1) {
-      start.linkTo(parent.start, margin = 4.dp)
+      start.linkTo(parent.start)
       top.linkTo(parent.top)
     }
     val button2Modifier = buttonModifier.constrainAs(button2) {
@@ -68,8 +70,7 @@ private fun BottomControls(
     }
     if (hasPrevious)
       PlayerButton(Icons.Default.SkipPrevious, stringResource(R.string.lbl_skip_prev), button1Modifier, skipToPrev)
-    else
-      Spacer(button1Modifier)
+
 
     if (isPlaying)
       PlayerButton(Icons.Default.Pause, stringResource(R.string.pause), button2Modifier, togglePlay)
@@ -78,15 +79,17 @@ private fun BottomControls(
 
     if (hasNext)
       PlayerButton(Icons.Default.SkipNext, stringResource(R.string.lbl_skip_next), button3Modifier, skipToNext)
-    else
-      Spacer(button3Modifier)
 
     Text(
         title ?: "",
         style = MaterialTheme.typography.subtitle1,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+
         modifier = Modifier.constrainAs(text1) {
-          start.linkTo(button3.end)
           top.linkTo(parent.top)
+          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 0.dp, bias = 0F)
+          width = Dimension.fillToConstraints
         }
     )
 
@@ -96,8 +99,10 @@ private fun BottomControls(
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.constrainAs(text2) {
-          start.linkTo(text1.start)
-          top.linkTo(text1.bottom, margin = 2.dp)
+          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 0.dp, bias = 0F)
+          top.linkTo(text1.bottom)
+          width = Dimension.fillToConstraints
+
         }
     )
 
@@ -119,7 +124,7 @@ private fun BottomControlsPreview() {
   DemoTheme {
     CompositionLocalProvider(LocalContentColor provides contentColorFor(MaterialTheme.colors.primary)) {
       Column(Modifier.background(MaterialTheme.colors.primary).width(400.dp)) {
-        BottomControls("The Title", "The Subtitle", true, true, true, true)
+        BottomControls("The Title which is quote long here as you can see", "The Subtitle which is really long and so will have ellipsis", true, true, true, true)
       }
     }
   }
@@ -177,15 +182,13 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientM
 
   val modifier = if (expanded) Modifier.statusBarsPadding() else Modifier
 
+  Column(modifier = modifier.fillMaxWidth()) {
 
-
-  Column(modifier = modifier) {
     BottomControls(
         title, subTitle,
         queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext, expanded,
         player::skipToPrev, player::togglePause, player::skipToNext
     )
-
 
     if (false)
       currentItem?.metadata?.extras?.also { extras ->

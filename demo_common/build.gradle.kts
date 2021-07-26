@@ -39,5 +39,6 @@ dependencies {
   implementation("com.github.danbrough.androidutils:logging_core:_")
   compileOnly(AndroidX.compose.runtime)
   implementation(Square.okHttp3.okHttp)
+  implementation("org.jetbrains.kotlin:kotlin-reflect:_")
 
 }

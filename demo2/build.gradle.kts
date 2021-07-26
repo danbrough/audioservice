@@ -132,6 +132,7 @@ dependencies {
   implementation("androidx.activity:activity-compose:1.3.0-rc02")
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
   implementation("androidx.constraintlayout:constraintlayout-compose:_")
+  implementation("androidx.constraintlayout:constraintlayout:2.1.0-rc01")
 
   implementation(AndroidX.compose.ui)
   implementation(AndroidX.compose.ui.text)

@@ -1,8 +1,5 @@
 package danbroid.audioservice.app.menu
 
-import android.content.Context
-import androidx.annotation.StringRes
-
 data class MenuItem(
     val id: String,
     val title: String,
@@ -10,7 +7,7 @@ data class MenuItem(
     val iconURI: Any? = null,
     val isPlayable: Boolean = false,
     val isBrowsable: Boolean = false,
-    val onClicked: ((MenuItem)->Unit) ? = null,
+    val onClicked: ((MenuItem) -> Unit)? = null,
 ) {
   companion object {
     val LOADING_ITEM = MenuItem("", "Loading...", "")
@@ -24,11 +21,7 @@ private val log = danbroid.logging.getLog(MenuItem::class)
 annotation class MenuDSL
 
 
-open class MenuBuilderContext(val context: Context) {
-  open fun getString(@StringRes id: Int) = context.getString(id)
-}
-
-class MenuBuilder(val context: MenuBuilderContext) {
+open class MenuBuilder(val builderFactory: () -> MenuBuilder) {
   @MenuDSL
   lateinit var id: String
 
@@ -70,11 +63,12 @@ class MenuBuilder(val context: MenuBuilderContext) {
     childBuilders.add(child)
   }
 
-  fun find(id: String): MenuBuilder? {
+  @Suppress("UNCHECKED_CAST")
+  fun <T : MenuBuilder> find(id: String): T? {
     //log.dtrace("find() ${this.id} -> $id")
     provides(id)?.also {
-     // log.dtrace("returning provider")
-      return it
+      // log.dtrace("returning provider")
+      return it as T
     }
     return children?.firstNotNullOfOrNull {
       it.find(id)
@@ -89,16 +83,16 @@ class MenuBuilder(val context: MenuBuilderContext) {
 
   fun buildChildren(): List<MenuItem> = children?.map { it.buildItem() } ?: emptyList()
 
-  @MenuDSL
-  suspend fun menu(child: MenuBuilder = MenuBuilder(context), block: suspend MenuBuilder.() -> Unit) {
-    addChild(child)
-    child.block()
-  }
 
   override fun toString() = "MenuBuilder[$id:$title]"
 
 }
 
+@MenuDSL
+suspend inline fun <reified T : MenuBuilder> T.menu(child: T = builderFactory.invoke() as T, block: suspend T.() -> Unit) {
+  addChild(child)
+  child.block()
+}
 
 /*
 @MenuDSL

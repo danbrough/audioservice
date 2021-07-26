@@ -1,11 +1,12 @@
 package danbroid.audioservice.app.content
 
+import android.content.Context
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.audioClientModel
-import danbroid.audioservice.app.menu.MenuBuilder
-import danbroid.audioservice.app.menu.MenuBuilderContext
+import danbroid.audioservice.app.menu.menu
 import danbroid.audioservice.app.ui.AppIcon
+import danbroid.audioservice.app.ui.menu.MenuModel
 import danbroid.demo.content.ipfs_gateway
 import danbroid.demo.content.somaFM
 import danbroid.demo.content.testTracks
@@ -20,7 +21,8 @@ const val URI_SETTINGS = "$URI_PREFIX/settings"
 const val URI_BROWSER = "$URI_PREFIX/browser"
 const val URI_PLAYLIST = "$URI_PREFIX/playlist"
 
-suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBuilder(this).apply {
+
+suspend fun demoMenu(context: Context, rootTitle: String): MenuModel.DemoMenuBuilder = MenuModel.DemoMenuBuilder(context).apply {
   id = URI_CONTENT
   title = rootTitle
 
@@ -33,9 +35,10 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
 
   menu {
     id = URI_PLAYLIST
-    title = getString(R.string.playlist)
-    subtitle = if (context.context.audioClientModel().client.playlist.isEmpty())
-      getString(R.string.playlist_empty) else getString(R.string.playlist_current)
+
+    title = context.getString(R.string.playlist)
+    subtitle = if (context.audioClientModel().client.playlist.isEmpty())
+      context.getString(R.string.playlist_empty) else context.getString(R.string.playlist_current)
     iconURI = AppIcon.PLAYLIST
   }
 
@@ -98,7 +101,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
     subtitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
     iconURI = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
 
-    context.context.somaFM.channels().forEach {
+    context.somaFM.channels().forEach {
       menu {
         id = "somafm://${it.id.uriEncode()}"
         title = it.title
@@ -110,7 +113,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
   }
 
 
-/*  context.context.rnz.loadProgramme(2582485L).toMenuItem().also {
+/*  context.rnz.loadProgramme(2582485L).toMenuItem().also {
     menu {
       id = it.id
       title = it.title
@@ -120,7 +123,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
     }
   }
 
-  context.context.rnz.rnzNews().toMenuItem().also {
+  context.rnz.rnzNews().toMenuItem().also {
     menu {
       id = it.id
       title = it.title
@@ -133,7 +136,7 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
   menu {
     id = URI_SETTINGS
     iconURI = AppIcon.SETTINGS
-    title = context.getString(R.string.settings)
+    title = "Settings with a really long title here to test with."
     subtitle = "Subtitle 2"
   }
 
@@ -149,3 +152,4 @@ suspend fun MenuBuilderContext.demoMenu(rootTitle: String): MenuBuilder = MenuBu
 
 
 }
+
