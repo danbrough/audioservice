@@ -31,6 +31,7 @@ android {
       useSupportLibrary = true
     }
   }
+
   signingConfigs {
     register("release") {
       storeFile = file("/home/dan/.android/busapp_keystore2")
@@ -39,7 +40,6 @@ android {
       keyPassword = project.property("KEYSTORE_PASSWORD")?.toString() ?: ""
     }
   }
-
 
   buildTypes {
 
@@ -57,8 +57,10 @@ android {
   }
 
   lint {
-    isAbortOnError = false
+    //isAbortOnError = false
+
   }
+
   buildFeatures {
     viewBinding = true
     compose = true
@@ -123,6 +125,8 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect:_")
   implementation("androidx.core:core-ktx:_")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")
+
   //implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")
   //implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:_")
 

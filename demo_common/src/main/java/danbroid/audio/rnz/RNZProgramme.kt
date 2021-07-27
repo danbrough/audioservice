@@ -1,4 +1,4 @@
-package danbroid.demo.rnz
+package danbroid.audio.rnz
 
 
 import kotlinx.serialization.SerialName

@@ -1,6 +1,9 @@
 package danbroid.audio.service
 
 import android.content.Context
+import android.graphics.Color
+import android.os.Bundle
+import androidx.annotation.ColorInt
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
@@ -119,3 +122,15 @@ val SessionPlayer.PlayerResult.successfull: Boolean
 val MediaItem?.duration: Long
   get() = this?.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L
 
+@ColorInt
+fun Bundle?.getColor(vararg keys: String, noColor: Int = Color.TRANSPARENT): Int {
+  if (this == null) return noColor
+  keys.forEach {
+    if (containsKey(it))
+      getInt(it).also {
+        if (it != noColor)
+          return it
+      }
+  }
+  return noColor
+}

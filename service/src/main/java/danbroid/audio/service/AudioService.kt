@@ -365,11 +365,9 @@ class AudioService : MediaSessionService() {
       // notificationManager.setColorized(true)
       log.dtrace("metadata: ${session.player.currentMediaItem?.metadata.toDebugString()}")
       val extras = session.player.currentMediaItem?.metadata?.extras
-      var dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_MUTED_COLOR, Color.TRANSPARENT)
-          ?: Color.TRANSPARENT
-      if (dominantColor == Color.TRANSPARENT)
-        dominantColor = extras?.getInt(MEDIA_METADATA_KEY_DARK_COLOR, Color.TRANSPARENT)
-            ?: Color.TRANSPARENT
+
+
+      var dominantColor = extras.getColor(MEDIA_METADATA_KEY_DOMINANT_COLOR, MEDIA_METADATA_KEY_DARK_COLOR, MEDIA_METADATA_KEY_DARK_MUTED_COLOR, noColor = Color.TRANSPARENT)
       if (dominantColor == Color.TRANSPARENT) dominantColor = Config.Notifications.notificationColour
 
       log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")

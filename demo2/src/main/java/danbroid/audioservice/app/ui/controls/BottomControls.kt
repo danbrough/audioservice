@@ -1,13 +1,11 @@
 package danbroid.audioservice.app.ui.controls
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -52,10 +51,10 @@ private fun BottomControls(
 
 
   ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-    val (button1, button2, button3, text1, text2, upArrow) = createRefs()
+    val (button1, button2, button3, text1, text2, upArrow, menu) = createRefs()
 
-    val buttonsEnd = createAbsoluteRightBarrier(button1,button2,button3)
-    val buttonModifier = Modifier.size(46.dp)
+    val buttonsEnd = createAbsoluteRightBarrier(button1, button2, button3)
+    val buttonModifier = Modifier.size(38.dp)
     val button1Modifier = buttonModifier.constrainAs(button1) {
       start.linkTo(parent.start)
       top.linkTo(parent.top)
@@ -80,6 +79,19 @@ private fun BottomControls(
     if (hasNext)
       PlayerButton(Icons.Default.SkipNext, stringResource(R.string.lbl_skip_next), button3Modifier, skipToNext)
 
+    Icon(
+        painterResource(if (expanded) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up),
+        stringResource(R.string.swipe_up),
+        tint = LocalContentColor.current.copy(alpha = 0.2f),
+        modifier = Modifier.size(28.dp)
+            .constrainAs(upArrow) {
+              //end.linkTo(parent.end, margin = 4.dp)
+              start.linkTo(parent.start)
+              end.linkTo(parent.end)
+              top.linkTo(parent.top)
+            }
+    )
+
     Text(
         title ?: "",
         style = MaterialTheme.typography.subtitle1,
@@ -88,33 +100,58 @@ private fun BottomControls(
 
         modifier = Modifier.constrainAs(text1) {
           top.linkTo(parent.top)
-          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 0.dp, bias = 0F)
+          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 4.dp, bias = 0F)
           width = Dimension.fillToConstraints
         }
     )
 
     Text(
         subTitle ?: "",
-        style = MaterialTheme.typography.subtitle2,
+        style = MaterialTheme.typography.caption,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.constrainAs(text2) {
-          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 0.dp, bias = 0F)
+          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 4.dp, bias = 0F)
           top.linkTo(text1.bottom)
           width = Dimension.fillToConstraints
 
         }
     )
 
-    Icon(
-        painterResource(if (expanded) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up),
-        stringResource(R.string.swipe_up),
-        tint = MaterialTheme.colors.secondary,
-        modifier = Modifier.size(28.dp).constrainAs(upArrow) {
-          end.linkTo(parent.end, margin = 4.dp)
-          top.linkTo(parent.top)
+    var menuExpanded by remember { mutableStateOf(false) }
+
+
+    Box(modifier = Modifier.constrainAs(menu) {
+      end.linkTo(parent.end,margin = 20.dp)
+    }.wrapContentHeight(Alignment.Bottom)) {
+      IconButton({ menuExpanded = true }) {
+        Icon(imageVector = Icons.Default.MoreVert, "")
+      }
+
+      DropdownMenu(
+          expanded = menuExpanded,
+          offset = DpOffset(0.dp, -30.dp),
+          onDismissRequest = {
+            log.derror("onDismissRequest")
+            menuExpanded = false
+          },
+
+          modifier = Modifier.background(Color.Green)
+      ) {
+        DropdownMenuItem({
+          log.dtrace("clicked item1")
+          menuExpanded = false
+        }) {
+          Text("Item 1")
         }
-    )
+        DropdownMenuItem({
+          log.dtrace("clicked item2")
+          menuExpanded = false
+        }) {
+          Text("Item 2")
+        }
+      }
+    }
   }
 }
 
@@ -147,11 +184,11 @@ fun ExtraControls(value: Float, durationInSeconds: Float, onValueChange: (Float)
         modifier = Modifier.fillMaxWidth(),
     )
 
-  }
 
+  }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable()
 private fun ExtraControlsPreview() {
   DemoTheme {
@@ -183,29 +220,11 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientM
   val modifier = if (expanded) Modifier.statusBarsPadding() else Modifier
 
   Column(modifier = modifier.fillMaxWidth()) {
-
     BottomControls(
         title, subTitle,
         queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext, expanded,
         player::skipToPrev, player::togglePause, player::skipToNext
     )
-
-    if (false)
-      currentItem?.metadata?.extras?.also { extras ->
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(20.dp)) {
-          val colorModifier = Modifier.size(12.dp)
-          listOf(
-              AudioService.MEDIA_METADATA_KEY_DARK_COLOR,
-              AudioService.MEDIA_METADATA_KEY_LIGHT_COLOR,
-              AudioService.MEDIA_METADATA_KEY_DARK_MUTED_COLOR,
-              AudioService.MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR,
-              AudioService.MEDIA_METADATA_KEY_DOMINANT_COLOR,
-              AudioService.MEDIA_METADATA_KEY_VIBRANT_COLOR,
-          ).forEach {
-            Box(modifier = colorModifier.background(Color(extras.getInt(it, android.graphics.Color.TRANSPARENT))))
-          }
-        }
-      }
 
 
     if (expanded) {
@@ -221,9 +240,86 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientM
         })
       }
 
+      currentItem?.metadata?.extras?.also { extras ->
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(20.dp)) {
+          val colorModifier = Modifier.size(24.dp)
+          listOf(
+              AudioService.MEDIA_METADATA_KEY_DARK_COLOR,
+              AudioService.MEDIA_METADATA_KEY_LIGHT_COLOR,
+              AudioService.MEDIA_METADATA_KEY_DARK_MUTED_COLOR,
+              AudioService.MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR,
+              AudioService.MEDIA_METADATA_KEY_DOMINANT_COLOR,
+              AudioService.MEDIA_METADATA_KEY_VIBRANT_COLOR,
+          ).forEach {
+            Box(modifier = colorModifier.background(Color(extras.getInt(it, android.graphics.Color.TRANSPARENT))))
+          }
+        }
+      }
+
+      var menuExpanded by remember { mutableStateOf(false) }
+      Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)) {
+        Icon(imageVector = Icons.Default.MoreVert, "", modifier = Modifier.clickable {
+          menuExpanded = true
+        })
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = {
+              log.derror("onDismissRequest")
+              menuExpanded = false
+            },
+            modifier = Modifier.background(Color.Red)
+        ) {
+          DropdownMenuItem({
+            log.dtrace("clicked item1")
+            menuExpanded = false
+          }) {
+            Text("Item 1")
+          }
+          DropdownMenuItem({
+            log.dtrace("clicked item2")
+            menuExpanded = false
+          }) {
+            Text("Item 2")
+          }
+        }
+
+      }
     }
   }
 }
 
+@Composable
+fun DropdownDemo() {
+  var expanded by remember { mutableStateOf(false) }
+  val items = listOf("A", "B", "C", "D", "E", "F")
+  val disabledValue = "B"
+  var selectedIndex by remember { mutableStateOf(0) }
+  Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)) {
+    Text(items[selectedIndex], modifier = Modifier.fillMaxWidth().clickable(onClick = { expanded = true }).background(
+        Color.Gray))
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+        modifier = Modifier.fillMaxWidth().background(
+            Color.Red)
+    ) {
+      items.forEachIndexed { index, s ->
+        DropdownMenuItem(onClick = {
+          selectedIndex = index
+          expanded = false
+        }) {
+          val disabledText = if (s == disabledValue) {
+            " (Disabled)"
+          } else {
+            ""
+          }
+          Text(text = s + disabledText)
+        }
+      }
+    }
+  }
+}
 
 private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.controls")
+
+

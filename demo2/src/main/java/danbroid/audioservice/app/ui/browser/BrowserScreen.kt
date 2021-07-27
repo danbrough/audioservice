@@ -152,13 +152,12 @@ private fun createWebView(context: Context, audioClientModel: DemoAudioClientMod
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun BrowserScreen(audioClientModel: DemoAudioClientModel) {
+fun BrowserScreen(url: String, audioClientModel: DemoAudioClientModel) {
   log.dtrace("BrowserScreen()")
   Column {
     Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     AndroidView(factory = { createWebView(it, audioClientModel) }, modifier = Modifier.fillMaxWidth()) {
-      log.dtrace("BrowserScreen update")
-      it.loadUrl("https://rnz.co.nz")
+      it.loadUrl(url)
     }
   }
 }

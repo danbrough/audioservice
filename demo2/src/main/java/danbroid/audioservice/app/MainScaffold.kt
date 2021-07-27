@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import danbroid.audioservice.app.ui.controls.BottomControls
+import kotlinx.coroutines.launch
 
 @Composable
 fun TestScaffold(
@@ -24,8 +25,6 @@ fun TestScaffold(
 
   log.trace("navBarsTop: ${insets.navigationBars.layoutInsets.top} bottom: ${insets.navigationBars.layoutInsets.bottom}")
   log.trace("statusBarsTop: ${insets.statusBars.layoutInsets.top} bottom: ${insets.statusBars.layoutInsets.bottom}")
-
-
   val navBottom = with(LocalDensity.current) { insets.navigationBars.bottom.toDp() }
   log.trace("NAV BAR BOTTOM: ${navBottom}")
 
@@ -45,11 +44,17 @@ fun TestScaffold(
 
       },
       //sheetPeekHeight = if (bottomSheetScaffoldState.bottomSheetState.isExpanded) 0.dp else 56.dp
-      sheetPeekHeight = 56.dp + navBottom
+      sheetPeekHeight = 50.dp + navBottom
   ) {
 
-    DemoNavGraph(Modifier.navigationBarsPadding().padding(bottom = 56.dp), navController, audioClientModel)
+    DemoNavGraph(Modifier.navigationBarsPadding().padding(bottom = 50.dp), navController, audioClientModel)
 
+  }
+
+  BackButtonHandler(bottomSheetScaffoldState.bottomSheetState.isExpanded) {
+    coroutineScope.launch {
+      bottomSheetScaffoldState.bottomSheetState.collapse()
+    }
   }
 }
 

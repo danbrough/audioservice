@@ -1,14 +1,10 @@
 package danbroid.audioservice.app
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
@@ -17,10 +13,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.navDeepLink
-import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audioservice.app.content.URI_BROWSER
 import danbroid.audioservice.app.content.URI_CONTENT
 import danbroid.audioservice.app.content.URI_SETTINGS
+import danbroid.audioservice.app.rnz.RNZLibrary
 import danbroid.audioservice.app.ui.browser.BrowserScreen
 import danbroid.audioservice.app.ui.home.MenuScreen
 import danbroid.audioservice.app.ui.menu.menuModel
@@ -34,20 +30,6 @@ object Routes {
   const val BROWSER = "browser"
 }
 
-
-@ExperimentalAnimationApi
-@Composable
-fun EnterAnimation(content: @Composable () -> Unit) {
-  AnimatedVisibility(
-      visible = true,
-      enter = slideInHorizontally(
-          initialOffsetX = { -40 }
-      ) + fadeIn(initialAlpha = 0.3f),
-      exit = slideOutHorizontally() + fadeOut(),
-      content = content,
-      initiallyVisible = false
-  )
-}
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -80,9 +62,8 @@ fun DemoNavGraph(
 
     val menuID = entry.arguments?.getString("id")!!
 
-    EnterAnimation {
-      Menu(menuID, navController, audioClientModel)
-    }
+    Menu(menuID, navController, audioClientModel)
+
 
 /*
     val backstackEntry = navController.currentBackStackEntryAsState()
@@ -105,7 +86,7 @@ fun DemoNavGraph(
       deepLinks = listOf(navDeepLink {
         uriPattern = URI_BROWSER
       })) { entry ->
-    BrowserScreen(audioClientModel)
+    BrowserScreen(RNZLibrary.URL_RNZ, audioClientModel)
   }
 }
 
@@ -153,11 +134,4 @@ private fun Menu(menuID: String, navController: NavHostController, audioClientMo
   }
 }
 
-
-
-@Composable
-fun NavPage(content: @Composable () -> Unit) =
-    Box(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp).statusBarsPadding()) {
-      content()
-    }
 

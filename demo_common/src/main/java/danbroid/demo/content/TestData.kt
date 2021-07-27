@@ -65,6 +65,21 @@ val testTracks = testData {
   }
 
   item {
+    title = "NTS1"
+    id = "https://stream-relay-geo.ntslive.net/stream"
+    subTitle = "NTS Live 1"
+    iconURI = "${ipfs_gateway}/ipns/audienz.danbrough.org/media/nts.png"
+  }
+
+
+  item {
+    title = "NTS2"
+    id = "https://stream-relay-geo.ntslive.net/stream2"
+    subTitle = "NTS Live 2"
+    iconURI = "${ipfs_gateway}/ipns/audienz.danbrough.org/media/nts.png"
+  }
+
+  item {
     title = "Opus Test"
     id = "https://h1.danbrough.org/audienz/demos/improv/improv1.opus"
     subTitle = "Improv1 - Dan Brough"

@@ -8,8 +8,8 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.library.AudioLibrary
+import danbroid.audio.rnz.RNZProgramme
 import danbroid.audio.service.util.httpSupport
-import danbroid.demo.rnz.RNZProgramme
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -38,6 +38,7 @@ class RNZLibrary(context: Context) : AudioLibrary {
     const val SCHEME_RNZ = "rnz"
     const val URI_PREFIX_RNZ_PROGRAMME = "$SCHEME_RNZ://programme"
     const val URI_RNZ_NEWS = "$SCHEME_RNZ://news"
+    const val URL_RNZ = "https://www.rnz.co.nz/topics"
     const val URL_RNZ_NEWS = "https://www.rnz.co.nz/news"
     private const val rnzNationalIcon = "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz-national.jpg"
     private const val rnzNewsIcon = "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz_news.jpg"
