@@ -15,10 +15,9 @@ import danbroid.audioservice.app.ui.controls.BottomControls
 
 @Composable
 fun TestScaffold(
-    title: String = "AudioService Demo",
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
+    bottomSheetScaffoldState: BottomSheetScaffoldState
 ) {
-  val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
   val audioClientModel: DemoAudioClientModel = audioClientModel()
   val insets = LocalWindowInsets.current
