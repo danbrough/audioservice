@@ -20,6 +20,11 @@ import kotlinx.coroutines.withContext
 
 class MenuModel(val menuID: String, context: Context) : ViewModel() {
 
+  init {
+    log.derror("MenuModel() $menuID")
+
+  }
+
   data class MenuState(val menuItem: MenuItem, val children: List<MenuItem>) {
     companion object {
       val LOADING = MenuState(MenuItem.LOADING_ITEM, emptyList())

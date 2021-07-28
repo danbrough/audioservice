@@ -135,7 +135,6 @@ suspend fun demoMenu(builder: MenuModel.DemoMenuBuilder, rootTitle: String): Men
     isBrowsable = true
     buildChildren = {
       context.somaFM.channels().map {
-        log.derror("CREATING CHANNEL $it")
         MenuItem(
             id = "somafm://${it.id.uriEncode()}",
             title = it.title,

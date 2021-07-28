@@ -1,11 +1,8 @@
 package danbroid.audioservice.app
 
-import androidx.compose.animation.*
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,8 +14,7 @@ import danbroid.audioservice.app.content.URI_CONTENT
 import danbroid.audioservice.app.content.URI_SETTINGS
 import danbroid.audioservice.app.rnz.RNZLibrary
 import danbroid.audioservice.app.ui.browser.BrowserScreen
-import danbroid.audioservice.app.ui.home.MenuScreen
-import danbroid.audioservice.app.ui.menu.menuModel
+import danbroid.audioservice.app.ui.home.Menu
 import danbroid.audioservice.app.ui.settings.SettingsScreen
 import danbroid.util.format.uriEncode
 
@@ -92,47 +88,5 @@ fun DemoNavGraph(
 }
 
 
-@Composable
-private fun Menu(menuID: String, navController: NavHostController, audioClientModel: DemoAudioClientModel) {
-  log.dwarn("Showing Menu screen id:${menuID}")
-  val menuModel = menuModel(menuID)
-  val menuState by menuModel.state.collectAsState()
-  log.dtrace("title: ${menuState.menuItem.title}")
-
-/*  val menuNavOptions: NavOptionsBuilder.() -> Unit = {
-    anim {
-      enter = R.anim.menu_enter
-      exit = R.anim.menu_exit
-      popEnter = R.anim.menu_pop_enter
-      popExit = R.anim.menu_pop_exit
-    }
-  }*/
-
-  MenuScreen(menuState.menuItem.title, menuState.children) { menuItem ->
-    log.dtrace("clicked $menuItem")
-
-    menuItem.onClicked?.also {
-      log.dtrace("calling click handler for ${menuItem.id}")
-      it.invoke(menuItem)
-      return@MenuScreen
-    }
-
-    navController.findDestination(menuItem.id)?.also {
-      log.dtrace("found destination $it")
-      navController.navigate(menuItem.id)
-      return@MenuScreen
-    }
-
-    if (navController.graph.hasDeepLink(menuItem.id.toUri())) {
-      log.trace("Navigating to deeplink:${menuItem.id}")
-      navController.navigate(menuItem.id.toUri())
-    } else if (menuItem.isBrowsable) {
-      log.trace("Opening menu ${menuItem.id}")
-      navController.navigate(Routes.menuRoute(menuItem.id)) //, menuNavOptions)
-    } else if (menuItem.isPlayable) {
-      audioClientModel.play(menuItem.id)
-    }
-  }
-}
 
 
