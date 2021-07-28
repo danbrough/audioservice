@@ -7,15 +7,15 @@ object ProjectVersions {
   var MIN_SDK_VERSION = 21
   val JAVA_VERSION = JavaVersion.VERSION_1_8
   val KOTLIN_VERSION = "1.8"
-  var BUILD_TOOLS_VERSION = "30.0.3"
+  var BUILD_TOOLS_VERSION = "31.0.0"
   var BUILD_VERSION = 1
   var VERSION_OFFSET = 1
   var GROUP_ID = "com.github.danbrough.audioservice"
   var KEYSTORE_PASSWORD = ""
   var VERSION_FORMAT = ""
   val NDK_VERSION = "21.3.6528147"
-  const val COMPOSE_VERSION = "1.0.0-rc02"
-  const val COMPOSE_TOOLS_VERSION = "1.0.0-rc02" //"1.0.0-beta09"
+  const val COMPOSE_VERSION = "1.0.0"
+  const val COMPOSE_TOOLS_VERSION = "1.0.0"
   const val MINIFY_ENABLED = true
 
   val VERSION_NAME: String
