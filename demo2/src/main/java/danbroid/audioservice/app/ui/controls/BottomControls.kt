@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.media2.common.MediaMetadata
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audio.client.AudioClient
 import danbroid.audio.service.AudioService
@@ -120,9 +122,10 @@ private fun BottomControls(
 
     var menuExpanded by remember { mutableStateOf(false) }
 
+    val navRight = with(LocalDensity.current) { LocalWindowInsets.current.navigationBars.right.toDp() }
 
     Box(modifier = Modifier.constrainAs(menu) {
-      end.linkTo(parent.end,margin = 20.dp)
+      end.linkTo(parent.end, margin = navRight)
     }.wrapContentHeight(Alignment.Bottom)) {
       IconButton({ menuExpanded = true }) {
         Icon(imageVector = Icons.Default.MoreVert, "")
@@ -130,25 +133,26 @@ private fun BottomControls(
 
       DropdownMenu(
           expanded = menuExpanded,
-          offset = DpOffset(0.dp, -30.dp),
+          offset = DpOffset(0.dp, 0.dp),
           onDismissRequest = {
             log.derror("onDismissRequest")
             menuExpanded = false
           },
-
-          modifier = Modifier.background(Color.Green)
       ) {
         DropdownMenuItem({
           log.dtrace("clicked item1")
           menuExpanded = false
         }) {
-          Text("Item 1")
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Default.Cast, "",tint=MaterialTheme.colors.primary)
+            Text("Cast to TV",modifier = Modifier.padding(4.dp))
+          }
         }
         DropdownMenuItem({
           log.dtrace("clicked item2")
           menuExpanded = false
         }) {
-          Text("Item 2")
+          Text("Item 2 with a very long title")
         }
       }
     }
@@ -214,18 +218,19 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientM
 
   var dragging by remember { mutableStateOf(false) }
   var value by remember { mutableStateOf(playPosition.currentPos) }
+
   if (!dragging)
     value = playPosition.currentPos
 
   val modifier = if (expanded) Modifier.statusBarsPadding() else Modifier
 
   Column(modifier = modifier.fillMaxWidth()) {
+
     BottomControls(
         title, subTitle,
         queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext, expanded,
         player::skipToPrev, player::togglePause, player::skipToNext
     )
-
 
     if (expanded) {
       if (playPosition.duration > 0L) {
@@ -273,7 +278,10 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientM
             log.dtrace("clicked item1")
             menuExpanded = false
           }) {
-            Text("Item 1")
+            Row {
+              Icon(Icons.Default.Cast, "")
+              Text("Cast to TV")
+            }
           }
           DropdownMenuItem({
             log.dtrace("clicked item2")

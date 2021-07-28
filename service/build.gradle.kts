@@ -44,9 +44,11 @@ android {
     sourceCompatibility = ProjectVersions.JAVA_VERSION
     targetCompatibility = ProjectVersions.JAVA_VERSION
   }
+
   kotlinOptions {
     jvmTarget = ProjectVersions.KOTLIN_VERSION
   }
+
   kotlin.sourceSets.all {
     setOf(
         "kotlinx.serialization.ExperimentalSerializationApi",

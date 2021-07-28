@@ -367,7 +367,12 @@ class AudioService : MediaSessionService() {
       val extras = session.player.currentMediaItem?.metadata?.extras
 
 
-      var dominantColor = extras.getColor(MEDIA_METADATA_KEY_DOMINANT_COLOR, MEDIA_METADATA_KEY_DARK_COLOR, MEDIA_METADATA_KEY_DARK_MUTED_COLOR, noColor = Color.TRANSPARENT)
+      var dominantColor = extras.getColor(
+          MEDIA_METADATA_KEY_DARK_MUTED_COLOR,
+          MEDIA_METADATA_KEY_DOMINANT_COLOR,
+          MEDIA_METADATA_KEY_DARK_COLOR,
+          noColor = Color.TRANSPARENT)
+
       if (dominantColor == Color.TRANSPARENT) dominantColor = Config.Notifications.notificationColour
 
       log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
@@ -382,8 +387,11 @@ class AudioService : MediaSessionService() {
     override fun onSetMediaUri(session: MediaSession, controller: MediaSession.ControllerInfo, uri: Uri, extras: Bundle?): Int {
       log.debug("onSetMediaUri() $uri")
 
-      val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, ACTION_ARG_MEDIA_ITEM) }
-      //log.ddebug("metadata: ${metadata.toDebugString()}")
+      extras ?: error("Extras not present")
+
+      val metadata = ParcelUtils.getVersionedParcelable<MediaMetadata?>(extras, ACTION_ARG_MEDIA_ITEM)
+
+      metadata ?: error("ACTION_ARG_MEDIA_ITEM not present in extras")
 
       val item = UriMediaItem.Builder(uri).setStartPosition(0L)
           .setEndPosition(-1L)
@@ -402,46 +410,12 @@ class AudioService : MediaSessionService() {
         }
       }
       return SessionResult.RESULT_SUCCESS
-
-/*
-      val metadata = extras?.let { ParcelUtils.getVersionedParcelable<MediaMetadata?>(it, "item") }
-      log.ddebug("metadata: ${metadata.toDebugString()}")
-
-      runCatching {
-
-        if (metadata != null) {
-          session.player.setMediaItem(UriMediaItem.Builder(metadata.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri())
-              .setStartPosition(0L).setEndPosition(-1L)
-              .setMetadata(metadata)
-              .build()).then {
-            log.debug("result: $it")
-            if (it.resultCode == SessionPlayer.PlayerResult.RESULT_SUCCESS) {
-              log.debug("calling play")
-              session.player.play()
-            } else {
-              log.error("failed: ${it.resultCode} item: ${it.mediaItem}")
-            }
-          }
-
-          return SessionResult.RESULT_SUCCESS
-        }
-      }.exceptionOrNull()?.also {
-        log.error("Failed to set media item: ${it.message}", it)
-      }
-*/
-
-      // return super.onSetMediaUri(session, controller, uri, extras)
     }
 
     override fun onCreateMediaItem(session: MediaSession, controller: MediaSession.ControllerInfo, mediaId: String): MediaItem? {
       log.error("onCreateMediaItem() $mediaId")
       return super.onCreateMediaItem(session, controller, mediaId)
-/*
-      return runBlocking {
-        audioServiceConfig.library.loadItem(mediaId)
-      }?.also { loadIcon(it) } ?: super.onCreateMediaItem(session, controller, mediaId)*/
     }
-
 
     override fun onCommandRequest(session: MediaSession, controller: MediaSession.ControllerInfo, command: SessionCommand): Int {
       //log.debug("onCommandRequest() ${command.commandCode}:${command.customAction}:extras:${command.customExtras}")
@@ -450,25 +424,20 @@ class AudioService : MediaSessionService() {
         //session.player.prepare()
         exoPlayer.prepare()
       }
+
+      if (command.commandCode == SessionCommand.COMMAND_CODE_PLAYER_PAUSE) {
+        log.derror("PAUSING IT DUDE!")
+      }
       return super.onCommandRequest(session, controller, command)
     }
 
 
     override fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo) =
-
         super.onConnect(session, controller)!!.let {
           SessionCommandGroup.Builder(it)
               .addCommand(SessionCommand(ACTION_ADD_TO_PLAYLIST, null))
               .build()
         }
-
-
-/*        SessionCommandGroup.Builder().let { builder ->
-          super.onConnect(session, controller)?.commands?.forEach {
-            builder.addCommand(it)
-          }
-          builder.build()
-        }*/
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
       log.info("onPostConnect() session:$session controller:$controller")
@@ -503,9 +472,6 @@ class AudioService : MediaSessionService() {
       }
 
       return super.onCustomCommand(session, controller, customCommand, args)
-
-      //return SessionResult(BaseResult.RESULT_ERROR_NOT_SUPPORTED, null)
-      //     return SessionResult(SessionResult.RESULT_SUCCESS, null)
     }
   }
 

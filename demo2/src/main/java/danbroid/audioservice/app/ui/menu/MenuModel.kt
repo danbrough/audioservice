@@ -26,21 +26,31 @@ class MenuModel(val menuID: String, context: Context) : ViewModel() {
     }
   }
 
-  class DemoMenuBuilder(val context: Context) : MenuBuilder({ DemoMenuBuilder(context) })
-
+  inner class DemoMenuBuilder(val context: Context, val model: MenuModel) : MenuBuilder({ DemoMenuBuilder(context, model) }) {
+    fun update(item: MenuItem) {
+      log.warn("UPDATING $item")
+      _state.value = _state.value.let {
+        it.copy(
+            children = it.children.toMutableList().map {
+              if (it.id == item.id) item else it
+            }
+        )
+      }
+    }
+  }
 
   private val _state = MutableStateFlow(MenuState.LOADING)
   val state: StateFlow<MenuState> = _state
 
   init {
-    log.dinfo("created menu model for $menuID context:$context")
+
+    log.dinfo("created menu model for $menuID")
 
     viewModelScope.launch {
-
-      log.info("loading menu...$menuID")
+      log.trace("loading menu...$menuID")
 
       val builder: DemoMenuBuilder?
-      val menuBuilder = demoMenu(context, context.getString(R.string.app_name))
+      val menuBuilder = demoMenu(DemoMenuBuilder(context, this@MenuModel), context.getString(R.string.app_name))
 
       withContext(Dispatchers.IO) {
         builder = menuBuilder.find(menuID)
@@ -48,15 +58,14 @@ class MenuModel(val menuID: String, context: Context) : ViewModel() {
 
       log.debug("found builder: $builder")
 
-      val menu: MenuItem? = builder?.buildItem()
-      val children = builder?.buildChildren()
+      builder ?: error("Failed to find builder for $menuID")
 
-      if (menu != null) {
-        _state.value = MenuState(menu, children ?: emptyList())
-      }
-
+      val menu: MenuItem = builder.buildItem.invoke()
+      val children = builder.buildChildren.invoke()
+      _state.value = MenuState(menu, children)
     }
   }
+
 
   override fun onCleared() {
     log.debug("onCleared() $menuID")

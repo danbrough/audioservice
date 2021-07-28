@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
           //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)
           val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 
-          TestScaffold(navController, bottomSheetScaffoldState)
+          MainScaffold(navController, bottomSheetScaffoldState)
         }
       }
     }

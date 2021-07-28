@@ -1,21 +1,25 @@
 package danbroid.audioservice.app
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import danbroid.audioservice.app.ui.controls.BottomControls
 import kotlinx.coroutines.launch
 
 @Composable
-fun TestScaffold(
+fun MainScaffold(
     navController: NavHostController,
     bottomSheetScaffoldState: BottomSheetScaffoldState
 ) {
@@ -23,10 +27,11 @@ fun TestScaffold(
   val audioClientModel: DemoAudioClientModel = audioClientModel()
   val insets = LocalWindowInsets.current
 
-  log.trace("navBarsTop: ${insets.navigationBars.layoutInsets.top} bottom: ${insets.navigationBars.layoutInsets.bottom}")
-  log.trace("statusBarsTop: ${insets.statusBars.layoutInsets.top} bottom: ${insets.statusBars.layoutInsets.bottom}")
+
+
   val navBottom = with(LocalDensity.current) { insets.navigationBars.bottom.toDp() }
   log.trace("NAV BAR BOTTOM: ${navBottom}")
+  val sheetHeight = 50.dp
 
   BottomSheetScaffold(
       modifier = Modifier,
@@ -44,11 +49,9 @@ fun TestScaffold(
 
       },
       //sheetPeekHeight = if (bottomSheetScaffoldState.bottomSheetState.isExpanded) 0.dp else 56.dp
-      sheetPeekHeight = 50.dp + navBottom
+      sheetPeekHeight = sheetHeight + navBottom
   ) {
-
-    DemoNavGraph(Modifier.navigationBarsPadding().padding(bottom = 50.dp), navController, audioClientModel)
-
+    DemoNavGraph(Modifier.navigationBarsPadding(end = false).padding(bottom = sheetHeight), navController, audioClientModel)
   }
 
   BackButtonHandler(bottomSheetScaffoldState.bottomSheetState.isExpanded) {
@@ -58,41 +61,5 @@ fun TestScaffold(
   }
 }
 
-@Composable
-fun MainScaffold(
-    title: String = "AudioService Demo",
-    navController: NavHostController = rememberNavController(),
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
-) {
-  Scaffold(
-      modifier = Modifier,
-      //  snackbarHost = { SnackBarHost(it) },
-      topBar = {
-        Row {
-          Text(title)
-        }
-      },
-/*    topBar = {
-      Column {
-        Spacer(
-          modifier = Modifier.statusBarsHeight().fillMaxWidth()
-            .background(MaterialTheme.colors.primaryVariant)
-        )
-        Button({}) {
-          Text("Testing")
-        }
-        BrewAppBar(
-          title = title,
-          navController = navController
-        )
-      }
-    },*/
-      //  bottomBar = { BottomNavButtons(navController = navController) },
-      scaffoldState = scaffoldState,
-  ) { innerPaddingModifier ->
-    //log.derror("innerPadding ${innerPaddingModifier}")
-    //DemoNavGraph(Modifier.padding(innerPaddingModifier), navController,audioClientModel: AudioClientModel = audioClientModel())
-  }
-}
 
 

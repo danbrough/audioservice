@@ -75,13 +75,19 @@ open class MenuBuilder(val builderFactory: () -> MenuBuilder) {
     }
   }
 
-  fun buildItem(): MenuItem = MenuItem(
-      id, title, subtitle,
-      iconURI = iconURI, isBrowsable = isBrowsable, isPlayable = isPlayable,
-      onClicked = onClicked
-  )
 
-  fun buildChildren(): List<MenuItem> = children?.map { it.buildItem() } ?: emptyList()
+  @MenuDSL
+  var buildItem: () -> MenuItem = {
+    MenuItem(
+        id, title, subtitle,
+        iconURI = iconURI, isBrowsable = isBrowsable, isPlayable = isPlayable,
+        onClicked = onClicked
+    )
+  }
+
+  @MenuDSL
+  var buildChildren: suspend () -> List<MenuItem> =
+      { children?.map { it.buildItem() } ?: emptyList() }
 
 
   override fun toString() = "MenuBuilder[$id:$title]"

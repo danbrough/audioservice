@@ -1,16 +1,19 @@
 package danbroid.audioservice.app.content
 
-import android.content.Context
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.audioClientModel
+import danbroid.audioservice.app.menu.MenuItem
 import danbroid.audioservice.app.menu.menu
+import danbroid.audioservice.app.rnz.RNZLibrary
+import danbroid.audioservice.app.rnz.rnz
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.MenuModel
 import danbroid.demo.content.ipfs_gateway
 import danbroid.demo.content.somaFM
 import danbroid.demo.content.testTracks
 import danbroid.util.format.uriEncode
+import java.util.*
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 
@@ -22,7 +25,7 @@ const val URI_BROWSER = "$URI_PREFIX/browser"
 const val URI_PLAYLIST = "$URI_PREFIX/playlist"
 
 
-suspend fun demoMenu(context: Context, rootTitle: String): MenuModel.DemoMenuBuilder = MenuModel.DemoMenuBuilder(context).apply {
+suspend fun demoMenu(builder: MenuModel.DemoMenuBuilder, rootTitle: String): MenuModel.DemoMenuBuilder = builder.apply {
   id = URI_CONTENT
   title = rootTitle
 
@@ -34,11 +37,22 @@ suspend fun demoMenu(context: Context, rootTitle: String): MenuModel.DemoMenuBui
   }
 
   menu {
-    id = URI_PLAYLIST
+    id = RNZLibrary.getProgrammeURI(context.rnz.rnzNewsProgrammeID())
+    title = "RNZ News"
+    subtitle = "Latest RNZ News Bulletin"
+    isPlayable = true
+    iconURI = AppIcon.RNZ_NEWS
+  }
 
+  menu {
+    id = URI_PLAYLIST
     title = context.getString(R.string.playlist)
-    subtitle = if (context.audioClientModel().client.playlist.isEmpty())
-      context.getString(R.string.playlist_empty) else context.getString(R.string.playlist_current)
+    subtitle = context.audioClientModel().client.queueState.value.size.let { size ->
+      if (size > 0)
+        "Size: $size"
+      else
+        "Empty"
+    }
     iconURI = AppIcon.PLAYLIST
   }
 
@@ -51,6 +65,19 @@ suspend fun demoMenu(context: Context, rootTitle: String): MenuModel.DemoMenuBui
       title = "Child 1"
       subtitle = "First Child"
       iconURI = AppIcon.PANORAMA
+    }
+
+    menu {
+      id = URI_PLAYLIST
+
+      title = context.getString(R.string.playlist)
+      subtitle = context.audioClientModel().client.queueState.value.size.let { size ->
+        if (size > 0)
+          "Size: $size"
+        else
+          "Empty"
+      }
+      iconURI = AppIcon.PLAYLIST
     }
 
     menu {
@@ -79,6 +106,11 @@ suspend fun demoMenu(context: Context, rootTitle: String): MenuModel.DemoMenuBui
       menu {
         id = Routes.SETTINGS
         title = "Navigate by ROUTE.SETTINGS to Settings"
+        subtitle = "Click to update this subtitle"
+        onClicked = {
+
+          update(it.copy(subTitle = "The date is ${Date()}"))
+        }
       }
     }
 
@@ -100,16 +132,20 @@ suspend fun demoMenu(context: Context, rootTitle: String): MenuModel.DemoMenuBui
     title = "Soma FM"
     subtitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
     iconURI = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
+    isBrowsable = true
+    buildChildren = {
+      context.somaFM.channels().map {
+        log.derror("CREATING CHANNEL $it")
+        MenuItem(
+            id = "somafm://${it.id.uriEncode()}",
+            title = it.title,
+            subTitle = it.description,
+            iconURI = it.image,
+            isPlayable = true)
 
-    context.somaFM.channels().forEach {
-      menu {
-        id = "somafm://${it.id.uriEncode()}"
-        title = it.title
-        subtitle = it.description
-        iconURI = it.image
-        isPlayable = true
       }
     }
+
   }
 
 
@@ -152,4 +188,3 @@ suspend fun demoMenu(context: Context, rootTitle: String): MenuModel.DemoMenuBui
 
 
 }
-

@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Audiotrack
-import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,13 +15,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audioservice.app.menu.MenuItem
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.components.DemoImage
-import danbroid.audioservice.app.ui.theme.DemoTheme
 
 
 @Composable
@@ -41,7 +38,7 @@ fun MenuScreen(
     Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     LazyColumn {
       items(menus, { it.id }) { menu ->
-        MenuListItem(menu, { menuItemClicked.invoke(menu) })
+        MenuListItem(menu.title, menu.subTitle, menu.iconURI, { menuItemClicked.invoke(menu) })
       }
     }
   }
@@ -49,13 +46,11 @@ fun MenuScreen(
 
 
 @Composable
-fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
+fun MenuListItem(title: String, subTitle: String, icon: Any?, onClicked: () -> Unit) {
   Row(modifier = Modifier.height(62.dp).fillMaxWidth().clickable { onClicked() }, verticalAlignment = Alignment.CenterVertically) {
-    //Spacer(Modifier.width(4.dp))
 
     val imageModifier = Modifier.size(52.dp).padding(start = 4.dp)
-    var icon: Any? = menuItem.iconURI
-
+    var icon = icon
 
     if (icon is AppIcon)
       icon = AppIcon.lookup(icon)
@@ -65,27 +60,27 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
         is String ->
           DemoImage(
               imageUrl = it,
-              menuItem.title,
+              title,
               modifier = imageModifier
           )
         is ImageVector ->
           Icon(
               it,
-              menuItem.title,
+              title,
               modifier = imageModifier,
               tint = MaterialTheme.colors.primary,
           )
         is Int ->
           Icon(
               painterResource(it),
-              menuItem.title,
+              title,
               modifier = imageModifier,
               tint = MaterialTheme.colors.primary,
           )
         else ->
           DemoImage(
               imageUrl = it.toString(),
-              menuItem.title,
+              title,
               modifier = imageModifier
           )
       }
@@ -102,9 +97,9 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
           colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
       )*/
     Column(Modifier.padding(start = 16.dp).fillMaxWidth(), verticalArrangement = Arrangement.Bottom) {
-      Text(menuItem.title, style = MaterialTheme.typography.subtitle1)
+      Text(title, style = MaterialTheme.typography.subtitle1)
       Text(
-          menuItem.subTitle,
+          subTitle,
           overflow = TextOverflow.Ellipsis, maxLines = 2,
           modifier = Modifier.alpha(ContentAlpha.medium),
           style = MaterialTheme.typography.body2
@@ -115,71 +110,6 @@ fun MenuListItem(menuItem: MenuItem, onClicked: () -> Unit) {
 }
 
 
-@Preview
-@Composable
-private fun ItemTest() {
-  DemoTheme {
-    LazyColumn {
-      item("1") {
-        Row(modifier = Modifier.height(62.dp), verticalAlignment = Alignment.CenterVertically) {
-          //Spacer(Modifier.width(4.dp))
-          Icon(
-              Icons.Filled.Audiotrack,
-              contentDescription = null,
-              tint = MaterialTheme.colors.primary,
-              modifier = Modifier.size(52.dp).padding(start = 4.dp)
-          )
-          /*  Image(
-                Icons.Filled.Audiotrack, "",
-                contentScale = ContentScale.Fit,
-                //modifier = Modifier.size(42.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
-            )*/
-          Column(Modifier.padding(start = 16.dp), verticalArrangement = Arrangement.Bottom) {
-            Text("Item 1", style = MaterialTheme.typography.subtitle1)
-            Text("Subtitle 1", overflow = TextOverflow.Ellipsis, maxLines = 2,
-                modifier = Modifier.alpha(0.6f),
-                style = MaterialTheme.typography.body2)
-          }
-        }
-        Divider()        /*       ListItem(
-                   icon = {
-                     *//*  Icon(
-                    Icons.Filled.Audiotrack,
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.primary
-                )*//*
-              Image(
-                  Icons.Filled.Audiotrack, "",
-                  contentScale = ContentScale.Fit,
-                  //modifier = Modifier.size(42.dp),
-                  colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
-              )
-            },
-            text = { Text("Item 1") },
-            secondaryText = { Text("Subtitle 1", overflow = TextOverflow.Ellipsis, maxLines = 2) },
-            modifier = Modifier.height(72.dp)
-        )*/
-      }
-      item {
-        Divider()
-      }
-      item("2") {
-        ListItem(
-            icon = {
-              Icon(
-                  Icons.Filled.Dashboard,
-                  contentDescription = null,
-                  tint = MaterialTheme.colors.primary,
-              )
-            },
-            text = { Text("Item 2") },
-            secondaryText = { Text("Subtitle 2", overflow = TextOverflow.Ellipsis, maxLines = 2) },
-        )
-      }
-    }
-  }
-}
 
 
 private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.menu")
