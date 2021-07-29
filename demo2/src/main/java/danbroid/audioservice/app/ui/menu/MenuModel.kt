@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import danbroid.audioservice.app.menu.MenuBuilder
 import danbroid.audioservice.app.menu.MenuItem
+import danbroid.audioservice.app.rnz.rnz
 import danbroid.demo.content.somaFM
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -55,6 +56,11 @@ class MenuModel(val menuID: String, context: Context) : ViewModel() {
   }
 
   val somaFMChannels = somaChannelsFlow.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+  val rnzProgID = flow {
+    log.error("GETTING RNZ PROG ID")
+    emit(context.rnz.rnzNewsProgrammeID())
+  }
 
   /*
     withContext(Dispatchers.Main) {

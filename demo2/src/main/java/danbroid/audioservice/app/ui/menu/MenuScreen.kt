@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audioservice.app.DemoAudioClientModel
 import danbroid.audioservice.app.Routes
+import danbroid.audioservice.app.content.SomaFM
 import danbroid.audioservice.app.content.URI_CONTENT
 import danbroid.audioservice.app.content.URI_SOMA_FM
 import danbroid.audioservice.app.content.rootContent
@@ -32,18 +33,7 @@ import danbroid.audioservice.app.menu.MenuDSL
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.components.DemoImage
 import danbroid.demo.menu.Menu
-import danbroid.util.format.uriEncode
 
-
-@Composable
-private fun MenuScreen(content: LazyListScope.() -> Unit) {
-  Column {
-    Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
-    LazyColumn {
-      content()
-    }
-  }
-}
 
 /*
 @Composable
@@ -147,8 +137,18 @@ class MenuContext(
   }
 
   @Composable
-  fun menuScreen(menuContent: MenuContext.() -> Unit) {
-    MenuScreen {
+  private fun MenuScreenImpl(content: LazyListScope.() -> Unit) {
+    Column {
+      Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
+      LazyColumn {
+        content()
+      }
+    }
+  }
+
+  @Composable
+  fun MenuScreen(menuContent: MenuContext.() -> Unit) {
+    MenuScreenImpl {
       listScope = this
       menuContent.invoke(this@MenuContext)
     }
@@ -185,41 +185,6 @@ class MenuContext(
 
 }
 
-@Composable
-fun MenuContext.SomaFM() {
-  val somaChannels by menuModel.somaFMChannels.collectAsState()
-
-  menuScreen {
-    somaChannels.forEach {
-      log.warn("CREATING MENU ${it.id}")
-      menu {
-        id = "somafm://${it.id.uriEncode()}"
-        title = it.title
-        subTitle = it.description
-        icon = it.image
-        isPlayable = true
-      }
-    }
-  }
-
-
-/*  scope.launch(Dispatchers.IO) {
-    val channels = context.somaFM.channels()
-    withContext(Dispatchers.Main) {
-      channels.forEach {
-        log.warn("CREATING MENU ${it.id}")
-        menu {
-          id = "somafm://${it.id.uriEncode()}"
-          title = it.title
-          subTitle = it.description
-          icon = it.image
-          isPlayable = true
-        }
-      }
-    }
-  }*/
-}
-
 
 @Composable
 fun menu(menuID: String, navController: NavHostController, audioClientModel: DemoAudioClientModel) {
@@ -229,22 +194,11 @@ fun menu(menuID: String, navController: NavHostController, audioClientModel: Dem
 
   val context = LocalContext.current
   log.derror("LAYING IT ON THICK")
-  val menuContext = MenuContext(URI_CONTENT, context, menuModel, navController, audioClientModel)
-
-  if (menuID == URI_SOMA_FM) {
-    menuContext.SomaFM()
-  } else {
-    MenuScreen {
-      menuContext.listScope = this
-      menuContext.apply {
-        log.dwarn("LAYING IT ON THICKER")
-
-        when (menuID) {
-          URI_CONTENT -> rootContent()
-          else -> log.error("Unhandled menuID: $menuID")
-        }
-
-      }
+  MenuContext(menuID, context, menuModel, navController, audioClientModel).apply {
+    when (menuID) {
+      URI_CONTENT -> rootContent()
+      URI_SOMA_FM -> SomaFM()
+      else -> log.error("Unhandled menuID: $menuID")
     }
   }
 }
