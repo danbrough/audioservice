@@ -144,15 +144,16 @@ private fun BottomControls(
           menuExpanded = false
         }) {
           Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.Cast, "",tint=MaterialTheme.colors.primary)
-            Text("Cast to TV",modifier = Modifier.padding(4.dp))
+            Icon(Icons.Default.Cast, "", tint = MaterialTheme.colors.primary)
+            Text("Cast to TV", modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.subtitle2)
           }
         }
         DropdownMenuItem({
           log.dtrace("clicked item2")
           menuExpanded = false
         }) {
-          Text("Item 2 with a very long title")
+          Icon(Icons.Default.Info, "", tint = MaterialTheme.colors.primary)
+          Text("Item 2 with a very long title", modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.subtitle2)
         }
       }
     }

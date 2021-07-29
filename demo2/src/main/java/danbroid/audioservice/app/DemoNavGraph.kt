@@ -14,7 +14,7 @@ import danbroid.audioservice.app.content.URI_CONTENT
 import danbroid.audioservice.app.content.URI_SETTINGS
 import danbroid.audioservice.app.rnz.RNZLibrary
 import danbroid.audioservice.app.ui.browser.BrowserScreen
-import danbroid.audioservice.app.ui.home.Menu
+import danbroid.audioservice.app.ui.menu.menu
 import danbroid.audioservice.app.ui.settings.SettingsScreen
 import danbroid.util.format.uriEncode
 
@@ -47,7 +47,7 @@ fun DemoNavGraph(
   }*/
 
   composable(Routes.HOME) {
-    Menu(URI_CONTENT, navController, audioClientModel)
+    menu(URI_CONTENT, navController, audioClientModel)
   }
 
   composable("${Routes.MENU}?id={id}", arguments = listOf(
@@ -59,15 +59,7 @@ fun DemoNavGraph(
 
     val menuID = entry.arguments?.getString("id")!!
 
-    Menu(menuID, navController, audioClientModel)
-
-
-/*
-    val backstackEntry = navController.currentBackStackEntryAsState()
-    log.info("CURRENT ROUTE: ${backstackEntry.value?.destination?.route}")
-*/
-
-
+    menu(menuID, navController, audioClientModel)
   }
 
   composable(

@@ -4,4 +4,11 @@
   <string name="playlist">Playlist</string>
   <string name="playlist_current">Current Playlist</string>
   <string name="playlist_empty">Playlist is empty</string>
+  <string name="settings_description">Application Settings</string>
+  <string name="settings">Settings</string>
+  <string name="lbl_skip_prev">Skip to previous</string>
+  <string name="lbl_skip_next">Skip to next</string>
+  <string name="pause">Pause</string>
+  <string name="play">Play</string>
+  <string name="swipe_up">Swipe up</string>
 </resources>

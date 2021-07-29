@@ -13,10 +13,10 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.library.RootAudioLibrary
-import danbroid.audioservice.app.rnz.RNZLibrary
+import danbroid.audioservice.app.rnz.rnz
 import danbroid.audioservice.app.ui.theme.DemoTheme
-import danbroid.demo.content.SomaFMLibrary
 import danbroid.demo.content.TestDataLibrary
+import danbroid.demo.content.somaFM
 
 class MainActivity : ComponentActivity() {
 
@@ -26,8 +26,8 @@ class MainActivity : ComponentActivity() {
 
     RootAudioLibrary.register(
         TestDataLibrary(),
-        SomaFMLibrary.getInstance(this),
-        RNZLibrary.getInstance(this)
+        somaFM,
+        rnz
     )
 
 
@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
     }
   }
 }
-
 
 
 @Composable

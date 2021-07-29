@@ -1,13 +1,15 @@
 package danbroid.audioservice.app.content
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.menu.MenuItem
-import danbroid.audioservice.app.menu.menu
 import danbroid.audioservice.app.rnz.RNZLibrary
 import danbroid.audioservice.app.rnz.rnz
 import danbroid.audioservice.app.ui.AppIcon
+import danbroid.audioservice.app.ui.menu.MenuContext
 import danbroid.audioservice.app.ui.menu.MenuModel
 import danbroid.demo.content.ipfs_gateway
 import danbroid.demo.content.somaFM
@@ -23,7 +25,40 @@ const val URI_CONTENT = "$URI_PREFIX/content"
 const val URI_SETTINGS = "$URI_PREFIX/settings"
 const val URI_BROWSER = "$URI_PREFIX/browser"
 const val URI_PLAYLIST = "$URI_PREFIX/playlist"
+const val URI_SOMA_FM = "$URI_PREFIX/somafm"
 
+fun MenuContext.rootContent() {
+
+  menu {
+    log.dinfo("CREATING THIS ONE!!")
+    title = stringResource(R.string.app_name)
+    icon = AppIcon.PANORAMA
+    subTitle = menuModel.dynamicTitleFlow.collectAsState("Initial Title").value
+    onClicked = {
+      log.debug("clicked $this")
+    }
+  }
+
+  menu {
+    log.ddebug("CREATING THIS ONE!!")
+    id = URI_SETTINGS
+    title = stringResource(R.string.settings)
+    subTitle = stringResource(R.string.settings_description)
+    icon = AppIcon.SETTINGS
+  }
+
+  menu {
+    id = URI_SOMA_FM
+    title = "Soma FM"
+    subTitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
+    icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
+    isBrowsable = true
+  }
+}
+
+
+
+suspend fun MenuModel.DemoMenuBuilder.menu(block: suspend MenuModel.DemoMenuBuilder.() -> Unit) = Unit
 
 suspend fun demoMenu(builder: MenuModel.DemoMenuBuilder, rootTitle: String): MenuModel.DemoMenuBuilder = builder.apply {
   id = URI_CONTENT

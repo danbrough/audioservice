@@ -21,7 +21,7 @@ private val log = danbroid.logging.getLog(MenuItem::class)
 annotation class MenuDSL
 
 
-open class MenuBuilder(val builderFactory: () -> MenuBuilder) {
+open class MenuBuilder() {
   @MenuDSL
   lateinit var id: String
 
@@ -94,11 +94,6 @@ open class MenuBuilder(val builderFactory: () -> MenuBuilder) {
 
 }
 
-@MenuDSL
-suspend inline fun <reified T : MenuBuilder> T.menu(child: T = builderFactory.invoke() as T, block: suspend T.() -> Unit) {
-  addChild(child)
-  child.block()
-}
 
 /*
 @MenuDSL
