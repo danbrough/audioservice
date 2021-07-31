@@ -1,11 +1,14 @@
 package danbroid.audioservice.app.content
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.AppIcon
+import danbroid.audioservice.app.ui.menu.LocalMenuContext
+import danbroid.audioservice.app.ui.menu.MenuScreen
 import danbroid.audioservice.app.ui.menu.menu
-import danbroid.audioservice.app.ui.menu.menuScreen
 import danbroid.demo.content.ipfs_gateway
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
@@ -23,18 +26,22 @@ const val URI_SOMA_FM = "$URI_PREFIX/somafm"
 fun RootMenu() {
 
   // val rnzProgID by menuModel.rnzProgID.collectAsState(0)
+  val model = LocalMenuContext.current!!.menuModel
+  val dynamicTitle by model.dynamicTitleFlow.collectAsState("Initial Title")
 
-  menuScreen {
-/*
+  MenuScreen {
+
+
     menu {
+      log.dtrace("DYNAMIC MENU")
       title = stringResource(R.string.app_name)
       icon = AppIcon.PANORAMA
-      subTitle = menuModel.dynamicTitleFlow.collectAsState("Initial Title").value
+      subTitle = dynamicTitle
       onClicked = {
         log.debug("clicked $this")
       }
     }
-*/
+
 
     menu {
       id = URI_SETTINGS

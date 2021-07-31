@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.log
 import danbroid.audioservice.app.ui.menu.menu
-import danbroid.audioservice.app.ui.menu.menuScreen
+import danbroid.audioservice.app.ui.menu.MenuScreen
 import danbroid.util.format.uriEncode
 
 @Composable
@@ -17,7 +17,7 @@ fun SomaFM() {
   runCatching {
     val somaChannels by context.menuModel.somaFMChannels.collectAsState()
 
-    menuScreen {
+    MenuScreen {
       somaChannels.forEach {
         menu {
           id = "somafm://${it.id.uriEncode()}"

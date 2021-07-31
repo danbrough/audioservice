@@ -107,9 +107,11 @@ fun MenuListItemImpl(title: String, subTitle: String, icon: Any?, onClicked: () 
   Divider()
 }
 
+typealias MenuScreenScope = LazyListScope
+
 
 @MenuDSL
-fun LazyListScope.menu(onCreate: @Composable Menu.() -> Unit) {
+inline fun MenuScreenScope.menu(crossinline onCreate: @Composable Menu.() -> Unit) {
   item {
     val context = LocalMenuContext.current!!
     val menu = Menu("_${MenuContext.NEXT_ID++}", "Untitled")
@@ -122,7 +124,7 @@ fun LazyListScope.menu(onCreate: @Composable Menu.() -> Unit) {
 
 @Composable
 @MenuDSL
-fun menuScreen(content: LazyListScope.() -> Unit) {
+fun MenuScreen(content: MenuScreenScope.() -> Unit) {
   Column {
     Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     LazyColumn {
