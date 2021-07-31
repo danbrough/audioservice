@@ -3,6 +3,9 @@ package danbroid.demo.menu
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
+@DslMarker
+annotation class MenuDSL
+
 @Serializable
 data class Menu(
     var id: String,

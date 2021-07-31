@@ -15,6 +15,11 @@ android {
     consumerProguardFiles("consumer-rules.pro")
   }
 
+  buildFeatures {
+    viewBinding = true
+    compose = true
+  }
+
   buildTypes {
     release {
       isMinifyEnabled = false
@@ -25,8 +30,26 @@ android {
     sourceCompatibility = ProjectVersions.JAVA_VERSION
     targetCompatibility = ProjectVersions.JAVA_VERSION
   }
+
   kotlinOptions {
     jvmTarget = ProjectVersions.KOTLIN_VERSION
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion = ProjectVersions.COMPOSE_VERSION
+  }
+
+  kotlin.sourceSets.all {
+    setOf(
+        "kotlinx.serialization.ExperimentalSerializationApi",
+        "androidx.compose.material.ExperimentalMaterialApi",
+        "androidx.compose.animation.ExperimentalAnimationApi",
+        "kotlin.time.ExperimentalTime",
+        //"kotlinx.coroutines.ExperimentalCoroutinesApi",
+        //"kotlinx.coroutines.FlowPreview",
+        //"androidx.compose.material.ExperimentalMaterialApi"
+    ).forEach {
+      languageSettings.useExperimentalAnnotation(it)
+    }
   }
 }
 
@@ -40,5 +63,13 @@ dependencies {
   compileOnly(AndroidX.compose.runtime)
   implementation(Square.okHttp3.okHttp)
   implementation("org.jetbrains.kotlin:kotlin-reflect:_")
+  implementation(AndroidX.lifecycle.viewModelKtx)
+  implementation(AndroidX.compose.runtime)
+  implementation(AndroidX.constraintLayoutCompose)
+
+
+  implementation("androidx.navigation:navigation-compose:2.4.0-alpha05")
+  implementation("androidx.activity:activity-compose:1.3.0-rc02")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
 }

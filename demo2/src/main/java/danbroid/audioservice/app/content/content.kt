@@ -1,27 +1,16 @@
 package danbroid.audioservice.app.content
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import danbroid.audioservice.app.R
-import danbroid.audioservice.app.Routes
-import danbroid.audioservice.app.audioClientModel
-import danbroid.audioservice.app.menu.MenuItem
-import danbroid.audioservice.app.rnz.RNZLibrary
-import danbroid.audioservice.app.rnz.rnz
 import danbroid.audioservice.app.ui.AppIcon
-import danbroid.audioservice.app.ui.menu.MenuContext
-import danbroid.audioservice.app.ui.menu.MenuModel
+import danbroid.audioservice.app.ui.menu.menu
+import danbroid.audioservice.app.ui.menu.menuScreen
 import danbroid.demo.content.ipfs_gateway
-import danbroid.demo.content.somaFM
-import danbroid.demo.content.testTracks
-import danbroid.util.format.uriEncode
-import java.util.*
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
-
 const val URI_PREFIX = "audiodemo:/"
+
 const val URI_CONTENT = "$URI_PREFIX/content"
 
 const val URI_SETTINGS = "$URI_PREFIX/settings"
@@ -29,14 +18,15 @@ const val URI_BROWSER = "$URI_PREFIX/browser"
 const val URI_PLAYLIST = "$URI_PREFIX/playlist"
 const val URI_SOMA_FM = "$URI_PREFIX/somafm"
 
+
 @Composable
-fun MenuContext.rootContent() {
+fun RootMenu() {
 
-  val rnzProgID by menuModel.rnzProgID.collectAsState(0)
+  // val rnzProgID by menuModel.rnzProgID.collectAsState(0)
 
-  MenuScreen {
+  menuScreen {
+/*
     menu {
-      log.dinfo("CREATING THIS ONE!!")
       title = stringResource(R.string.app_name)
       icon = AppIcon.PANORAMA
       subTitle = menuModel.dynamicTitleFlow.collectAsState("Initial Title").value
@@ -44,9 +34,9 @@ fun MenuContext.rootContent() {
         log.debug("clicked $this")
       }
     }
+*/
 
     menu {
-      log.ddebug("CREATING THIS ONE!!")
       id = URI_SETTINGS
       title = stringResource(R.string.settings)
       subTitle = stringResource(R.string.settings_description)
@@ -68,6 +58,7 @@ fun MenuContext.rootContent() {
       icon = AppIcon.RADIO
     }
 
+/*
     menu {
       id = RNZLibrary.getProgrammeURI(rnzProgID)
       title = "RNZ News"
@@ -75,8 +66,9 @@ fun MenuContext.rootContent() {
       isPlayable = true
       icon = AppIcon.RNZ_NEWS
     }
+*/
 
-    menu {
+/*    menu {
       id = URI_PLAYLIST
       title = context.getString(R.string.playlist)
       subTitle = context.audioClientModel().client.queueState.value.size.let { size ->
@@ -86,48 +78,13 @@ fun MenuContext.rootContent() {
           "Empty"
       }
       icon = AppIcon.PLAYLIST
-    }
+    }*/
 
   }
 }
 
 
-@Composable
-fun MenuContext.SomaFM() {
-  val somaChannels by menuModel.somaFMChannels.collectAsState()
-
-  MenuScreen {
-    somaChannels.forEach {
-      log.warn("CREATING MENU ${it.id}")
-      menu {
-        id = "somafm://${it.id.uriEncode()}"
-        title = it.title
-        subTitle = it.description
-        icon = it.image
-        isPlayable = true
-      }
-    }
-  }
-
-
-/*  scope.launch(Dispatchers.IO) {
-    val channels = context.somaFM.channels()
-    withContext(Dispatchers.Main) {
-      channels.forEach {
-        log.warn("CREATING MENU ${it.id}")
-        menu {
-          id = "somafm://${it.id.uriEncode()}"
-          title = it.title
-          subTitle = it.description
-          icon = it.image
-          isPlayable = true
-        }
-      }
-    }
-  }*/
-}
-
-suspend fun MenuModel.DemoMenuBuilder.menu(block: suspend MenuModel.DemoMenuBuilder.() -> Unit) = Unit
+/*
 
 suspend fun demoMenu(builder: MenuModel.DemoMenuBuilder, rootTitle: String): MenuModel.DemoMenuBuilder = builder.apply {
   id = URI_CONTENT
@@ -252,6 +209,7 @@ suspend fun demoMenu(builder: MenuModel.DemoMenuBuilder, rootTitle: String): Men
   }
 
 
+*/
 /*  context.rnz.loadProgramme(2582485L).toMenuItem().also {
     menu {
       id = it.id
@@ -270,7 +228,8 @@ suspend fun demoMenu(builder: MenuModel.DemoMenuBuilder, rootTitle: String): Men
       iconURI = AppIcon.RNZ_NEWS
       isPlayable = it.isPlayable
     }
-  }*/
+  }*//*
+
 
   menu {
     id = URI_SETTINGS
@@ -291,3 +250,4 @@ suspend fun demoMenu(builder: MenuModel.DemoMenuBuilder, rootTitle: String): Men
 
 
 }
+*/

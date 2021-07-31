@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
+import danbroid.audio.library.AudioClientViewModel
 import danbroid.audioservice.app.ui.controls.BottomControls
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,7 @@ fun MainScaffold(
     bottomSheetScaffoldState: BottomSheetScaffoldState
 ) {
   val coroutineScope = rememberCoroutineScope()
-  val audioClientModel: DemoAudioClientModel = audioClientModel()
+  val audioClientModel: AudioClientViewModel = audioClientModel()
   val insets = LocalWindowInsets.current
 
 

@@ -49,11 +49,11 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun audioClientModel(): DemoAudioClientModel = LocalContext.current.audioClientModel()
+fun audioClientModel(): AudioClientViewModel = LocalContext.current.audioClientModel()
 
-fun Context.audioClientModel(): DemoAudioClientModel {
+fun Context.audioClientModel(): AudioClientViewModel {
   val activity = this as ComponentActivity
-  return activity.viewModels<DemoAudioClientModel> {
+  return activity.viewModels<AudioClientViewModel> {
     AudioClientViewModel.Companion.AudioClientViewModelFactory(activity)
   }.value
 }

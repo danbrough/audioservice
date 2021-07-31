@@ -24,8 +24,8 @@ import androidx.media2.common.MediaMetadata
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audio.client.AudioClient
+import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.service.AudioService
-import danbroid.audioservice.app.DemoAudioClientModel
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
@@ -205,7 +205,7 @@ private fun ExtraControlsPreview() {
 }
 
 @Composable
-fun BottomControls(expanded: Boolean = false, audioClientModel: DemoAudioClientModel = audioClientModel()) {
+fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewModel = audioClientModel()) {
   log.ddebug("BottomControls() expanded: $expanded")
 
   val player = audioClientModel.client

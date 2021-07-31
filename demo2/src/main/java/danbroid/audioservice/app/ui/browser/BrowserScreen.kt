@@ -18,13 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsHeight
-import danbroid.audioservice.app.DemoAudioClientModel
+import danbroid.audio.library.AudioClientViewModel
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.rnz.RNZLibrary
 
 
-private fun createWebView(context: Context, audioClientModel: DemoAudioClientModel): WebView {
+private fun createWebView(context: Context, audioClientModel: AudioClientViewModel): WebView {
   val webView = WebView(context)
 
   // val cssRegex = "https://www.rnz.co.nz/x/application.*\\.css".toRegex().toPattern()
@@ -152,7 +152,7 @@ private fun createWebView(context: Context, audioClientModel: DemoAudioClientMod
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun BrowserScreen(url: String, audioClientModel: DemoAudioClientModel) {
+fun BrowserScreen(url: String, audioClientModel: AudioClientViewModel) {
   log.dtrace("BrowserScreen()")
   Column {
     Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))

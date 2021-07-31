@@ -9,12 +9,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.navDeepLink
+import danbroid.audio.library.AudioClientViewModel
 import danbroid.audioservice.app.content.URI_BROWSER
 import danbroid.audioservice.app.content.URI_CONTENT
 import danbroid.audioservice.app.content.URI_SETTINGS
 import danbroid.audioservice.app.rnz.RNZLibrary
 import danbroid.audioservice.app.ui.browser.BrowserScreen
-import danbroid.audioservice.app.ui.menu.menu
+import danbroid.audioservice.app.ui.menu.MenuScreen
 import danbroid.audioservice.app.ui.settings.SettingsScreen
 import danbroid.util.format.uriEncode
 
@@ -33,7 +34,7 @@ object Routes {
 fun DemoNavGraph(
     modifier: Modifier,
     navController: NavHostController,
-    audioClientModel: DemoAudioClientModel
+    audioClientModel: AudioClientViewModel
 ) = NavHost(
     navController,
     modifier = modifier,
@@ -47,7 +48,7 @@ fun DemoNavGraph(
   }*/
 
   composable(Routes.HOME) {
-    menu(URI_CONTENT, navController, audioClientModel)
+    MenuScreen(URI_CONTENT, navController, audioClientModel)
   }
 
   composable("${Routes.MENU}?id={id}", arguments = listOf(
@@ -59,14 +60,14 @@ fun DemoNavGraph(
 
     val menuID = entry.arguments?.getString("id")!!
 
-    menu(menuID, navController, audioClientModel)
+    MenuScreen(menuID, navController, audioClientModel)
   }
 
   composable(
       Routes.SETTINGS,
       deepLinks = listOf(navDeepLink {
         uriPattern = URI_SETTINGS
-      })) { entry ->
+      })) { _ ->
     SettingsScreen()
   }
 
@@ -74,7 +75,7 @@ fun DemoNavGraph(
       Routes.BROWSER,
       deepLinks = listOf(navDeepLink {
         uriPattern = URI_BROWSER
-      })) { entry ->
+      })) { _ ->
     BrowserScreen(RNZLibrary.URL_RNZ, audioClientModel)
   }
 }
