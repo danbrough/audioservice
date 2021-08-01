@@ -9,7 +9,6 @@ import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.MenuScreen
 import danbroid.audioservice.app.ui.menu.menu
-import danbroid.demo.content.ipfs_gateway
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 const val URI_PREFIX = "audiodemo:/"
@@ -18,7 +17,6 @@ const val URI_CONTENT = "$URI_PREFIX/content"
 
 const val URI_SETTINGS = "$URI_PREFIX/settings"
 const val URI_BROWSER = "$URI_PREFIX/browser"
-const val URI_PLAYLIST = "$URI_PREFIX/playlist"
 const val URI_SOMA_FM = "$URI_PREFIX/somafm"
 
 
@@ -43,6 +41,9 @@ fun RootMenu() {
     }
 
 
+    PlaylistMenu()
+
+
     menu {
       id = URI_SETTINGS
       title = stringResource(R.string.settings)
@@ -63,6 +64,16 @@ fun RootMenu() {
       title = "PopTron"
       isPlayable = true
       icon = AppIcon.RADIO
+    }
+
+    testTracks.testData.forEach {
+      menu {
+        id = it.id
+        title = it.title
+        subTitle = it.subTitle
+        icon = it.iconURI
+        isPlayable = true
+      }
     }
 
 /*

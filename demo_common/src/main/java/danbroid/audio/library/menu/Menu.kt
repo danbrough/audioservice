@@ -1,4 +1,4 @@
-package danbroid.demo.menu
+package danbroid.audio.library.menu
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -15,6 +15,7 @@ data class Menu(
     var icon: Any? = null,
     var onClicked: (() -> Unit)? = null,
     var isBrowsable: Boolean = false,
-    var isPlayable: Boolean = false
+    var isPlayable: Boolean = false,
+    var isHidden: Boolean = false
 )
 

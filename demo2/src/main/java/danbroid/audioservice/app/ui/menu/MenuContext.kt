@@ -1,13 +1,11 @@
 package danbroid.audioservice.app.ui.menu
 
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.compositionLocalOf
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import danbroid.audio.library.AudioClientViewModel
-import danbroid.audio.ui.menu.MenuModel
+import danbroid.audio.library.menu.Menu
 import danbroid.audioservice.app.Routes
-import danbroid.demo.menu.Menu
 
 class MenuContext(
     val id: String,
@@ -53,4 +51,3 @@ class MenuContext(
 val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.menu")
 
 val LocalMenuContext = compositionLocalOf<MenuContext?> { null }
-val LocalLazyListScope = compositionLocalOf<LazyListScope?> { null }

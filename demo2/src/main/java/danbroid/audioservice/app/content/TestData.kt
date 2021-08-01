@@ -1,9 +1,12 @@
-package danbroid.demo.content
+package danbroid.audioservice.app.content
 
 import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.library.AudioLibrary
+import danbroid.demo.content.item
+import danbroid.demo.content.testData
+import danbroid.demo.content.toMediaMetadata
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.FileWriter
@@ -130,25 +133,6 @@ val testTracks = testData {
     id = "https://h1.danbrough.org/audienz/demos/complete.oga"
     subTitle = "A short OGA file"
   }
-}
-
-@DslMarker
-annotation class TestDataDSL
-
-@TestDataDSL
-class TestData {
-  val testData = mutableListOf<AudioTrack>()
-}
-
-@TestDataDSL
-fun testData(block: TestData.() -> Unit) = TestData().apply {
-  block()
-}
-
-@TestDataDSL
-fun TestData.item(block: AudioTrack.() -> Unit) = AudioTrack("").also {
-  it.block()
-  testData.add(it)
 }
 
 

@@ -212,16 +212,10 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
   val playerState by player.playState.collectAsState()
   val queueState by player.queueState.collectAsState()
   val currentItem by player.currentItem.collectAsState()
-  val playPosition by player.playPosition.collectAsState()
 
   val title = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE) ?: ""
   val subTitle = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE) ?: ""
 
-  var dragging by remember { mutableStateOf(false) }
-  var value by remember { mutableStateOf(playPosition.currentPos) }
-
-  if (!dragging)
-    value = playPosition.currentPos
 
   val modifier = if (expanded) Modifier.statusBarsPadding() else Modifier
 
@@ -234,6 +228,13 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
     )
 
     if (expanded) {
+      val playPosition by player.playPosition.collectAsState()
+      var dragging by remember { mutableStateOf(false) }
+      var value by remember { mutableStateOf(playPosition.currentPos) }
+
+      if (!dragging)
+        value = playPosition.currentPos
+
       if (playPosition.duration > 0L) {
         ExtraControls(value, playPosition.duration, {
           log.dtrace("value: $it")

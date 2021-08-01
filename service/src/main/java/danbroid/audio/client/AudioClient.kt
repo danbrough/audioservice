@@ -57,6 +57,10 @@ open class AudioClient(context: Context) {
   private val _metadata = MutableStateFlow<MediaMetadata?>(null)
   val metadata: StateFlow<MediaMetadata?> = _metadata
 
+  private val _playList = MutableStateFlow<List<MediaItem>>(emptyList())
+  val playlist: StateFlow<List<MediaItem>> = _playList
+
+
   protected val controllerCallback = ControllerCallback()
 
   protected val mainExecutor = ContextCompat.getMainExecutor(context)//Executors.newSingleThreadExecutor()
@@ -83,7 +87,6 @@ open class AudioClient(context: Context) {
         .build()
   }
 
-  val playlist: List<MediaItem> = mediaController.playlist ?: emptyList()
   val playlistIndex: Int = mediaController.currentMediaItemIndex
   var seeking = false
 
@@ -202,6 +205,7 @@ open class AudioClient(context: Context) {
           hasNext = controller.nextMediaItemIndex != -1,
           size = list?.size ?: 0
       )
+      _playList.value = list ?: emptyList()
     }
 
     override fun onTrackSelected(controller: MediaController, trackInfo: SessionPlayer.TrackInfo) {

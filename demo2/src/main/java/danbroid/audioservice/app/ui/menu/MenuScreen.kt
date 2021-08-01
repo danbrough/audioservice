@@ -1,5 +1,6 @@
 package danbroid.audioservice.app.ui.menu
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,45 +22,34 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.library.AudioClientViewModel
+import danbroid.audio.library.menu.Menu
+import danbroid.audio.library.menu.MenuDSL
 import danbroid.audio.somafm.SomaFM
-import danbroid.audio.ui.menu.menuModel
-import danbroid.audioservice.app.content.RootMenu
-import danbroid.audioservice.app.content.URI_CONTENT
-import danbroid.audioservice.app.content.URI_SOMA_FM
+import danbroid.audioservice.app.content.*
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.components.DemoImage
-import danbroid.demo.menu.Menu
-import danbroid.demo.menu.MenuDSL
-
-
-/*
-@Composable
-fun MenuScreen(menus: List<MenuItem>, menuItemClicked: (MenuItem) -> Unit) {
-  MenuScreen {
-    items(menus, { it.id }) { menu ->
-      MenuListItem(menu.title, menu.subTitle, menu.iconURI, { menuItemClicked(menu) })
-    }
-  }
-}
-*/
-
 
 @Composable
-fun MenuListItemImpl(title: String, subTitle: String, icon: Any?, onClicked: () -> Unit) {
+fun MenuListItemImpl(title: String, subTitle: String, _icon: Any?, onClicked: () -> Unit) {
   Row(modifier = Modifier.height(62.dp).fillMaxWidth().clickable { onClicked() }, verticalAlignment = Alignment.CenterVertically) {
 
     val imageModifier = Modifier.size(52.dp).padding(start = 4.dp)
-    var icon = icon
+    var icon = _icon
 
     if (icon is AppIcon)
       icon = AppIcon.lookup(icon)
 
+
+
     icon?.also {
       when (it) {
+        is Bitmap ->
+          Icon(it.asImageBitmap(), title, modifier = imageModifier)
         is String ->
           DemoImage(
               imageUrl = it,
               title,
+
               modifier = imageModifier
           )
         is ImageVector ->
@@ -116,8 +107,10 @@ inline fun MenuScreenScope.menu(crossinline onCreate: @Composable Menu.() -> Uni
     val context = LocalMenuContext.current!!
     val menu = Menu("_${MenuContext.NEXT_ID++}", "Untitled")
     menu.onCreate()
-    MenuListItemImpl(menu.title, menu.subTitle, menu.icon) {
-      context.onClicked(menu)
+    if (!menu.isHidden) {
+      MenuListItemImpl(menu.title, menu.subTitle, menu.icon) {
+        context.onClicked(menu)
+      }
     }
   }
 }
@@ -142,6 +135,7 @@ fun MenuScreen(menuID: String, navController: NavHostController, audioClientMode
     when (menuID) {
       URI_CONTENT -> RootMenu()
       URI_SOMA_FM -> SomaFM()
+      URI_PLAYLIST -> Playlist()
       else -> log.error("Unhandled menuID: $menuID")
     }
   }

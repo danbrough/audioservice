@@ -1,29 +1,10 @@
-package danbroid.demo.content
+package danbroid.audioservice.app.content
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.media2.common.MediaMetadata
 import danbroid.audio.service.AudioService
 import kotlinx.serialization.Serializable
-
-@DslMarker
-annotation class TestDataDSL
-
-@TestDataDSL
-class TestData {
-  val testData = mutableListOf<AudioTrack>()
-}
-
-@TestDataDSL
-fun testData(block: TestData.() -> Unit) = TestData().apply {
-  block()
-}
-
-@TestDataDSL
-fun TestData.item(block: AudioTrack.() -> Unit) = AudioTrack("").also {
-  it.block()
-  testData.add(it)
-}
 
 @Serializable
 data class AudioTrack(

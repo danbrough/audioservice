@@ -1,4 +1,4 @@
-package danbroid.audio.ui.menu
+package danbroid.audioservice.app.ui.menu
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import danbroid.audioservice.app.rnz.rnz
+import danbroid.audioservice.app.audioClientModel
 import danbroid.demo.content.somaFM
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,13 +37,10 @@ class MenuModel(val menuID: String, context: Context) : ViewModel() {
     emit(context.somaFM.channels())
   }
 
-  val somaFMChannels = somaChannelsFlow.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+  val somaFMChannels = somaChannelsFlow.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-  val rnzProgID = flow {
-    log.error("GETTING RNZ PROG ID")
-    emit(context.rnz.rnzNewsProgrammeID())
-  }
 
+  val playlist = context.audioClientModel().client.playlist
   override fun onCleared() {
     log.debug("onCleared() $menuID")
   }
@@ -58,6 +55,5 @@ class MenuModelFactory(val menuID: String, val context: Context) : ViewModelProv
 @Composable
 fun menuModel(menuID: String) = viewModel<MenuModel>(factory = MenuModelFactory(menuID, LocalContext.current))
 
-private val log = danbroid.logging.getLog(MenuModel::class)
 
 
