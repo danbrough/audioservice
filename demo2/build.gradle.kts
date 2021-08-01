@@ -88,6 +88,7 @@ android {
         "kotlinx.serialization.ExperimentalSerializationApi",
         "androidx.compose.material.ExperimentalMaterialApi",
         "androidx.compose.animation.ExperimentalAnimationApi",
+        "androidx.compose.foundation.ExperimentalFoundationApi",
         "kotlin.time.ExperimentalTime",
         //"kotlinx.coroutines.ExperimentalCoroutinesApi",
         //"kotlinx.coroutines.FlowPreview",

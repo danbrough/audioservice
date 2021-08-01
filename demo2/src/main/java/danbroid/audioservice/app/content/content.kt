@@ -1,5 +1,8 @@
 package danbroid.audioservice.app.content
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Elderly
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,6 +23,7 @@ const val URI_BROWSER = "$URI_PREFIX/browser"
 const val URI_SOMA_FM = "$URI_PREFIX/somafm"
 
 
+@ExperimentalFoundationApi
 @Composable
 fun RootMenu() {
 
@@ -28,6 +32,7 @@ fun RootMenu() {
   val dynamicTitle by model.dynamicTitleFlow.collectAsState("Initial Title")
 
   MenuScreen {
+    PlaylistMenu()
 
 
     menu {
@@ -40,16 +45,13 @@ fun RootMenu() {
       }
     }
 
-
-    PlaylistMenu()
-
-
     menu {
-      id = URI_SETTINGS
-      title = stringResource(R.string.settings)
-      subTitle = stringResource(R.string.settings_description)
-      icon = AppIcon.SETTINGS
+      id = URI_TEST
+      title = "Test Content"
+      icon = Icons.Default.Elderly
+      isBrowsable = true
     }
+
 
     menu {
       id = URI_SOMA_FM
@@ -58,6 +60,14 @@ fun RootMenu() {
       icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
       isBrowsable = true
     }
+
+    menu {
+      id = URI_SETTINGS
+      title = stringResource(R.string.settings)
+      subTitle = stringResource(R.string.settings_description)
+      icon = AppIcon.SETTINGS
+    }
+
 
     menu {
       id = "somafm://poptron"
@@ -97,6 +107,7 @@ fun RootMenu() {
       }
       icon = AppIcon.PLAYLIST
     }*/
+
 
   }
 }

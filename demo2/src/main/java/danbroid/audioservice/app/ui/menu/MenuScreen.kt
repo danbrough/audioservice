@@ -1,10 +1,12 @@
 package danbroid.audioservice.app.ui.menu
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -101,11 +103,17 @@ fun MenuListItemImpl(title: String, subTitle: String, _icon: Any?, onClicked: ()
 typealias MenuScreenScope = LazyListScope
 
 
+@ExperimentalFoundationApi
 @MenuDSL
-inline fun MenuScreenScope.menu(crossinline onCreate: @Composable Menu.() -> Unit) {
-  item {
+inline fun MenuScreenScope.menu(stickHeader: Boolean = false, crossinline onCreate: @Composable Menu.() -> Unit) {
+
+
+  val menu = Menu("_${MenuContext.NEXT_ID++}", "Untitled")
+  log.dinfo("MENU: $menu")
+
+  val content: @Composable LazyItemScope.() -> Unit = {
+    log.dtrace("MENU BLOCK: $menu")
     val context = LocalMenuContext.current!!
-    val menu = Menu("_${MenuContext.NEXT_ID++}", "Untitled")
     menu.onCreate()
     if (!menu.isHidden) {
       MenuListItemImpl(menu.title, menu.subTitle, menu.icon) {
@@ -113,6 +121,18 @@ inline fun MenuScreenScope.menu(crossinline onCreate: @Composable Menu.() -> Uni
       }
     }
   }
+
+  val id = {
+    menu.id.also {
+      log.derror("MENU ID: $it")
+    }
+  }
+
+  if (stickHeader)
+    stickyHeader(id, content)
+  else
+    item(id, content)
+
 }
 
 @Composable
@@ -136,6 +156,7 @@ fun MenuScreen(menuID: String, navController: NavHostController, audioClientMode
       URI_CONTENT -> RootMenu()
       URI_SOMA_FM -> SomaFM()
       URI_PLAYLIST -> Playlist()
+      URI_TEST -> TestContent()
       else -> log.error("Unhandled menuID: $menuID")
     }
   }
