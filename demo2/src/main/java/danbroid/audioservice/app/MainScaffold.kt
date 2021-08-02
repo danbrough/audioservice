@@ -16,6 +16,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import danbroid.audio.library.AudioClientViewModel
+import danbroid.audio.library.BackButtonHandler
+import danbroid.audio.library.audioClientModel
 import danbroid.audioservice.app.ui.controls.BottomControls
 import kotlinx.coroutines.launch
 
@@ -27,7 +29,6 @@ fun MainScaffold(
   val coroutineScope = rememberCoroutineScope()
   val audioClientModel: AudioClientViewModel = audioClientModel()
   val insets = LocalWindowInsets.current
-
 
 
   val navBottom = with(LocalDensity.current) { insets.navigationBars.bottom.toDp() }
@@ -45,7 +46,7 @@ fun MainScaffold(
       sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetContent = {
         Box(Modifier.fillMaxWidth().fillMaxHeight()) {
-          BottomControls(expanded = bottomSheetScaffoldState.bottomSheetState.isExpanded)
+          BottomControls(expanded = bottomSheetScaffoldState.bottomSheetState.isExpanded, audioClientModel)
         }
 
       },

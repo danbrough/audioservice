@@ -1,4 +1,4 @@
-package danbroid.audioservice.app
+package danbroid.audio.library
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner

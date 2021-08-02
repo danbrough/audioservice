@@ -1,17 +1,12 @@
 package danbroid.audioservice.app
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.material.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
-import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.library.RootAudioLibrary
 import danbroid.audioservice.app.content.TestDataLibrary
 import danbroid.audioservice.app.rnz.rnz
@@ -47,15 +42,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Composable
-fun audioClientModel(): AudioClientViewModel = LocalContext.current.audioClientModel()
-
-fun Context.audioClientModel(): AudioClientViewModel {
-  val activity = this as ComponentActivity
-  return activity.viewModels<AudioClientViewModel> {
-    AudioClientViewModel.Companion.AudioClientViewModelFactory(activity)
-  }.value
-}
 
 
 

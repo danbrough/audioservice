@@ -2,6 +2,10 @@ package danbroid.audio.library
 
 import android.content.Context
 import android.content.Intent
+import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -90,5 +94,16 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
     }
   }
 }
+
+@Composable
+fun audioClientModel(): AudioClientViewModel = LocalContext.current.audioClientModel()
+
+fun Context.audioClientModel(): AudioClientViewModel {
+  val activity = this as ComponentActivity
+  return activity.viewModels<AudioClientViewModel> {
+    AudioClientViewModel.Companion.AudioClientViewModelFactory(activity)
+  }.value
+}
+
 
 private val log = danbroid.logging.getLog(AudioClientViewModel::class)

@@ -27,7 +27,6 @@ import danbroid.audio.client.AudioClient
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.service.AudioService
 import danbroid.audioservice.app.R
-import danbroid.audioservice.app.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.demo.formatDurationFromSeconds
@@ -205,7 +204,7 @@ private fun ExtraControlsPreview() {
 }
 
 @Composable
-fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewModel = audioClientModel()) {
+fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewModel) {
   log.ddebug("BottomControls() expanded: $expanded")
 
   val player = audioClientModel.client
