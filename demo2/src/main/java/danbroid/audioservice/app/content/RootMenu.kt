@@ -1,6 +1,5 @@
 package danbroid.audioservice.app.content
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Elderly
 import androidx.compose.runtime.Composable
@@ -10,8 +9,9 @@ import androidx.compose.ui.res.stringResource
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
-import danbroid.audioservice.app.ui.menu.MenuScreen
 import danbroid.audioservice.app.ui.menu.menu
+import danbroid.audioservice.app.ui.menu.menuScreen
+import kotlinx.coroutines.flow.map
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 const val URI_PREFIX = "audiodemo:/"
@@ -23,68 +23,72 @@ const val URI_BROWSER = "$URI_PREFIX/browser"
 const val URI_SOMA_FM = "$URI_PREFIX/somafm"
 
 
-@ExperimentalFoundationApi
 @Composable
 fun RootMenu() {
 
-  // val rnzProgID by menuModel.rnzProgID.collectAsState(0)
-  val model = LocalMenuContext.current!!.menuModel
-  val dynamicTitle by model.dynamicTitleFlow.collectAsState("Initial Title")
+  val context = LocalMenuContext.current
+  val dynamicTitle by context.menuModel.dynamicTitleFlow.collectAsState()
 
-  MenuScreen {
-    PlaylistMenu()
+  val queueSize by context.audioClientModel.client.queueState.map { it.size }.collectAsState(0)
 
+  menuScreen {
+
+    if (queueSize > 0) {
+      menu(URI_PLAYLIST) {
+        title = stringResource(R.string.playlist)
+        subTitle = if (queueSize > 0) "Size: $queueSize" else "Empty"
+        icon = AppIcon.PLAYLIST
+      }
+    }
 
     menu {
       log.dtrace("DYNAMIC MENU")
       title = stringResource(R.string.app_name)
       icon = AppIcon.PANORAMA
-      subTitle = dynamicTitle
+      subTitle = dynamicTitle.also {
+        log.dtrace("SUB TITLE $it")
+      }
       onClicked = {
         log.debug("clicked $this")
       }
     }
 
-    menu {
-      id = URI_TEST
+    menu(URI_TEST) {
       title = "Test Content"
       icon = Icons.Default.Elderly
       isBrowsable = true
     }
 
 
-    menu {
-      id = URI_SOMA_FM
+    menu(URI_SOMA_FM) {
       title = "Soma FM"
       subTitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
       icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
-      isBrowsable = true
     }
 
-    menu {
-      id = URI_SETTINGS
+    menu(URI_SETTINGS) {
       title = stringResource(R.string.settings)
       subTitle = stringResource(R.string.settings_description)
       icon = AppIcon.SETTINGS
     }
 
 
-    menu {
-      id = "somafm://poptron"
+    menu("somafm://poptron") {
       title = "PopTron"
       isPlayable = true
       icon = AppIcon.RADIO
     }
 
     testTracks.testData.forEach {
-      menu {
-        id = it.id
+      menu(it.id) {
         title = it.title
         subTitle = it.subTitle
         icon = it.iconURI
         isPlayable = true
       }
     }
+  }
+}
 
 /*
     menu {
@@ -96,21 +100,8 @@ fun RootMenu() {
     }
 */
 
-/*    menu {
-      id = URI_PLAYLIST
-      title = context.getString(R.string.playlist)
-      subTitle = context.audioClientModel().client.queueState.value.size.let { size ->
-        if (size > 0)
-          "Size: $size"
-        else
-          "Empty"
-      }
-      icon = AppIcon.PLAYLIST
-    }*/
 
 
-  }
-}
 
 
 /*

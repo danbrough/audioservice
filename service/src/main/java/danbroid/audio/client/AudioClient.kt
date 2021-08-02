@@ -34,12 +34,12 @@ open class AudioClient(context: Context) {
     }
   }
 
-  data class QueueState(val hasPrevious: Boolean, val hasNext: Boolean, val playState: PlayerState, val size: Int)
+  data class QueueState(val hasPrevious: Boolean, val hasNext: Boolean, val playState: PlayerState, val size: Int, val position: Int)
 
   private val _playPosition = MutableStateFlow(PlayPosition.NO_POSITION)
   val playPosition: StateFlow<PlayPosition> = _playPosition
 
-  private val _queueState = MutableStateFlow(QueueState(false, false, PlayerState.IDLE, 0))
+  private val _queueState = MutableStateFlow(QueueState(false, false, PlayerState.IDLE, 0, -1))
   val queueState: StateFlow<QueueState> = _queueState
 
   private val _bufferingState = MutableStateFlow(BufferingState.UNKNOWN)
@@ -203,7 +203,8 @@ open class AudioClient(context: Context) {
       _queueState.value = _queueState.value.copy(
           hasPrevious = controller.previousMediaItemIndex != -1,
           hasNext = controller.nextMediaItemIndex != -1,
-          size = list?.size ?: 0
+          size = list?.size ?: 0,
+          position = controller.currentMediaItemIndex
       )
       _playList.value = list ?: emptyList()
     }
@@ -224,7 +225,8 @@ open class AudioClient(context: Context) {
       _metadata.value = item?.metadata
       _queueState.value = _queueState.value.copy(
           hasPrevious = controller.previousMediaItemIndex != -1,
-          hasNext = controller.nextMediaItemIndex != -1
+          hasNext = controller.nextMediaItemIndex != -1,
+          position = controller.currentMediaItemIndex
       )
     }
 

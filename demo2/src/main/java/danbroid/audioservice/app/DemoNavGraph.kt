@@ -10,9 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.navDeepLink
 import danbroid.audio.library.AudioClientViewModel
-import danbroid.audioservice.app.content.URI_BROWSER
-import danbroid.audioservice.app.content.URI_CONTENT
-import danbroid.audioservice.app.content.URI_SETTINGS
+import danbroid.audioservice.app.content.*
 import danbroid.audioservice.app.rnz.RNZLibrary
 import danbroid.audioservice.app.ui.browser.BrowserScreen
 import danbroid.audioservice.app.ui.menu.MenuScreen
@@ -24,6 +22,8 @@ object Routes {
   const val MENU = "menu"
   const val SETTINGS = "settings"
   const val BROWSER = "browser"
+  const val SOMAFM = "somafm"
+  const val PLAYLIST = "playlist"
 
   fun menuRoute(menuID: String) = "${MENU}?id=${menuID.uriEncode()}"
 }
@@ -51,6 +51,18 @@ fun DemoNavGraph(
     MenuScreen(URI_CONTENT, navController, audioClientModel)
   }
 
+  composable(Routes.SOMAFM, deepLinks = listOf(navDeepLink {
+    uriPattern = URI_SOMA_FM
+  })) {
+    MenuScreen(URI_SOMA_FM, navController, audioClientModel)
+  }
+
+  composable(Routes.PLAYLIST, deepLinks = listOf(navDeepLink {
+    uriPattern = URI_PLAYLIST
+  })) {
+    MenuScreen(URI_PLAYLIST, navController, audioClientModel)
+  }
+
   composable("${Routes.MENU}?id={id}", arguments = listOf(
       navArgument("id") {
         defaultValue = URI_CONTENT
@@ -70,6 +82,8 @@ fun DemoNavGraph(
       })) { _ ->
     SettingsScreen()
   }
+
+  //URI_PLAYLIST
 
   composable(
       Routes.BROWSER,

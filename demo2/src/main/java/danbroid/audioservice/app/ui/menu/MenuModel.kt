@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import danbroid.audioservice.app.audioClientModel
 import danbroid.demo.content.somaFM
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +21,6 @@ class MenuModel(val menuID: String, context: Context) : ViewModel() {
     log.derror("MenuModel() $menuID")
   }
 
-
   val dynamicTitleFlow = flow {
     var count = 0
     delay(Duration.seconds(1))
@@ -33,14 +31,10 @@ class MenuModel(val menuID: String, context: Context) : ViewModel() {
     }
   }.stateIn(viewModelScope, SharingStarted.Lazily, "Initial set in model")
 
-  private val somaChannelsFlow = flow {
+  val somaChannels = flow {
     emit(context.somaFM.channels())
-  }
+  }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-  val somaFMChannels = somaChannelsFlow.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-
-  val playlist = context.audioClientModel().client.playlist
   override fun onCleared() {
     log.debug("onCleared() $menuID")
   }
