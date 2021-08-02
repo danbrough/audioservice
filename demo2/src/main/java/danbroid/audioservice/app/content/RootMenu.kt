@@ -1,5 +1,7 @@
 package danbroid.audioservice.app.content
 
+import androidx.compose.material.ListItem
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Elderly
 import androidx.compose.runtime.Composable
@@ -9,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
+import danbroid.audioservice.app.ui.menu.MenuListIcon
 import danbroid.audioservice.app.ui.menu.menu
 import danbroid.audioservice.app.ui.menu.menuScreen
 import kotlinx.coroutines.flow.map
@@ -32,7 +35,14 @@ fun RootMenu() {
   val queueSize by context.audioClientModel.client.queueState.map { it.size }.collectAsState(0)
 
   menuScreen {
-
+    item {
+      ListItem(
+          secondaryText = { Text("This is the secondary text") },
+          icon = { MenuListIcon(AppIcon.SETTINGS, "Settings") }
+      ) {
+        Text("This is the primary text")
+      }
+    }
     if (queueSize > 0) {
       menu(URI_PLAYLIST) {
         title = stringResource(R.string.playlist)

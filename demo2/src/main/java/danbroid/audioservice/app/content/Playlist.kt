@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.media2.common.MediaMetadata
-import danbroid.audio.library.menu.MenuDSL
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.MenuContext
 import danbroid.audioservice.app.ui.menu.menu
@@ -12,23 +11,6 @@ import danbroid.audioservice.app.ui.menu.menuScreen
 import kotlinx.coroutines.flow.map
 
 const val URI_PLAYLIST = "$URI_PREFIX/playlist"
-
-
-@MenuDSL
-suspend fun MenuContext.playlistMenu() {
-
-/*
-  menu {
-    val playlistSize by menuModel.playlist.map { it.size }.collectAsState(true)
-    id = URI_PLAYLIST
-    title = stringResource(R.string.playlist)
-    subTitle = "$playlistSize items"
-    isHidden = playlistSize == 0
-    isBrowsable = true
-  }
-*/
-
-}
 
 
 @Composable
@@ -49,7 +31,8 @@ fun PlaylistMenu() {
         subTitle = mediaItem.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)
             ?: mediaItem.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION) ?: ""
         isPlayable = true
-        icon = mediaItem.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
+        icon = mediaItem.metadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
+            ?: mediaItem.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
       }
     }
   }
