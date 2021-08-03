@@ -35,9 +35,9 @@ object Config {
     @DrawableRes
     var defaultNotificationIcon = R.drawable.ic_audiotrack
 
-    var notificationIconWidth = 128
+    var notificationIconWidth = 256
 
-    var notificationIconHeight = 128
+    var notificationIconHeight = 256
   }
 
 

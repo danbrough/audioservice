@@ -2,6 +2,8 @@ package danbroid.audioservice.app.ui.menu
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,24 +33,45 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
+import coil.transform.RoundedCornersTransformation
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
+import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.content.*
 import danbroid.audioservice.app.ui.AppIcon
-import danbroid.audioservice.app.ui.components.DemoImage
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
+@Composable
+fun DemoImage(
+    imageUrl: String,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+) {
+
+  Image(
+      painter = rememberImagePainter(data = imageUrl) {
+        //crossfade(true)
+        transformations(RoundedCornersTransformation(8f))
+        fadeIn()
+        placeholder(R.drawable.ic_audiotrack)
+      },
+      contentDescription = contentDescription,
+      modifier = modifier,
+      contentScale = ContentScale.FillBounds,
+  )
+}
 
 @Composable
 fun MenuListIcon(_icon: Any?, title: String = "") {
   val imageModifier =
       Modifier.size(52.dp)
           .padding(8.dp)
-          // .padding(start = 8.dp, top = 0.dp, bottom = 0.dp)
-          .clip(RoundedCornerShape(8.dp))
+  // .padding(start = 8.dp, top = 0.dp, bottom = 0.dp)
+
   var icon = _icon
 
   if (icon is AppIcon)
@@ -61,7 +85,7 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
         Icon(
             it.asImageBitmap(),
             title,
-            modifier = imageModifier,
+            modifier = imageModifier.clip(RoundedCornerShape(8.dp)),
             tint = Color.Unspecified
         )
       is String ->

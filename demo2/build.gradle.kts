@@ -152,7 +152,8 @@ dependencies {
 
   implementation("com.google.accompanist:accompanist-systemuicontroller:_")
   implementation("com.google.accompanist:accompanist-insets:_")
-  implementation("com.google.accompanist:accompanist-coil:_")
+  //implementation("com.google.accompanist:accompanist-coil:_")
+  implementation("io.coil-kt:coil-compose:1.3.1")
 
   //implementation("androidx.media2:media2-exoplayer:$media_version")
   //implementation("androidx.media2:media2-player:$media_version")
