@@ -136,6 +136,7 @@ dependencies {
   kapt("com.github.bumptech.glide:compiler:_")
 
   implementation("androidx.palette:palette:_")
+  implementation("io.coil-kt:coil:_")
 
 /*
   val exo_vanilla = false

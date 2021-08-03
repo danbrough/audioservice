@@ -2,7 +2,6 @@ package danbroid.audioservice.app.ui.menu
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +38,6 @@ import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
-import danbroid.audioservice.app.R
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.content.*
 import danbroid.audioservice.app.ui.AppIcon
@@ -47,7 +45,7 @@ import danbroid.audioservice.app.ui.theme.DemoTheme
 
 @Composable
 fun DemoImage(
-    imageUrl: String,
+    imageUrl: Any,
     contentDescription: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -55,9 +53,7 @@ fun DemoImage(
   Image(
       painter = rememberImagePainter(data = imageUrl) {
         //crossfade(true)
-        transformations(RoundedCornersTransformation(8f))
-        fadeIn()
-        placeholder(R.drawable.ic_audiotrack)
+        transformations(RoundedCornersTransformation(8.dp.value))
       },
       contentDescription = contentDescription,
       modifier = modifier,
@@ -69,7 +65,7 @@ fun DemoImage(
 fun MenuListIcon(_icon: Any?, title: String = "") {
   val imageModifier =
       Modifier.size(52.dp)
-          .padding(8.dp)
+          .padding(4.dp)
   // .padding(start = 8.dp, top = 0.dp, bottom = 0.dp)
 
   var icon = _icon
@@ -82,6 +78,11 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
   icon?.also {
     when (it) {
       is Bitmap ->
+/*        DemoImage(
+            imageUrl = it,
+            title,
+            modifier = imageModifier
+        )*/
         Icon(
             it.asImageBitmap(),
             title,
@@ -135,6 +136,7 @@ private fun MenuListItemRow(
       verticalAlignment = Alignment.CenterVertically
   ) {
 
+    Spacer(Modifier.width(4.dp))
     MenuListIcon(_icon, title)
     /*  Image(
           Icons.Filled.Audiotrack, "",
