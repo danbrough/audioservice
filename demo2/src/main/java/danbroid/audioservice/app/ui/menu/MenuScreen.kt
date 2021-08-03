@@ -44,14 +44,14 @@ import danbroid.audioservice.app.ui.theme.DemoTheme
 @Composable
 fun MenuListIcon(_icon: Any?, title: String = "") {
   val imageModifier =
-    Modifier.size(52.dp)
-      .clip(RoundedCornerShape(8.dp))
-      .padding(start = 8.dp, top = 0.dp, bottom = 0.dp)
+      Modifier.size(52.dp)
+          .padding(8.dp)
+          // .padding(start = 8.dp, top = 0.dp, bottom = 0.dp)
+          .clip(RoundedCornerShape(8.dp))
   var icon = _icon
 
   if (icon is AppIcon)
     icon = AppIcon.lookup(icon)
-
 
   val iconTint = MaterialTheme.colors.primary
 
@@ -59,56 +59,56 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
     when (it) {
       is Bitmap ->
         Icon(
-          it.asImageBitmap(),
-          title,
-          modifier = imageModifier,
-          tint = Color.Unspecified
+            it.asImageBitmap(),
+            title,
+            modifier = imageModifier,
+            tint = Color.Unspecified
         )
       is String ->
         DemoImage(
-          imageUrl = it,
-          title,
-          modifier = imageModifier
+            imageUrl = it,
+            title,
+            modifier = imageModifier
         )
       is ImageVector ->
         Icon(
-          it,
-          title,
-          modifier = imageModifier,
-          tint = iconTint
+            it,
+            title,
+            modifier = imageModifier,
+            tint = iconTint
         )
       is Int ->
         Icon(
-          painterResource(it),
-          title,
-          modifier = imageModifier,
-          tint = iconTint,
+            painterResource(it),
+            title,
+            modifier = imageModifier,
+            tint = iconTint,
         )
       else ->
         DemoImage(
-          imageUrl = it.toString(),
-          title,
-          modifier = imageModifier
+            imageUrl = it.toString(),
+            title,
+            modifier = imageModifier
         )
     }
   } ?: Icon(
-    Icons.Filled.Audiotrack,
-    contentDescription = null,
-    tint = iconTint,
-    modifier = imageModifier
+      Icons.Filled.Audiotrack,
+      contentDescription = null,
+      tint = iconTint,
+      modifier = imageModifier
   )
 }
 
 @Composable
 private fun MenuListItemRow(
-  modifier: Modifier,
-  title: String,
-  subTitle: String,
-  _icon: Any?
+    modifier: Modifier,
+    title: String,
+    subTitle: String,
+    _icon: Any?
 ) {
   Row(
-    modifier = modifier.height(62.dp).fillMaxWidth(),
-    verticalAlignment = Alignment.CenterVertically
+      modifier = modifier.height(62.dp).fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically
   ) {
 
     MenuListIcon(_icon, title)
@@ -119,15 +119,15 @@ private fun MenuListItemRow(
           colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
       )*/
     Column(
-      Modifier.padding(start = 16.dp).fillMaxWidth(),
-      verticalArrangement = Arrangement.Bottom
+        Modifier.padding(start = 16.dp).fillMaxWidth(),
+        verticalArrangement = Arrangement.Bottom
     ) {
       Text(title, style = MaterialTheme.typography.subtitle1)
       Text(
-        subTitle,
-        overflow = TextOverflow.Ellipsis, maxLines = 2,
-        modifier = Modifier.alpha(ContentAlpha.medium),
-        style = MaterialTheme.typography.body2
+          subTitle,
+          overflow = TextOverflow.Ellipsis, maxLines = 2,
+          modifier = Modifier.alpha(ContentAlpha.medium),
+          style = MaterialTheme.typography.body2
       )
     }
   }
@@ -135,18 +135,18 @@ private fun MenuListItemRow(
 
 @Composable
 fun MenuListItemImpl(
-  modifier: Modifier,
-  title: String,
-  subTitle: String,
-  _icon: Any?,
-  highLighted: Boolean = false,
+    modifier: Modifier,
+    title: String,
+    subTitle: String,
+    _icon: Any?,
+    highLighted: Boolean = false,
 ) {
   if (highLighted) {
     Box {
       MenuListItemRow(modifier, title, subTitle, _icon)
       Box(
-        Modifier.height(62.dp).fillMaxWidth()
-          .background(MaterialTheme.colors.secondaryVariant.copy(alpha = 0.2f))
+          Modifier.height(62.dp).fillMaxWidth()
+              .background(MaterialTheme.colors.secondaryVariant.copy(alpha = 0.2f))
       ) {
 
       }
@@ -163,8 +163,8 @@ private fun MenuItemPreview() {
     Column {
 
       ListItem(
-        secondaryText = { Text("This is the secondary text") },
-        icon = { MenuListIcon(AppIcon.SETTINGS, "Settings") }
+          secondaryText = { Text("This is the secondary text") },
+          icon = { MenuListIcon(AppIcon.SETTINGS, "Settings") }
       ) {
         Text("This is the primary text")
       }
@@ -173,11 +173,11 @@ private fun MenuItemPreview() {
       MenuListItemImpl(Modifier, "The title", "The Subtitle", Icons.Default.QueueMusic)
       Divider()
       MenuListItemImpl(
-        Modifier,
-        "The title2",
-        "The Subtitle which is a lot longer and so will probably over flow the text display thingy still typing ",
-        Icons.Default.RemoveFromQueue,
-        highLighted = true
+          Modifier,
+          "The title2",
+          "The Subtitle which is a lot longer and so will probably over flow the text display thingy still typing ",
+          Icons.Default.RemoveFromQueue,
+          highLighted = true
       )
       Divider()
     }
@@ -186,11 +186,11 @@ private fun MenuItemPreview() {
 
 @MenuDSL
 inline fun LazyListScope.menu(
-  id: String = "_${MenuContext.NEXT_ID++}",
-  sticky: Boolean = false,
-  highLighted: Boolean = false,
-  clickable: Boolean = true,
-  crossinline onCreate: @Composable Menu.() -> Unit
+    id: String = "_${MenuContext.NEXT_ID++}",
+    sticky: Boolean = false,
+    highLighted: Boolean = false,
+    clickable: Boolean = true,
+    crossinline onCreate: @Composable Menu.() -> Unit
 ) {
 
   val menu = Menu(id, "Untitled")
@@ -206,19 +206,19 @@ inline fun LazyListScope.menu(
     if (sticky) {
       Card(elevation = 1.dp) {
         MenuListItemImpl(
-          itemModifier,
-          menu.title,
-          menu.subTitle,
-          menu.icon,
-          highLighted = highLighted
+            itemModifier,
+            menu.title,
+            menu.subTitle,
+            menu.icon,
+            highLighted = highLighted
         )
       }
     } else MenuListItemImpl(
-      itemModifier,
-      menu.title,
-      menu.subTitle,
-      menu.icon,
-      highLighted = highLighted
+        itemModifier,
+        menu.title,
+        menu.subTitle,
+        menu.icon,
+        highLighted = highLighted
     )
   }
 
@@ -269,9 +269,9 @@ fun MenuScreen2(content: MenuScreenScope.() -> Unit) {
 
 
 fun onClicked(
-  menu: Menu,
-  navController: NavHostController,
-  audioClientModel: AudioClientViewModel
+    menu: Menu,
+    navController: NavHostController,
+    audioClientModel: AudioClientViewModel
 ) {
   log.debug("clicked: $menu")
   menu.onClicked?.also {
@@ -317,14 +317,14 @@ fun menuScreen(block: LazyListScope.() -> Unit) {
 
 @Composable
 fun MenuScreen(
-  menuID: String,
-  navController: NavHostController,
-  audioClientModel: AudioClientViewModel
+    menuID: String,
+    navController: NavHostController,
+    audioClientModel: AudioClientViewModel
 ) {
   val menuModel = menuModel(menuID)
   log.dtrace("MenuScreen() $menuID")
   val context =
-    MenuContext(menuID, LocalContext.current, menuModel, audioClientModel, navController)
+      MenuContext(menuID, LocalContext.current, menuModel, audioClientModel, navController)
   CompositionLocalProvider(LocalMenuContext provides context) {
     when (menuID) {
       URI_CONTENT -> RootMenu()

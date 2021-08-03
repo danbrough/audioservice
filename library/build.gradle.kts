@@ -72,8 +72,8 @@ dependencies {
   api("androidx.media2:media2-common:_")
   api("androidx.media2:media2-session:_")
 
-  implementation("androidx.navigation:navigation-compose:2.4.0-alpha05")
-  implementation("androidx.activity:activity-compose:1.3.0")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+  implementation("androidx.navigation:navigation-compose:_")
+  implementation("androidx.activity:activity-compose:_")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:_")
 
 }

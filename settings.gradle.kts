@@ -1,5 +1,6 @@
 plugins {
   id("de.fayard.refreshVersions") version "0.10.1"
+////                          # available:"0.11.0"
 }
 
 if (System.getenv("JITPACK") == null) {

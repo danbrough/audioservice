@@ -134,9 +134,9 @@ dependencies {
 
   implementation("com.github.fornewid:material-motion-compose:_")
 
-  implementation("androidx.navigation:navigation-compose:2.4.0-alpha05")
-  implementation("androidx.activity:activity-compose:1.3.0")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+  implementation("androidx.navigation:navigation-compose:_")
+  implementation("androidx.activity:activity-compose:_")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:_")
   implementation(AndroidX.constraintLayoutCompose)
 
   implementation(AndroidX.compose.ui)
@@ -148,7 +148,8 @@ dependencies {
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
   implementation("androidx.compose.ui:ui-tooling:${ProjectVersions.COMPOSE_TOOLS_VERSION}")
-  implementation("com.github.danbrough.androidutils:compose:_")
+
+
   implementation("com.google.accompanist:accompanist-systemuicontroller:_")
   implementation("com.google.accompanist:accompanist-insets:_")
   implementation("com.google.accompanist:accompanist-coil:_")
@@ -158,22 +159,12 @@ dependencies {
   //implementation("com.google.guava:guava:_")
 
   implementation("com.github.danbrough.androidutils:logging_android:_")
-  //implementation("com.github.danbrough.androidutils:menu:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:compose:_")
 
-/*  implementation("com.mikepenz:iconics-core:5.0.3")
-  implementation("com.mikepenz:iconics-views:5.0.3")
-  implementation ("com.mikepenz:fontawesome-typeface:5.9.0.0-kotlin")
-  implementation("com.mikepenz:community-material-typeface:5.3.45.1-kotlin")*/
-
-
 
   implementation(Square.okHttp3.okHttp)
-
-
-//  implementation(project(":menu"))
-
+  
   androidTestImplementation(Testing.junit4)
 
   androidTestImplementation(AndroidX.test.core)
