@@ -110,7 +110,7 @@ dependencies {
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation("androidx.core:core-ktx:_")
 
-  implementation("androidx.fragment:fragment-ktx:_")
+  //implementation("androidx.fragment:fragment-ktx:_")
   api("androidx.media2:media2-common:_")
   api("androidx.media2:media2-session:_")
 
@@ -128,12 +128,12 @@ dependencies {
   api("com.google.guava:guava:_")
 
   //api(AndroidX.media2.exoplayer)
-  implementation(Google.android.material)
+//  implementation(Google.android.material)
   // implementation("com.google.guava:guava:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:logging_core:_")
-  api("com.github.bumptech.glide:glide:_")
-  kapt("com.github.bumptech.glide:compiler:_")
+/*  api("com.github.bumptech.glide:glide:_")
+  kapt("com.github.bumptech.glide:compiler:_")*/
 
   implementation("androidx.palette:palette:_")
   implementation("io.coil-kt:coil:_")

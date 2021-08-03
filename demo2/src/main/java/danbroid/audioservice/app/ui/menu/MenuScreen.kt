@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -44,7 +43,7 @@ import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
 @Composable
-fun DemoImage(
+fun IconImage(
     imageUrl: Any,
     contentDescription: String?,
     modifier: Modifier = Modifier,
@@ -83,14 +82,20 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
             title,
             modifier = imageModifier
         )*/
-        Icon(
+        Image(
             it.asImageBitmap(),
             title,
             modifier = imageModifier.clip(RoundedCornerShape(8.dp)),
-            tint = Color.Unspecified
+            contentScale = ContentScale.FillBounds
         )
+      /*       Icon(
+                 it.asImageBitmap(),
+                 title,
+                 modifier = imageModifier.clip(RoundedCornerShape(8.dp)),
+                 tint = Color.Unspecified
+             )*/
       is String ->
-        DemoImage(
+        IconImage(
             imageUrl = it,
             title,
             modifier = imageModifier
@@ -110,7 +115,7 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
             tint = iconTint,
         )
       else ->
-        DemoImage(
+        IconImage(
             imageUrl = it.toString(),
             title,
             modifier = imageModifier

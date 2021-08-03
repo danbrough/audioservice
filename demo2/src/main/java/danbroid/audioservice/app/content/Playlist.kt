@@ -21,7 +21,6 @@ fun PlaylistMenu() {
   val playList by audioClient.playlist.collectAsState(emptyList())
   val playlistPosition by audioClient.queueState.map { it.position }.collectAsState(-1)
 
-  log.error("PLAYLIST POSITION $playlistPosition")
   menuScreen {
     playList.forEachIndexed { index, mediaItem ->
       val id = mediaItem.metadata?.mediaId ?: "_${MenuContext.NEXT_ID++}"

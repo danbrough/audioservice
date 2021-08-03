@@ -3,17 +3,18 @@ package danbroid.audio.service
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.media2.common.MediaMetadata
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import coil.Coil
+import coil.request.ImageRequest
 import danbroid.util.resource.resolveDrawableURI
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class IconUtils(
     val context: Context,
@@ -62,7 +63,18 @@ class IconUtils(
     imageURI.resolveDrawableURI(context).also {
       if (it != 0) return drawableToBitmapIcon(it)
     }
+    val request = ImageRequest.Builder(context)
+        .data(imageURI)
+        .size(Config.Notifications.notificationIconWidth)
+        .target {
+          val drawable = it as BitmapDrawable
+          callbacks.remove(metadata)!!.invoke(drawable.bitmap)
+        }.build()
 
+    GlobalScope.launch(Dispatchers.IO) {
+      Coil.execute(request)
+    }
+/*
     Glide.with(context).asBitmap().load(imageURI).diskCacheStrategy(DiskCacheStrategy.DATA)
         //.transform(RoundedCorners(iconCornerRadius))
         .into(object : CustomTarget<Bitmap>(
@@ -77,6 +89,7 @@ class IconUtils(
 
           }
         })
+*/
 
 
 
