@@ -25,13 +25,13 @@ android {
   }
 
   buildFeatures {
-    aidl = true
+    //aidl = true
   }
 
   buildTypes {
 
     getByName("release") {
-      isMinifyEnabled = true
+      isMinifyEnabled = ProjectVersions.MINIFY_ENABLED
       proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
           "proguard-rules.pro"
@@ -62,6 +62,7 @@ android {
       languageSettings.useExperimentalAnnotation(it)
     }
   }
+
   val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.getByName("main").java.srcDirs)
@@ -124,7 +125,7 @@ dependencies {
 
 
   //api(AndroidX.concurrent.futures)
-  api("com.google.guava:guava:30.1.1-android")
+  api("com.google.guava:guava:_")
 
   //api(AndroidX.media2.exoplayer)
   implementation(Google.android.material)

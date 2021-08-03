@@ -1,7 +1,5 @@
 package danbroid.audioservice.app.content
 
-import androidx.compose.material.ListItem
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Elderly
 import androidx.compose.runtime.Composable
@@ -11,7 +9,6 @@ import androidx.compose.ui.res.stringResource
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
-import danbroid.audioservice.app.ui.menu.MenuListIcon
 import danbroid.audioservice.app.ui.menu.menu
 import danbroid.audioservice.app.ui.menu.menuScreen
 import kotlinx.coroutines.flow.map
@@ -35,20 +32,11 @@ fun RootMenu() {
   val queueSize by context.audioClientModel.client.queueState.map { it.size }.collectAsState(0)
 
   menuScreen {
-    item {
-      ListItem(
-          secondaryText = { Text("This is the secondary text") },
-          icon = { MenuListIcon(AppIcon.SETTINGS, "Settings") }
-      ) {
-        Text("This is the primary text")
-      }
-    }
-    if (queueSize > 0) {
-      menu(URI_PLAYLIST) {
-        title = stringResource(R.string.playlist)
-        subTitle = if (queueSize > 0) "Size: $queueSize" else "Empty"
-        icon = AppIcon.PLAYLIST
-      }
+
+    menu(URI_PLAYLIST,clickable = queueSize > 0) {
+      title = stringResource(R.string.playlist)
+      subTitle = if (queueSize > 0) "Size: $queueSize" else "Empty"
+      icon = AppIcon.PLAYLIST
     }
 
     menu {
@@ -72,7 +60,8 @@ fun RootMenu() {
 
     menu(URI_SOMA_FM) {
       title = "Soma FM"
-      subTitle = "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
+      subTitle =
+        "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
       icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
     }
 
@@ -109,9 +98,6 @@ fun RootMenu() {
       icon = AppIcon.RNZ_NEWS
     }
 */
-
-
-
 
 
 /*

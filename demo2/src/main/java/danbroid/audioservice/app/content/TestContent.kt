@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsHeight
-import danbroid.audio.library.menu.Menu
+import danbroid.audio.menu.Menu
 
 const val URI_TEST = "$URI_CONTENT/test"
 

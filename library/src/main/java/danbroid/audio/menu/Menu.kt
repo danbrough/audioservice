@@ -1,4 +1,4 @@
-package danbroid.audio.library.menu
+package danbroid.audio.menu
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable

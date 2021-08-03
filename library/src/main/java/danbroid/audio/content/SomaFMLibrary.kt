@@ -1,4 +1,4 @@
-package danbroid.demo.content
+package danbroid.audio.content
 
 import android.content.Context
 import androidx.core.net.toUri

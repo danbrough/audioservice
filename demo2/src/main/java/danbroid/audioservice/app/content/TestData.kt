@@ -4,9 +4,9 @@ import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.library.AudioLibrary
-import danbroid.demo.content.item
-import danbroid.demo.content.testData
-import danbroid.demo.content.toMediaMetadata
+import danbroid.audio.content.item
+import danbroid.audio.content.testData
+import danbroid.audio.content.toMediaMetadata
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.FileWriter

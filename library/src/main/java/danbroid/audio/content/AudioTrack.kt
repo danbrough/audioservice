@@ -1,4 +1,4 @@
-package danbroid.demo.content
+package danbroid.audio.content
 
 import android.os.Bundle
 import androidx.core.os.bundleOf

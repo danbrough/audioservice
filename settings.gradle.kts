@@ -5,7 +5,7 @@ plugins {
 if (System.getenv("JITPACK") == null) {
   //println("including :demo")
   //include(":demo")
-  include(":demo2",":demo_common")
+  include(":demo2",":library")
 }else {
   println("Not including demo as building on jitpack.io")
 }

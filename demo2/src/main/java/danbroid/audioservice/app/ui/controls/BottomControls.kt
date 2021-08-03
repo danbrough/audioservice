@@ -29,7 +29,7 @@ import danbroid.audio.service.AudioService
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
-import danbroid.demo.formatDurationFromSeconds
+import danbroid.audio.formatDurationFromSeconds
 
 
 @Composable
