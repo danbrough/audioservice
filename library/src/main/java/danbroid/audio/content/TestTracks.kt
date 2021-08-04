@@ -1,12 +1,12 @@
-package danbroid.audioservice.app.content
+package danbroid.audio.content
 
 import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.UriMediaItem
-import danbroid.audio.library.AudioLibrary
 import danbroid.audio.content.item
 import danbroid.audio.content.testData
 import danbroid.audio.content.toMediaMetadata
+import danbroid.audio.library.AudioLibrary
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.FileWriter

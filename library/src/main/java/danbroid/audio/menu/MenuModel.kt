@@ -1,4 +1,4 @@
-package danbroid.audioservice.app.ui.menu
+package danbroid.audio.menu
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlin.time.Duration
 
 
-class MenuModel(val menuID: String, context: Context) : ViewModel() {
+open class MenuModel(val menuID: String, context: Context) : ViewModel() {
 
   init {
     log.derror("MenuModel() $menuID")
@@ -40,14 +40,21 @@ class MenuModel(val menuID: String, context: Context) : ViewModel() {
   }
 }
 
+private val log = danbroid.logging.getLog(MenuModel::class)
+
 
 class MenuModelFactory(val menuID: String, val context: Context) : ViewModelProvider.NewInstanceFactory() {
   @Suppress("UNCHECKED_CAST")
   override fun <T : ViewModel?> create(modelClass: Class<T>): T = MenuModel(menuID, context) as T
 }
 
+
 @Composable
-fun menuModel(menuID: String) = viewModel<MenuModel>(factory = MenuModelFactory(menuID, LocalContext.current))
+inline fun <reified T : MenuModel> menuModel(menuID: String) = viewModel<T>(
+    factory = MenuModelFactory(menuID, LocalContext.current),
+    key = menuID
+)
+
 
 
 

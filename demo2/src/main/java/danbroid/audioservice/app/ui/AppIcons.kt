@@ -10,7 +10,7 @@ enum class AppIcon {
   SETTINGS, SAVINGS, AUDIO_TRACK, PANORAMA, BROWSER, RNZ_NEWS, FOLDER, RADIO, PLAYLIST, CAST, CAST_CONNECTED;
 
   companion object {
-    fun lookup(key: AppIcon) = when (key) {
+    fun lookup(key: AppIcon): Any = when (key) {
       AppIcon.SAVINGS -> Icons.Default.Savings
       AppIcon.CAST -> Icons.Default.Cast
       AppIcon.CAST_CONNECTED -> Icons.Default.CastConnected

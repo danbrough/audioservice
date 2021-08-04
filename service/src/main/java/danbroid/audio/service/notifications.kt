@@ -5,7 +5,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -194,27 +193,5 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
   override fun getCurrentLargeIcon(
       player: Player,
       callback: PlayerNotificationManager.BitmapCallback
-  ): Bitmap? {
-
-   // log.dwarn("getCurrentLargeIcon(): $currentMetadata")
-    val metadata = service.session.player.currentMediaItem?.metadata
-
-    metadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)?.also {
-   //   log.dwarn("FOUND EXISTING DISPLAY ICON")
-      return it
-    }
-
-
-/*    metadata?.extras?.getParcelable<Bitmap>(AudioService.METADATA_EXTRAS_KEY_CACHED_ICON)?.also {
-      log.dwarn("FOUND EXISTING CACHED ICON")
-      return it
-    }*/
-
-    //log.derror("returning null for large icon")
-    return null
-  }
-
-
+  ) = currentMetadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
 }
-
-

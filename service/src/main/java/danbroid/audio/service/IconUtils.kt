@@ -11,69 +11,41 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.media2.common.MediaMetadata
 import coil.Coil
 import coil.request.ImageRequest
-import danbroid.util.resource.resolveDrawableURI
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import danbroid.audio.R
 
 class IconUtils(
     val context: Context,
     @ColorInt val iconTint: Int = Config.Notifications.notificationIconTint
 ) {
 
-  companion object {
-    var BITMAP_CONFIG = Bitmap.Config.ARGB_8888
-  }
 
-  val callbacks = mutableMapOf<MediaMetadata, (Bitmap) -> Unit>()
-
-  fun loadIcon(
-      metadata: MediaMetadata?,
-      defaultIcon: Bitmap? = null,
-      callback: (Bitmap) -> Unit
-  ): Bitmap? {
+  suspend fun loadIcon(metadata: MediaMetadata): BitmapDrawable? {
     log.dtrace("loadIcon() $metadata")
 
-    metadata ?: let {
-      log.error("metadata is null")
-      return defaultIcon
-    }
+    val imageURI = metadata.getString(MediaMetadata.METADATA_KEY_ART_URI)
+        ?: metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
 
-    if (callbacks.containsKey(metadata)) {
-      log.derror("CALLBACK ALREADY SET")
-      return null
-    }
 
-    callbacks[metadata] = callback
-
-    metadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)?.also {
-      log.trace("found existing display icon bitmap")
-      return it
-    }
-
-    val imageURI = metadata.getString(MediaMetadata.METADATA_KEY_ART_URI) ?: metadata.getString(
-        MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI
-    ) ?: run {
-      log.trace("no METADATA_KEY_ART_URI or METADATA_KEY_DISPLAY_ICON_URI returning defaultIcon ")
-      return defaultIcon
-    }
-
-    log.trace("loading icon from imageURI: $imageURI")
-
+/*
     imageURI.resolveDrawableURI(context).also {
       if (it != 0) return drawableToBitmapIcon(it)
     }
+*/
+
+    log.trace("loading image $imageURI...")
     val request = ImageRequest.Builder(context)
         .data(imageURI)
         .size(Config.Notifications.notificationIconWidth)
-        .target {
-          val drawable = it as BitmapDrawable
-          callbacks.remove(metadata)!!.invoke(drawable.bitmap)
-        }.build()
+        .allowHardware(false)
+        .fallback(R.drawable.ic_audio_track)
+        .build()
 
-    GlobalScope.launch(Dispatchers.IO) {
-      Coil.execute(request)
-    }
+
+    log.trace("making request for $imageURI")
+    val result = Coil.execute(request)
+    log.trace("got result: $result")
+    return result.drawable as? BitmapDrawable
+  }
 /*
     Glide.with(context).asBitmap().load(imageURI).diskCacheStrategy(DiskCacheStrategy.DATA)
         //.transform(RoundedCorners(iconCornerRadius))
@@ -92,17 +64,13 @@ class IconUtils(
 */
 
 
-
-    return defaultIcon
-  }
-
-  fun drawableToBitmapIcon(@DrawableRes resID: Int): Bitmap {
-    val drawable = ResourcesCompat.getDrawable(context.resources, resID, context.theme)!!
+  fun drawableToBitmapIcon(@DrawableRes resID: Int): BitmapDrawable {
+    val drawable = ResourcesCompat.getDrawable(context.resources, resID, context.theme)!! as BitmapDrawable
 
     val bitmap = Bitmap.createBitmap(
         Config.Notifications.notificationIconWidth,
         Config.Notifications.notificationIconHeight,
-        BITMAP_CONFIG
+        Bitmap.Config.ARGB_8888
     )
 
     log.dtrace("drawing bitmap ..")
@@ -115,7 +83,7 @@ class IconUtils(
           iconTint
       )
     drawable.draw(canvas)
-    return bitmap
+    return drawable
   }
 }
 

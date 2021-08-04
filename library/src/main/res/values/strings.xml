@@ -11,4 +11,6 @@
   <string name="pause">Pause</string>
   <string name="play">Play</string>
   <string name="swipe_up">Swipe up</string>
+  <string name="quit">Quit</string>
+  <string name="msg_press_back_to_quit">Press back again to quit.</string>
 </resources>

@@ -1,16 +1,19 @@
 plugins {
-  id("de.fayard.refreshVersions") version "0.10.1"
-////                          # available:"0.11.0"
+  id("de.fayard.refreshVersions") version "0.11.0"
 }
 
 if (System.getenv("JITPACK") == null) {
   //println("including :demo")
   //include(":demo")
-  include(":demo2",":library")
-}else {
+  include(":demo2")
+  include(":audienz")
+
+  project(":audienz").projectDir = file("../audienz/app")
+
+} else {
   println("Not including demo as building on jitpack.io")
 }
 
-include(":service")
+include(":library", ":service")
 rootProject.name = "audioservice"
 

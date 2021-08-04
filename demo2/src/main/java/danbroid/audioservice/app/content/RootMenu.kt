@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import danbroid.audio.content.ipfs_gateway
+import danbroid.audio.content.testTracks
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
@@ -27,17 +29,18 @@ const val URI_SOMA_FM = "$URI_PREFIX/somafm"
 fun RootMenu() {
 
   val context = LocalMenuContext.current
-  val dynamicTitle by context.menuModel.dynamicTitleFlow.collectAsState()
+  // val dynamicTitle by context.menuModel.dynamicTitleFlow.collectAsState()
 
   val queueSize by context.audioClientModel.client.queueState.map { it.size }.collectAsState(0)
 
   menuScreen {
 
-    menu(URI_PLAYLIST,clickable = queueSize > 0) {
+    menu(URI_PLAYLIST, clickable = queueSize > 0) {
       title = stringResource(R.string.playlist)
       subTitle = if (queueSize > 0) "Size: $queueSize" else "Empty"
       icon = AppIcon.PLAYLIST
     }
+/*
 
     menu {
       log.dtrace("DYNAMIC MENU")
@@ -50,6 +53,7 @@ fun RootMenu() {
         log.debug("clicked $this")
       }
     }
+*/
 
     menu(URI_TEST) {
       title = "Test Content"
@@ -61,7 +65,7 @@ fun RootMenu() {
     menu(URI_SOMA_FM) {
       title = "Soma FM"
       subTitle =
-        "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
+          "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
       icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
     }
 

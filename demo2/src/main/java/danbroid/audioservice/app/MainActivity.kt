@@ -6,9 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
+import danbroid.audio.content.TestDataLibrary
 import danbroid.audio.content.somaFM
 import danbroid.audio.library.RootAudioLibrary
-import danbroid.audioservice.app.content.TestDataLibrary
+import danbroid.audio.library.audioClientModel
 import danbroid.audioservice.app.rnz.rnz
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
           //val scaffoldState = rememberScaffoldState()
           //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)
 
-          val audioClientViewModel = danbroid.audio.library.audioClientModel()
+          val audioClientViewModel = audioClientModel()
           MainScaffold(navController, audioClientViewModel)
         }
       }

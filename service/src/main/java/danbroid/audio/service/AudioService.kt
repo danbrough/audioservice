@@ -4,7 +4,9 @@ import android.app.Notification
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -67,10 +69,6 @@ class AudioService : MediaSessionService() {
   private lateinit var callbackExecutor: Executor
   private lateinit var notificationManager: PlayerNotificationManager
   internal val iconUtils = IconUtils(this)
-
-  val defaultIcon: Bitmap by lazy {
-    iconUtils.drawableToBitmapIcon(Config.Notifications.defaultNotificationIcon)
-  }
 
   private val lifecycleScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -282,10 +280,10 @@ class AudioService : MediaSessionService() {
   }
 
   private fun loadIcon(mediaItem: MediaItem) {
-    log.error("loadIcon() $mediaItem")
+    log.derror("loadIcon() $mediaItem")
 
     lifecycleScope.launch {
-      fun updateMetadata(bitmap: Bitmap) {
+      fun updateMetadata(bitmap: BitmapDrawable) {
         log.dwarn("updateMetadata()")
 
         val builder = MediaMetadata.Builder(mediaItem.metadata!!)
@@ -294,10 +292,10 @@ class AudioService : MediaSessionService() {
           builder.setExtras(it)
         }
 
-        if (bitmap != defaultIcon && !extras.containsKey(MEDIA_METADATA_KEY_LIGHT_COLOR)) {
+        if (!extras.containsKey(MEDIA_METADATA_KEY_LIGHT_COLOR)) {
           log.dwarn("generating palette............................................")
 
-          val palette = Palette.from(bitmap).generate()
+          val palette = Palette.from(bitmap.bitmap).generate()
 
           extras.putInt(MEDIA_METADATA_KEY_LIGHT_COLOR, palette.getLightVibrantColor(Color.TRANSPARENT))
           extras.putInt(MEDIA_METADATA_KEY_DARK_COLOR, palette.getDarkVibrantColor(Color.TRANSPARENT))
@@ -308,14 +306,15 @@ class AudioService : MediaSessionService() {
         }
 
         //extras.putParcelable(METADATA_EXTRAS_KEY_CACHED_ICON, bitmap)
-        builder.putBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON, bitmap)
+        builder.putBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON, bitmap.bitmap)
         mediaItem.metadata = builder.build()
       }
 
-      iconUtils.loadIcon(mediaItem.metadata, defaultIcon) {
-        updateMetadata(it)
-      }?.also {
-        updateMetadata(it)
+      mediaItem.metadata?.also {
+        if (!it.containsKey(MediaMetadata.METADATA_KEY_DISPLAY_ICON))
+          iconUtils.loadIcon(it)?.also {
+            updateMetadata(it)
+          }
       }
     }
   }

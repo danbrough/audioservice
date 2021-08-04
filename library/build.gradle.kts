@@ -68,6 +68,8 @@ dependencies {
   implementation(AndroidX.lifecycle.viewModelKtx)
   implementation(AndroidX.compose.runtime)
   implementation(AndroidX.constraintLayoutCompose)
+  implementation(AndroidX.compose.material)
+
   implementation(Google.android.material)
   api("androidx.media2:media2-common:_")
   api("androidx.media2:media2-session:_")

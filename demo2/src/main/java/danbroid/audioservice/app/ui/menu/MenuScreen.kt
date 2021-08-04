@@ -37,6 +37,8 @@ import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
+import danbroid.audio.menu.MenuModel
+import danbroid.audio.menu.menuModel
 import danbroid.audioservice.app.Routes
 import danbroid.audioservice.app.content.*
 import danbroid.audioservice.app.ui.AppIcon
@@ -257,45 +259,7 @@ inline fun LazyListScope.menu(
     stickyHeader(menu.id, itemContent)
   else
     item(menu.id, itemContent)
-
-
-/*  val content: @Composable LazyItemScope.() -> Unit = {
-    log.dtrace("MENU BLOCK: $menu")
-    val context = LocalMenuContext.current!!
-    menu.onCreate()
-    if (!menu.isHidden) {
-      MenuListItemImpl(menu.title, menu.subTitle, menu.icon) {
-        context.onClicked(menu)
-      }
-    }
-  }
-
-  val id = {
-    menu.id.also {
-      log.derror("MENU ID: $it")
-    }
-  }
-
-  if (stickHeader)
-    stickyHeader(id, content)
-  else
-    item(id, content)*/
-
 }
-
-/*
-@Composable
-@MenuDSL
-fun MenuScreen2(content: MenuScreenScope.() -> Unit) {
-  Column {
-    Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
-    LazyColumn {
-      content()
-    }
-  }
-}
-*/
-
 
 
 
@@ -352,7 +316,7 @@ fun MenuScreen(
     navController: NavHostController,
     audioClientModel: AudioClientViewModel
 ) {
-  val menuModel = menuModel(menuID)
+  val menuModel = menuModel<MenuModel>(menuID)
   log.dtrace("MenuScreen() $menuID")
   val context =
       MenuContext(menuID, LocalContext.current, menuModel, audioClientModel, navController)
