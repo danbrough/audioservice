@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class  danbroid.audop.content.* { <fields>; }
+-keep class  danbroid.audio.content.* { <fields>; }
 
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.SerializationKt
