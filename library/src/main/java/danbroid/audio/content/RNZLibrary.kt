@@ -1,4 +1,4 @@
-package danbroid.audio.rnz
+package danbroid.audio.content
 
 import android.content.Context
 import androidx.core.net.toUri
@@ -124,4 +124,3 @@ fun RNZProgramme.getMetadata(defaultIcon:String): MediaMetadata.Builder = MediaM
 val Context.rnz: RNZLibrary
   get() = RNZLibrary.getInstance(this)
 
-private val log = danbroid.logging.getLog(RNZLibrary::class)

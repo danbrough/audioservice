@@ -35,7 +35,7 @@ if git tag | grep "$VERSION_NAME" > /dev/null; then
 fi
 
 
-./gradlew assembleDebug || exit 1
+./gradlew publishToMavenLocal || exit 1
 
 
 #sed -i  README.md  -e 's/Latest version.*/Latest version: '$VERSION_NAME'/g'

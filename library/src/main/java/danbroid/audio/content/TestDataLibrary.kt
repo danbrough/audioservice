@@ -3,13 +3,7 @@ package danbroid.audio.content
 import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.UriMediaItem
-import danbroid.audio.content.item
-import danbroid.audio.content.testData
-import danbroid.audio.content.toMediaMetadata
 import danbroid.audio.library.AudioLibrary
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.io.FileWriter
 
 //const val ipfs_gateway = "https://cloudflare-ipfs.com"
 const val ipfs_gateway = "https://h1.danbrough.org"
@@ -147,14 +141,5 @@ class TestDataLibrary : AudioLibrary {
       }.also {
         log.dinfo("Found mediaID: $mediaID ${it != null}")
       }
-}
-
-fun main() {
-  println("Generating json ...")
-  Json.encodeToString(testTracks.testData).also { data ->
-    FileWriter("/tmp/tracks.json").use {
-      it.write(data)
-    }
-  }
 }
 

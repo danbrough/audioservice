@@ -18,9 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsHeight
+import danbroid.audio.content.RNZLibrary
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.library.audioClientModel
-import danbroid.audio.rnz.RNZLibrary
 import danbroid.audioservice.app.R
 
 

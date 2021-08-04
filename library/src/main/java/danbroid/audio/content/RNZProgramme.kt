@@ -1,4 +1,4 @@
-package danbroid.audio.rnz
+package danbroid.audio.content
 
 
 import kotlinx.serialization.SerialName
@@ -108,4 +108,3 @@ data class RNZProgramme(
 }
 
 
-private val log = danbroid.logging.getLog(RNZProgramme::class)
