@@ -21,6 +21,7 @@ android {
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles("consumer-rules.pro")
+    addManifestPlaceholders(mapOf("projectVersion" to ProjectVersions.getVersionName()))
 
   }
 
@@ -31,7 +32,7 @@ android {
   buildTypes {
 
     getByName("release") {
-      isMinifyEnabled = ProjectVersions.MINIFY_ENABLED
+      isMinifyEnabled = false
       proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
           "proguard-rules.pro"
