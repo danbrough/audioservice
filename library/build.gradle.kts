@@ -1,6 +1,7 @@
 plugins {
   id("com.android.library")
   id("kotlin-android")
+  id("maven-publish")
   kotlin("plugin.serialization")
 }
 
@@ -51,6 +52,29 @@ android {
         //"androidx.compose.material.ExperimentalMaterialApi"
     ).forEach {
       languageSettings.useExperimentalAnnotation(it)
+    }
+  }
+
+  val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.getByName("main").java.srcDirs)
+  }
+
+  afterEvaluate {
+    publishing {
+      val projectName = name
+      publications {
+        val release by registering(MavenPublication::class) {
+          /*components.forEach {
+        println("Publication component: ${it.name}")
+      }*/
+          from(components["release"])
+          artifact(sourcesJar.get())
+          artifactId = projectName
+          groupId = ProjectVersions.GROUP_ID
+          version = ProjectVersions.VERSION_NAME
+        }
+      }
     }
   }
 }

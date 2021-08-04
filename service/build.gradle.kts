@@ -79,7 +79,7 @@ android {
       }*/
           from(components["release"])
           artifact(sourcesJar.get())
-          artifactId = "service"
+          artifactId = projectName
           groupId = ProjectVersions.GROUP_ID
           version = ProjectVersions.VERSION_NAME
         }
