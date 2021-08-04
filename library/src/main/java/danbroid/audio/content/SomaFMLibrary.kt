@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 const val SOMA_CHANNELS_URL = "https://somafm.com/channels.json"
 
-internal val log = danbroid.logging.getLog("danbroid.demo.content")
+internal val log = danbroid.logging.getLog("danbroid.audio.content")
 
 @Serializable
 data class SomaChannel(
@@ -93,7 +93,7 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
 
   override suspend fun loadItem(mediaID: String): MediaItem? {
     log.trace("loadItem() $mediaID")
-    val somaID = mediaID.toUri().host!!.uriDecode()
+    val somaID = mediaID.substringAfterLast('/')
     log.trace("somaID: $somaID")
 
     return channels().firstOrNull {

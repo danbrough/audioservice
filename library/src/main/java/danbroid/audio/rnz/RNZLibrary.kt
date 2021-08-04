@@ -1,4 +1,4 @@
-package danbroid.audioservice.app.rnz
+package danbroid.audio.rnz
 
 import android.content.Context
 import androidx.core.net.toUri
@@ -8,7 +8,6 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.library.AudioLibrary
-import danbroid.audio.rnz.RNZProgramme
 import danbroid.audio.service.util.httpSupport
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable

@@ -10,7 +10,7 @@ import danbroid.audio.content.TestDataLibrary
 import danbroid.audio.content.somaFM
 import danbroid.audio.library.RootAudioLibrary
 import danbroid.audio.library.audioClientModel
-import danbroid.audioservice.app.rnz.rnz
+import danbroid.audio.rnz.rnz
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
 class MainActivity : ComponentActivity() {

@@ -14,8 +14,8 @@ object ProjectVersions {
   var KEYSTORE_PASSWORD = ""
   var VERSION_FORMAT = ""
   val NDK_VERSION = "21.3.6528147"
-  const val COMPOSE_VERSION = "1.0.0"
-  const val COMPOSE_TOOLS_VERSION = "1.0.0"
+  const val COMPOSE_VERSION = "1.1.0-alpha01"
+  const val COMPOSE_TOOLS_VERSION = "1.1.0-alpha01"
   const val MINIFY_ENABLED = true
 
   val VERSION_NAME: String

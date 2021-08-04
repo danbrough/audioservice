@@ -20,8 +20,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.library.audioClientModel
+import danbroid.audio.rnz.RNZLibrary
 import danbroid.audioservice.app.R
-import danbroid.audioservice.app.rnz.RNZLibrary
 
 
 private fun createWebView(context: Context, audioClientModel: AudioClientViewModel): WebView {

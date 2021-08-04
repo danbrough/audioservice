@@ -22,8 +22,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScaffold(
-  navController: NavHostController,
-  audioClientModel: AudioClientViewModel
+    navController: NavHostController,
+    audioClientModel: AudioClientViewModel
 ) {
   val coroutineScope = rememberCoroutineScope()
   val insets = LocalWindowInsets.current
@@ -35,35 +35,37 @@ fun MainScaffold(
   val sheetHeight = 50.dp
 
   BottomSheetScaffold(
-    modifier = Modifier,
+      modifier = Modifier,
 /*      topBar = {
         Row {
           Text(title)
         }
       },*/
-    scaffoldState = scaffoldState,
-    sheetBackgroundColor = MaterialTheme.colors.primary,
-    sheetContent = {
-      Box(Modifier.fillMaxWidth().fillMaxHeight()) {
-        BottomControls(expanded = scaffoldState.bottomSheetState.isExpanded, audioClientModel)
-      }
+      scaffoldState = scaffoldState,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
+      sheetContent = {
+        Box(Modifier.fillMaxWidth().fillMaxHeight()) {
+          BottomControls(expanded = scaffoldState.bottomSheetState.isExpanded, audioClientModel)
+        }
 
-    },
-    //sheetPeekHeight = if (bottomSheetScaffoldState.bottomSheetState.isExpanded) 0.dp else 56.dp
-    sheetPeekHeight = sheetHeight + navBottom
+      },
+      //sheetPeekHeight = if (bottomSheetScaffoldState.bottomSheetState.isExpanded) 0.dp else 56.dp
+      sheetPeekHeight = sheetHeight + navBottom
   ) {
     DemoNavGraph(
-      Modifier.navigationBarsPadding(end = false).padding(bottom = sheetHeight),
-      navController,
-      audioClientModel
+        Modifier.navigationBarsPadding(end = false).padding(bottom = sheetHeight),
+        navController,
+        audioClientModel
     )
-  }
 
-  BackButtonHandler(scaffoldState.bottomSheetState.isExpanded) {
-    coroutineScope.launch {
-      scaffoldState.bottomSheetState.collapse()
+    BackButtonHandler(scaffoldState.bottomSheetState.isExpanded) {
+      coroutineScope.launch {
+        scaffoldState.bottomSheetState.collapse()
+      }
     }
   }
+
+
 }
 
 

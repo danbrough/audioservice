@@ -1,8 +1,8 @@
 package danbroid.audio.ui
 
 import android.app.Activity
-import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -10,7 +10,7 @@ import danbroid.audio.library.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun QuitOnBackHandler(scaffoldState: BottomSheetScaffoldState) {
+fun QuitOnBackHandler(snackbarHostState: SnackbarHostState) {
   var lastBackPressed by remember { mutableStateOf(0L) }
   val context = LocalContext.current
   val scope = rememberCoroutineScope()
@@ -25,9 +25,9 @@ fun QuitOnBackHandler(scaffoldState: BottomSheetScaffoldState) {
       lastBackPressed = now
       log.dtrace("showing snack bar")
       scope.launch {
-        scaffoldState.snackbarHostState.showSnackbar(
-          msg,
-          duration = SnackbarDuration.Short
+        snackbarHostState.showSnackbar(
+            msg,
+            duration = SnackbarDuration.Short
         )
       }
     }

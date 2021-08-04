@@ -16,6 +16,8 @@ import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.service.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 
 open class AudioClient(context: Context) {

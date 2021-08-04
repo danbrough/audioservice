@@ -11,7 +11,7 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.navDeepLink
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audioservice.app.content.*
-import danbroid.audioservice.app.rnz.RNZLibrary
+import danbroid.audio.rnz.RNZLibrary
 import danbroid.audioservice.app.ui.browser.BrowserScreen
 import danbroid.audioservice.app.ui.menu.MenuScreen
 import danbroid.audioservice.app.ui.settings.SettingsScreen

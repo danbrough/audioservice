@@ -8,12 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import danbroid.audio.content.ipfs_gateway
 import danbroid.audio.content.testTracks
+import danbroid.audio.ui.menu
+import danbroid.audio.ui.menuScreen
 import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
-import danbroid.audioservice.app.ui.menu.menu
-import danbroid.audioservice.app.ui.menu.menuScreen
-import kotlinx.coroutines.flow.map
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 const val URI_PREFIX = "audiodemo:/"
@@ -31,7 +30,8 @@ fun RootMenu() {
   val context = LocalMenuContext.current
   // val dynamicTitle by context.menuModel.dynamicTitleFlow.collectAsState()
 
-  val queueSize by context.audioClientModel.client.queueState.map { it.size }.collectAsState(0)
+  val queueState by context.audioClientModel.client.queueState.collectAsState()
+  val queueSize = queueState.size
 
   menuScreen {
 
