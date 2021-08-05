@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @DslMarker
 annotation class MenuDSL
 
+
 @Serializable
 data class Menu(
     var id: String,
