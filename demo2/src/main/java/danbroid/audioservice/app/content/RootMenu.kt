@@ -8,10 +8,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import danbroid.audio.content.ipfs_gateway
 import danbroid.audio.content.testTracks
+import danbroid.audio.ui.AppIcon
 import danbroid.audio.ui.menu
 import danbroid.audio.ui.menuScreen
 import danbroid.audioservice.app.R
-import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")

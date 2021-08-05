@@ -36,7 +36,6 @@ import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
 import danbroid.audioservice.app.Routes
-import danbroid.audioservice.app.ui.AppIcon
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.MenuContext
 import danbroid.audioservice.app.ui.theme.DemoTheme

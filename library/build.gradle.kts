@@ -93,6 +93,7 @@ dependencies {
   implementation(AndroidX.compose.runtime)
   implementation(AndroidX.constraintLayoutCompose)
   implementation(AndroidX.compose.material)
+  implementation(AndroidX.compose.material.icons.extended)
 
   implementation(Google.android.material)
   api("androidx.media2:media2-common:_")

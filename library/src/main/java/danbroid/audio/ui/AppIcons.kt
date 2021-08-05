@@ -1,8 +1,8 @@
-package danbroid.audioservice.app.ui
+package danbroid.audio.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import danbroid.audioservice.app.R
+import danbroid.audio.library.R
 import kotlinx.serialization.Serializable
 
 @Serializable
