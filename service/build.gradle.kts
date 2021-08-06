@@ -116,7 +116,8 @@ dependencies {
   api("androidx.media2:media2-session:_")
 
   implementation("org.jetbrains.kotlin:kotlin-reflect:_")
-
+  implementation("io.coil-kt:coil:_")
+  implementation(Square.okHttp3.okHttp)
   //implementation(AndroidX.media2.session)
 //  implementation(project(":session"))
 
@@ -127,7 +128,6 @@ dependencies {
 
   //api(AndroidX.concurrent.futures)
   api("com.google.guava:guava:_")
-
   //api(AndroidX.media2.exoplayer)
 //  implementation(Google.android.material)
   // implementation("com.google.guava:guava:_")
@@ -137,7 +137,7 @@ dependencies {
   kapt("com.github.bumptech.glide:compiler:_")*/
 
   implementation("androidx.palette:palette:_")
-  implementation("io.coil-kt:coil:_")
+
 
 /*
   val exo_vanilla = false
@@ -181,7 +181,6 @@ dependencies {
     //implementation("com.github.danbrough.exoplayer:extension-opus:_")
     // implementation("com.github.danbrough.exoplayer:extension-flac:_")
   }
-  implementation(Square.okHttp3.okHttp)
 
 
   //implementation("com.github.danbrough.exoplayer:extension-media2:2.12.0-dan02")

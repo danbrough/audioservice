@@ -5,9 +5,9 @@ import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
+import danbroid.audio.http.httpSupport
 import danbroid.audio.library.AudioLibrary
-import danbroid.audio.service.parsePlaylistURL
-import danbroid.audio.service.util.httpSupport
+import danbroid.audio.utils.parsePlaylistURL
 import danbroid.util.format.uriDecode
 import danbroid.util.format.uriEncode
 import danbroid.util.misc.SingletonHolder

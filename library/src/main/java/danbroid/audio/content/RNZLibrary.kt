@@ -7,8 +7,8 @@ import androidx.core.text.parseAsHtml
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
+import danbroid.audio.http.httpSupport
 import danbroid.audio.library.AudioLibrary
-import danbroid.audio.service.util.httpSupport
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -113,7 +113,7 @@ fun RNZProgramme.toMediaItem(defaultIcon: String): MediaItem =
     }
 
 
-fun RNZProgramme.getMetadata(defaultIcon:String): MediaMetadata.Builder = MediaMetadata.Builder()
+fun RNZProgramme.getMetadata(defaultIcon: String): MediaMetadata.Builder = MediaMetadata.Builder()
     .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZLibrary.getProgrammeURI(id))
     .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
     .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
