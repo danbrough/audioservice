@@ -1,14 +1,14 @@
 plugins {
-  id("de.fayard.refreshVersions") version "0.11.0"
+  id("de.fayard.refreshVersions") version "0.51.0"
 }
 
 if (System.getenv("JITPACK") == null) {
   //println("including :demo")
   //include(":demo")
-  include(":demo2")
-  include(":audienz")
+ // include(":demo2")
+//  include(":audienz")
 
-  project(":audienz").projectDir = file("../audienz/app")
+//  project(":audienz").projectDir = file("../audienz/app")
 
 } else {
   println("Not including demo as building on jitpack.io")

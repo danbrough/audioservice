@@ -5,8 +5,8 @@ import java.util.*
 object ProjectVersions {
   var SDK_VERSION = 30
   var MIN_SDK_VERSION = 21
-  val JAVA_VERSION = JavaVersion.VERSION_1_8
-  val KOTLIN_VERSION = "1.8"
+  const val JAVA_VERSION = 11
+  const val KOTLIN_VERSION = "11"
   var BUILD_TOOLS_VERSION = "31.0.0"
   var BUILD_VERSION = 1
   var VERSION_OFFSET = 1

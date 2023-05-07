@@ -8,6 +8,7 @@ plugins {
 android {
   compileSdk = ProjectVersions.SDK_VERSION
   buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
+  namespace = "danbroid.audio.library"
 
   defaultConfig {
     minSdk = ProjectVersions.MIN_SDK_VERSION
@@ -28,6 +29,7 @@ android {
     }
   }
 
+/*
   compileOptions {
     sourceCompatibility = ProjectVersions.JAVA_VERSION
     targetCompatibility = ProjectVersions.JAVA_VERSION
@@ -36,6 +38,7 @@ android {
   kotlinOptions {
     jvmTarget = ProjectVersions.KOTLIN_JVM_VERSION
   }
+*/
 
   composeOptions {
     kotlinCompilerExtensionVersion = ProjectVersions.COMPOSE_VERSION

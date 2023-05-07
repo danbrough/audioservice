@@ -1,7 +1,7 @@
 plugins {
   id("com.android.library")
   kotlin("android")
-  id("maven-publish")
+  `maven-publish`
   id("kotlin-parcelize")
   kotlin("kapt")
 }
@@ -11,6 +11,7 @@ android {
 
   compileSdk = ProjectVersions.SDK_VERSION
   buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
+  namespace = "danbroid.audio.service"
 
   defaultConfig {
     minSdk = ProjectVersions.MIN_SDK_VERSION
@@ -42,13 +43,14 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility = ProjectVersions.JAVA_VERSION
-    targetCompatibility = ProjectVersions.JAVA_VERSION
+    sourceCompatibility =  JavaVersion.VERSION_11
+    targetCompatibility =  JavaVersion.VERSION_11
   }
 
   kotlinOptions {
-    jvmTarget = ProjectVersions.KOTLIN_JVM_VERSION
+    jvmTarget =  JavaVersion.VERSION_11.toString()
   }
+/*
 
   kotlin.sourceSets.all {
     setOf(
@@ -63,6 +65,7 @@ android {
       languageSettings.useExperimentalAnnotation(it)
     }
   }
+*/
 
   val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")

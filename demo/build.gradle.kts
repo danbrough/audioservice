@@ -79,7 +79,7 @@ dependencies {
 
   implementation(project(":demo_common"))
   implementation(project(":service"))
-  implementation(AndroidX.lifecycle.runtimeKtx)
+  implementation(AndroidX.lifecycle.runtime.ktx)
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation(AndroidX.lifecycle.viewModelKtx)
   //implementation(AndroidX.coreKtx)
@@ -89,12 +89,12 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
   //implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")
   //implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:_")
-  implementation(AndroidX.paletteKtx)
+  implementation(AndroidX.palette.ktx)
 
   implementation(AndroidX.navigation.fragmentKtx)
   implementation(AndroidX.navigation.uiKtx)
   implementation(AndroidX.constraintLayout)
-  implementation(AndroidX.preferenceKtx)
+  implementation(AndroidX.preference.ktx)
   implementation(AndroidX.media2.common)
   implementation(AndroidX.concurrent.futures)
   implementation(Google.android.material)

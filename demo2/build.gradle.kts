@@ -117,7 +117,7 @@ dependencies {
   implementation(project(":library"))
   //implementation(project(":demo_common"))
 
-  implementation(AndroidX.lifecycle.runtimeKtx)
+  implementation(AndroidX.lifecycle.runtime.ktx)
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation(AndroidX.lifecycle.viewModelKtx)
   //implementation(AndroidX.coreKtx)
@@ -137,7 +137,7 @@ dependencies {
   implementation("androidx.navigation:navigation-compose:_")
   implementation("androidx.activity:activity-compose:_")
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:_")
-  implementation(AndroidX.constraintLayoutCompose)
+  implementation(AndroidX.constraintLayout.compose)
 
   implementation(AndroidX.compose.ui)
   implementation(AndroidX.compose.ui.text)
