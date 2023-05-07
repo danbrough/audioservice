@@ -11,7 +11,7 @@ android {
 
   defaultConfig {
     minSdk = ProjectVersions.MIN_SDK_VERSION
-    targetSdk = ProjectVersions.SDK_VERSION
+    //targetSdk = ProjectVersions.SDK_VERSION
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles("consumer-rules.pro")
   }
@@ -34,13 +34,15 @@ android {
   }
 
   kotlinOptions {
-    jvmTarget = ProjectVersions.KOTLIN_VERSION
+    jvmTarget = ProjectVersions.KOTLIN_JVM_VERSION
   }
 
   composeOptions {
     kotlinCompilerExtensionVersion = ProjectVersions.COMPOSE_VERSION
   }
 
+
+/*
   kotlin.sourceSets.all {
     setOf(
         "kotlinx.serialization.ExperimentalSerializationApi",
@@ -54,6 +56,7 @@ android {
       languageSettings.useExperimentalAnnotation(it)
     }
   }
+*/
 
   val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
@@ -92,11 +95,14 @@ dependencies {
 
   implementation(AndroidX.lifecycle.viewModelKtx)
   implementation(AndroidX.compose.runtime)
-  implementation(AndroidX.constraintLayoutCompose)
+  implementation("androidx.constraintlayout:constraintlayout-compose:_")
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
   implementation(Ktor.client.core)
   implementation(Ktor.client.okHttp)
+  implementation(Ktor.client.cio)
+  implementation(Ktor.client.logging)
+  implementation(Ktor.client.serialization)
   implementation(Google.android.material)
   api("androidx.media2:media2-common:_")
   api("androidx.media2:media2-session:_")

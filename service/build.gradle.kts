@@ -47,7 +47,7 @@ android {
   }
 
   kotlinOptions {
-    jvmTarget = ProjectVersions.KOTLIN_VERSION
+    jvmTarget = ProjectVersions.KOTLIN_JVM_VERSION
   }
 
   kotlin.sourceSets.all {

@@ -9,6 +9,8 @@ import kotlin.reflect.KProperty
 @DslMarker
 annotation class MenuDSL
 
+@Serializable
+data class Menus(val title: String, val menus: List<Menu>)
 
 @Serializable
 data class Menu(

@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import danbroid.audio.content.somaFM
+import danbroid.audio.library.MenuState
+import danbroid.audio.library.RootAudioLibrary
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlin.time.Duration
 
 
@@ -31,9 +30,11 @@ open class MenuModel(val menuID: String, context: Context) : ViewModel() {
     }
   }.stateIn(viewModelScope, SharingStarted.Lazily, "Initial set in model")
 
-  val somaChannels = flow {
-    emit(context.somaFM.channels())
-  }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+  protected val menuFlow: Flow<MenuState> =
+      RootAudioLibrary.loadMenus(menuID) ?: flowOf(MenuState.ERROR("No content found for $menuID"))
+
+  val menus: StateFlow<MenuState> = menuFlow.stateIn(viewModelScope, SharingStarted.Eagerly, MenuState.LOADING("Loading $menuID"))
 
   override fun onCleared() {
     log.debug("onCleared() $menuID")

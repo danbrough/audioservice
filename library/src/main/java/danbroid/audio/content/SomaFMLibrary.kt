@@ -6,19 +6,32 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.http.httpSupport
+import danbroid.audio.http.httpSupport2
 import danbroid.audio.library.AudioLibrary
+import danbroid.audio.library.MenuState
+import danbroid.audio.menu.Menu
 import danbroid.audio.utils.parsePlaylistURL
-import danbroid.util.format.uriDecode
 import danbroid.util.format.uriEncode
 import danbroid.util.misc.SingletonHolder
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.CacheControl
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
 
 const val SOMA_CHANNELS_URL = "https://somafm.com/channels.json"
+
+const val URI_SOMA_PREFIX = "somafm:/"
+
+const val URI_SOMA_CHANNELS = "$URI_SOMA_PREFIX/channels"
 
 internal val log = danbroid.logging.getLog("danbroid.audio.content")
 
@@ -86,10 +99,24 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
 
 
   @Suppress("BlockingMethodInNonBlockingContext")
-  suspend fun channels(): List<SomaChannel> =
+  suspend fun channels2(): List<SomaChannel> =
       context.httpSupport.requestString(SOMA_CHANNELS_URL, CacheControl.Builder().maxStale(7, TimeUnit.DAYS).build(), true).let {
         json.decodeFromString<SomaChannels>(it).channels
       }
+
+  suspend fun channels(): List<SomaChannel> = context.httpSupport2.client.get<HttpResponse>(SOMA_CHANNELS_URL) {
+    headers {
+      append(HttpHeaders.CacheControl, "max-stale=${Duration.days(7).inWholeSeconds}")
+    }
+  }.receive<SomaChannels>().channels
+
+  override fun loadMenus(menuID: String): Flow<MenuState>? =
+      if (menuID == URI_SOMA_CHANNELS)
+        flow {
+          emit(MenuState.LOADED("Soma FM", channels().map { it.toMenu() }))
+        }
+      else null
+
 
   override suspend fun loadItem(mediaID: String): MediaItem? {
     log.trace("loadItem() $mediaID")
@@ -99,7 +126,6 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
     return channels().firstOrNull {
       it.id == somaID
     }?.let {
-
 
       val metadata = it.mediaMetadata
       val playlistURL = it.playlists.first({ it.format == SomaChannel.Playlist.Format.AAC }).url
@@ -125,7 +151,7 @@ val Context.somaFM: SomaFMLibrary
 
 val SomaChannel.mediaMetadata: MediaMetadata.Builder
   get() = MediaMetadata.Builder()
-      .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, "somafm://${id.uriEncode()}")
+      .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, "$URI_SOMA_PREFIX/${id.uriEncode()}")
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title)
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, description)
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, image)
@@ -133,3 +159,4 @@ val SomaChannel.mediaMetadata: MediaMetadata.Builder
       .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, playlists.first({ it.format == SomaChannel.Playlist.Format.AAC }).url)
 
 
+fun SomaChannel.toMenu(): Menu = Menu("somafm://${id.uriEncode()}", title, description, image, isPlayable = true)
