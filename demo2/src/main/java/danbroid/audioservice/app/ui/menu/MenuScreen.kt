@@ -23,7 +23,7 @@ fun MenuScreen(
   CompositionLocalProvider(LocalMenuContext provides context) {
     when (menuID) {
       URI_CONTENT -> RootMenu()
-      URI_SOMA_FM -> SomaFM()
+      //TODO URI_SOMA_FM -> SomaFM()
       URI_PLAYLIST -> PlaylistMenu()
       URI_TEST -> TestContent()
       else -> error("Unhandled menuID: $menuID")

@@ -6,12 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import danbroid.audio.AppIcon
+import danbroid.audio.LibraryIcon
 import danbroid.audio.content.ipfs_gateway
 import danbroid.audio.content.testTracks
-import danbroid.audio.ui.AppIcon
 import danbroid.audio.ui.menu
 import danbroid.audio.ui.menuScreen
-import danbroid.audioservice.app.R
+import danbroid.audio.library.R
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
@@ -38,7 +39,7 @@ fun RootMenu() {
     menu(URI_PLAYLIST, clickable = queueSize > 0) {
       title = stringResource(R.string.playlist)
       subTitle = if (queueSize > 0) "Size: $queueSize" else "Empty"
-      icon = AppIcon.PLAYLIST
+      icon = LibraryIcon.PLAYLIST
     }
 /*
 
@@ -72,24 +73,24 @@ fun RootMenu() {
     menu(URI_SETTINGS) {
       title = stringResource(R.string.settings)
       subTitle = stringResource(R.string.settings_description)
-      icon = AppIcon.SETTINGS
+      icon = LibraryIcon.SETTINGS
     }
 
 
     menu("somafm://poptron") {
       title = "PopTron"
       isPlayable = true
-      icon = AppIcon.RADIO
+      icon = LibraryIcon.SOMAFM
     }
 
-    testTracks.testData.forEach {
+    /*TODO: testTracks.testData.forEach {
       menu(it.id) {
         title = it.title
         subTitle = it.subTitle
         icon = it.iconURI
         isPlayable = true
       }
-    }
+    }*/
   }
 }
 

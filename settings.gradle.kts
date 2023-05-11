@@ -5,7 +5,7 @@ plugins {
 if (System.getenv("JITPACK") == null) {
   //println("including :demo")
   //include(":demo")
- // include(":demo2")
+ include(":demo2")
 //  include(":audienz")
 
 //  project(":audienz").projectDir = file("../audienz/app")

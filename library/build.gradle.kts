@@ -1,13 +1,13 @@
 plugins {
   id("com.android.library")
-  id("kotlin-android")
-  id("maven-publish")
+  kotlin("android")
+  `maven-publish`
   kotlin("plugin.serialization")
 }
 
 android {
   compileSdk = ProjectVersions.SDK_VERSION
-  buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
+  //buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
   namespace = "danbroid.audio.library"
 
   defaultConfig {
@@ -16,6 +16,14 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles("consumer-rules.pro")
   }
+  compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = "17"
+  }
+
 
   buildFeatures {
     viewBinding = true
@@ -45,7 +53,7 @@ android {
   }
 
 
-/*
+
   kotlin.sourceSets.all {
     setOf(
         "kotlinx.serialization.ExperimentalSerializationApi",
@@ -56,10 +64,9 @@ android {
         //"kotlinx.coroutines.FlowPreview",
         //"androidx.compose.material.ExperimentalMaterialApi"
     ).forEach {
-      languageSettings.useExperimentalAnnotation(it)
+      languageSettings.optIn(it)
     }
   }
-*/
 
   val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
@@ -104,6 +111,11 @@ dependencies {
   implementation(Ktor.client.core)
   implementation(Ktor.client.okHttp)
   implementation(Ktor.client.cio)
+  implementation(Ktor.client.contentNegotiation)
+
+
+  implementation("io.ktor:ktor-serialization-kotlinx-json:_")
+
   implementation(Ktor.client.logging)
   implementation(Ktor.client.serialization)
   implementation(Google.android.material)

@@ -35,7 +35,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.BandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.audio.BuildConfig
+import danbroid.audio.service.BuildConfig
 import kotlinx.coroutines.*
 import java.util.concurrent.Executor
 

@@ -10,12 +10,12 @@ android {
 
 
   compileSdk = ProjectVersions.SDK_VERSION
-  buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
+  //buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
   namespace = "danbroid.audio.service"
 
   defaultConfig {
     minSdk = ProjectVersions.MIN_SDK_VERSION
-    targetSdk = ProjectVersions.SDK_VERSION
+    //targetSdk = ProjectVersions.SDK_VERSION
 
     //versionCode = ProjectVersions.BUILD_VERSION
     //versionName = ProjectVersions.VERSION_NAME
@@ -43,12 +43,12 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility =  JavaVersion.VERSION_11
-    targetCompatibility =  JavaVersion.VERSION_11
+    sourceCompatibility =  JavaVersion.VERSION_17
+    targetCompatibility =  JavaVersion.VERSION_17
   }
 
   kotlinOptions {
-    jvmTarget =  JavaVersion.VERSION_11.toString()
+    jvmTarget =  JavaVersion.VERSION_17.toString()
   }
 /*
 

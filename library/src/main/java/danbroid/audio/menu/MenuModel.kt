@@ -12,6 +12,8 @@ import danbroid.audio.library.RootAudioLibrary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 
 open class MenuModel(val menuID: String, context: Context) : ViewModel() {
@@ -22,10 +24,10 @@ open class MenuModel(val menuID: String, context: Context) : ViewModel() {
 
   val dynamicTitleFlow = flow {
     var count = 0
-    delay(Duration.seconds(1))
+    delay(1.toDuration(DurationUnit.SECONDS))
     while (true) {
       emit("Title: $count")
-      delay(Duration.seconds(1))
+      delay(1.toDuration(DurationUnit.SECONDS))
       count++
     }
   }.stateIn(viewModelScope, SharingStarted.Lazily, "Initial set in model")
@@ -46,7 +48,7 @@ private val log = danbroid.logging.getLog(MenuModel::class)
 
 class MenuModelFactory(val menuID: String, val context: Context) : ViewModelProvider.NewInstanceFactory() {
   @Suppress("UNCHECKED_CAST")
-  override fun <T : ViewModel?> create(modelClass: Class<T>): T = MenuModel(menuID, context) as T
+  override fun <T : ViewModel> create(modelClass: Class<T>): T = MenuModel(menuID, context) as T
 }
 
 

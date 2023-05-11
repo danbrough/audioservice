@@ -26,6 +26,8 @@ import kotlinx.serialization.json.Json
 import okhttp3.CacheControl
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 const val SOMA_CHANNELS_URL = "https://somafm.com/channels.json"
 
@@ -104,11 +106,11 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
         json.decodeFromString<SomaChannels>(it).channels
       }
 
-  suspend fun channels(): List<SomaChannel> = context.httpSupport2.client.get<HttpResponse>(SOMA_CHANNELS_URL) {
+  suspend fun channels(): List<SomaChannel> = context.httpSupport2.client.get(SOMA_CHANNELS_URL) {
     headers {
-      append(HttpHeaders.CacheControl, "max-stale=${Duration.days(7).inWholeSeconds}")
+      append(HttpHeaders.CacheControl, "max-stale=${7.toDuration(DurationUnit.DAYS).inWholeSeconds}")
     }
-  }.receive<SomaChannels>().channels
+  }.body<SomaChannels>().channels
 
   override fun loadMenus(menuID: String): Flow<MenuState>? =
       if (menuID == URI_SOMA_CHANNELS)
@@ -125,10 +127,10 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
 
     return channels().firstOrNull {
       it.id == somaID
-    }?.let {
+    }?.let { somaChannel ->
 
-      val metadata = it.mediaMetadata
-      val playlistURL = it.playlists.first({ it.format == SomaChannel.Playlist.Format.AAC }).url
+      val metadata = somaChannel.mediaMetadata
+      val playlistURL = somaChannel.playlists.first { it.format == SomaChannel.Playlist.Format.AAC }.url
 
       val audioURL = parsePlaylistURL(context, playlistURL) ?: run {
         log.error("failed to find audio url in $playlistURL")
@@ -156,7 +158,7 @@ val SomaChannel.mediaMetadata: MediaMetadata.Builder
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, description)
       .putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, image)
       .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)
-      .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, playlists.first({ it.format == SomaChannel.Playlist.Format.AAC }).url)
+      .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, playlists.first { it.format == SomaChannel.Playlist.Format.AAC }.url)
 
 
 fun SomaChannel.toMenu(): Menu = Menu("somafm://${id.uriEncode()}", title, description, image, isPlayable = true)

@@ -15,38 +15,38 @@ fun SomaFM() {
 
   log.dtrace("SomaFM")
   runCatching {
-    val somaChannels by context.menuModel.somaChannels.collectAsState()
-
-    menuScreen {
-
-      somaChannels.forEach {
-
-        menu("somafm://${it.id.uriEncode()}") {
-          title = it.title
-          subTitle = it.description
-          icon = it.image
-          isPlayable = true
-        }
-
-        /*item("somafm://${it.id.uriEncode()}_") {
-          ListItem(
-              Modifier.clickable {
-                log.dwarn("CLICKED ${it.id}")
-              },
-              icon = {
-                Icon(
-                    painter = rememberImagePainter(it.image),
-                    contentDescription = it.title,
-                    modifier = Modifier.size(48.dp),
-                    tint = Color.Unspecified,
-                )
-              },
-              secondaryText = { Text(it.description) }
-          ) { Text(it.title) }
-          Divider()
-        }*/
-      }
-    }
+//    val somaChannels by context.menuModel.somaChannels.collectAsState()
+//
+//    menuScreen {
+//
+//      somaChannels.forEach {
+//
+//        menu("somafm://${it.id.uriEncode()}") {
+//          title = it.title
+//          subTitle = it.description
+//          icon = it.image
+//          isPlayable = true
+//        }
+//
+//        /*item("somafm://${it.id.uriEncode()}_") {
+//          ListItem(
+//              Modifier.clickable {
+//                log.dwarn("CLICKED ${it.id}")
+//              },
+//              icon = {
+//                Icon(
+//                    painter = rememberImagePainter(it.image),
+//                    contentDescription = it.title,
+//                    modifier = Modifier.size(48.dp),
+//                    tint = Color.Unspecified,
+//                )
+//              },
+//              secondaryText = { Text(it.description) }
+//          ) { Text(it.title) }
+//          Divider()
+//        }*/
+//      }
+//    }
 
   }.exceptionOrNull()?.also {
     log.error(it.message, it)

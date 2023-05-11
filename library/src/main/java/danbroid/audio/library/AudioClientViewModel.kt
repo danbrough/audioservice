@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.media2.common.SessionPlayer
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.client.AudioClient
@@ -83,14 +84,16 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
 
   private val mainExecutor = ContextCompat.getMainExecutor(context)
 
-  protected fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
+  private fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
       addListener({
         job.invoke(get())
       }, mainExecutor)
 
   companion object {
     class AudioClientViewModelFactory(val context: Context) : ViewModelProvider.NewInstanceFactory() {
-      override fun <T : ViewModel?> create(modelClass: Class<T>): T = modelClass.getDeclaredConstructor(Context::class.java).newInstance(context) as T
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return modelClass.getDeclaredConstructor(Context::class.java).newInstance(context) as T
+      }
     }
   }
 }

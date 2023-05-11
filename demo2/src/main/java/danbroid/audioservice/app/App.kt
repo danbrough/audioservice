@@ -16,7 +16,8 @@ class App : Application(), ImageLoaderFactory {
         .crossfade(true)
         .okHttpClient {
           OkHttpClient.Builder()
-              .cache(CoilUtils.createDefaultCache(applicationContext))
+              //TODO
+              //.cache(CoilUtils.createDefaultCache(applicationContext))
               .build()
         }
         .build()

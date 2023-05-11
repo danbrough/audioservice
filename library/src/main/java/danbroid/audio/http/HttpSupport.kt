@@ -5,8 +5,8 @@ import danbroid.audio.service.audioServiceConfig
 import danbroid.util.misc.SingletonHolder
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -22,7 +22,7 @@ class HttpSupport2(context: Context) {
 
   val client by lazy {
 
-    val JsonConfiguration = Json {
+    val jsonConfiguration = Json {
       isLenient = false
       ignoreUnknownKeys = true
       allowSpecialFloatingPointValues = true
@@ -43,9 +43,12 @@ class HttpSupport2(context: Context) {
 
       }
 
-      install(JsonFeature) {
-        serializer = KotlinxSerializer(JsonConfiguration)
+      install(ContentNegotiation){
+        json(jsonConfiguration)
       }
+      /*install(JsonFeature) {
+        serializer = KotlinxSerializer(JsonConfiguration)
+      }*/
 
 /*      engine {
         endpoint {

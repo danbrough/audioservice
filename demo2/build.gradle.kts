@@ -13,11 +13,12 @@ android {
 
   compileSdk = ProjectVersions.SDK_VERSION
   ndkVersion = ProjectVersions.NDK_VERSION
-  buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
+
 
   defaultConfig {
-    //buildToolsVersion("30.0.2")
+    //buildToolsVersion("30.0.2"
     vectorDrawables.useSupportLibrary = true
+    namespace = "danbroid.audioservice.app"
 
     minSdk = ProjectVersions.MIN_SDK_VERSION
     targetSdk = ProjectVersions.SDK_VERSION
@@ -94,7 +95,9 @@ android {
         //"kotlinx.coroutines.FlowPreview",
         //"androidx.compose.material.ExperimentalMaterialApi"
     ).forEach {
-      languageSettings.useExperimentalAnnotation(it)
+      languageSettings.optIn(it)
+
+      //languageSettings.u(it)
     }
   }
 }

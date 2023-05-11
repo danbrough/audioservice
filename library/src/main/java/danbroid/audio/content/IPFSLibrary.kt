@@ -12,6 +12,8 @@ import io.ktor.http.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class IPFSLibrary(val httpSupport2: HttpSupport2) : AudioLibrary {
 
@@ -37,11 +39,13 @@ class IPFSLibrary(val httpSupport2: HttpSupport2) : AudioLibrary {
 
       runCatching {
         log.dtrace("getting ... $url")
-        httpSupport2.client.get<HttpResponse>(url) {
+
+        httpSupport2.client.get(url) {
           headers {
-            append(HttpHeaders.CacheControl, "max-stale=${Duration.days(7).inWholeSeconds}")
+
+            append(HttpHeaders.CacheControl, "max-stale=${7.toDuration(DurationUnit.DAYS).inWholeSeconds}")
           }
-        }.receive<Menus>().also {
+        }.body<Menus>().also {
           emit(MenuState.LOADED(it.title, it.menus))
         }
 

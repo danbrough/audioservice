@@ -29,9 +29,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.google.accompanist.insets.statusBarsHeight
+import danbroid.audio.AppIcon
+import danbroid.audio.LibraryIcon
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
@@ -48,10 +51,13 @@ fun IconImage(
 ) {
 
   Image(
-    painter = rememberImagePainter(data = imageUrl) {
+      /*
+         painter = rememberImagePainter(imageUrl) {
       //crossfade(true)
       transformations(RoundedCornersTransformation(8.dp.value))
     },
+       */
+    painter = rememberAsyncImagePainter(imageUrl) ,
     contentDescription = contentDescription,
     modifier = modifier,
     contentScale = ContentScale.FillBounds,
@@ -67,8 +73,8 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
 
   var icon = _icon
 
-  if (icon is AppIcon)
-    icon = AppIcon.lookup(icon)
+  if (icon is LibraryIcon)
+    icon = AppIcon.lookupIcon(icon)
 
   val iconTint = MaterialTheme.colors.primary
 
@@ -193,7 +199,7 @@ private fun MenuItemPreview() {
 
       ListItem(
         secondaryText = { Text("This is the secondary text") },
-        icon = { MenuListIcon(AppIcon.SETTINGS, "Settings") }
+        icon = { MenuListIcon(LibraryIcon.SETTINGS, "Settings") }
       ) {
         Text("This is the primary text")
       }
@@ -252,9 +258,9 @@ inline fun LazyListScope.menu(
   }
 
   if (sticky)
-    stickyHeader(menu.id, itemContent)
+    stickyHeader(menu.id,null, itemContent)
   else
-    item(menu.id, itemContent)
+    item(menu.id, null,itemContent)
 }
 
 

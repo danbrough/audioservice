@@ -3,18 +3,20 @@ import java.util.*
 
 
 object ProjectVersions {
-  var SDK_VERSION = 30
-  var MIN_SDK_VERSION = 21
-  const val JAVA_VERSION = 11
-  const val KOTLIN_VERSION = "11"
-  var BUILD_TOOLS_VERSION = "31.0.0"
+  var SDK_VERSION = 33
+  var MIN_SDK_VERSION = 24
+   val JAVA_VERSION = JavaVersion.VERSION_17
+  const val KOTLIN_VERSION = "17"
+  //var BUILD_TOOLS_VERSION = "31.0.0"
   var BUILD_VERSION = 1
   var VERSION_OFFSET = 1
   var GROUP_ID = "com.github.danbrough.audioservice"
   var KEYSTORE_PASSWORD = ""
   var VERSION_FORMAT = ""
   val NDK_VERSION = "21.3.6528147"
-  const val COMPOSE_VERSION = "1.1.0-alpha01"
+  //const val COMPOSE_VERSION = "1.1.0-alpha01"
+  const val COMPOSE_VERSION = "1.4.3"
+
   const val COMPOSE_TOOLS_VERSION = "1.1.0-alpha01"
   const val MINIFY_ENABLED = true
   const val LOCAL_AUDIOSERVICE = true

@@ -12,7 +12,7 @@ import androidx.media2.common.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.util.NotificationUtil
-import danbroid.audio.R
+
 
 object Config {
 
@@ -23,7 +23,7 @@ object Config {
     var notificationID = 1438293
 
     @DrawableRes
-    var statusBarIcon = R.drawable.ic_audiotrack
+    var statusBarIcon = R.drawable.ic_audio_track
 
     @ColorInt
     var notificationColour = 0
@@ -32,7 +32,7 @@ object Config {
     var notificationIconTint = 0
 
     @DrawableRes
-    var defaultNotificationIcon = R.drawable.ic_audiotrack
+    var defaultNotificationIcon = R.drawable.ic_audio_track
 
     var notificationIconWidth = 256
 

@@ -10,7 +10,7 @@ import danbroid.audio.menu.Menu
 //const val ipfs_gateway = "https://cloudflare-ipfs.com"
 const val ipfs_gateway = "https://h1.danbrough.org"
 
-private val testTracks = testData {
+ val testTracks = testData {
 
   menu {
     id = "http://sohoradioculture.doughunt.co.uk:8000/320mp3"
@@ -127,7 +127,7 @@ private val testTracks = testData {
 }
 
 
-class TestDataLibrary(val tracks: List<Menu>) : AudioLibrary {
+class TestDataLibrary(private val tracks: List<Menu> = testTracks) : AudioLibrary {
   override suspend fun loadItem(mediaID: String): MediaItem? =
       tracks.firstOrNull {
         it.id == mediaID
