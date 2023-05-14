@@ -17,11 +17,11 @@ android {
     consumerProguardFiles("consumer-rules.pro")
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = ProjectVersions.JAVA_VERSION
+    targetCompatibility =  ProjectVersions.JAVA_VERSION
   }
   kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget =  ProjectVersions.KOTLIN_VERSION
   }
 
 
@@ -94,6 +94,7 @@ android {
 
 dependencies {
   implementation(project(":service"))
+  implementation("org.danbrough:klog:_")
   implementation(AndroidX.core.ktx)
   implementation(AndroidX.media2.common)
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")

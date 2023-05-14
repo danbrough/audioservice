@@ -2,9 +2,7 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("kapt")
-  //kotlin("serialization")
   kotlin("plugin.serialization")
-
 }
 
 
@@ -96,8 +94,6 @@ android {
         //"androidx.compose.material.ExperimentalMaterialApi"
     ).forEach {
       languageSettings.optIn(it)
-
-      //languageSettings.u(it)
     }
   }
 }
@@ -150,7 +146,8 @@ dependencies {
   implementation(AndroidX.compose.runtime.liveData)
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
-  implementation("androidx.compose.ui:ui-tooling:${ProjectVersions.COMPOSE_TOOLS_VERSION}")
+  implementation(AndroidX.compose.ui.tooling)
+
 
 
   implementation("com.google.accompanist:accompanist-systemuicontroller:_")
@@ -162,6 +159,7 @@ dependencies {
   //implementation("androidx.media2:media2-player:$media_version")
   //implementation("com.google.guava:guava:_")
 
+  implementation("org.danbrough:klog:_")
   implementation("com.github.danbrough.androidutils:logging_android:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:compose:_")

@@ -29,6 +29,7 @@ subprojects {
    // jcenter()
     mavenCentral()
   //maven("https://h1.danbrough.org/maven/")
+    maven("/usr/local/kotlinxtras/build/xtras/maven")
     maven("https://jitpack.io")
   //  mavenLocal()
   }

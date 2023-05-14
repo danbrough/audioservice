@@ -17,7 +17,7 @@ object ProjectVersions {
   //const val COMPOSE_VERSION = "1.1.0-alpha01"
   const val COMPOSE_VERSION = "1.4.3"
 
-  const val COMPOSE_TOOLS_VERSION = "1.1.0-alpha01"
+//  const val COMPOSE_TOOLS_VERSION = "1.1.0-alpha01"
   const val MINIFY_ENABLED = true
   const val LOCAL_AUDIOSERVICE = true
   const val URI_SCHEME = "audiodemo"
