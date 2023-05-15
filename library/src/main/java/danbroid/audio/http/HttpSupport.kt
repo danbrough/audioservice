@@ -1,13 +1,13 @@
 package danbroid.audio.http
 
 import android.content.Context
+import danbroid.audio.log
 import danbroid.audio.service.audioServiceConfig
 import danbroid.util.misc.SingletonHolder
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
-import klog.klog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -32,10 +32,10 @@ class HttpSupport2(context: Context) {
 
     HttpClient(OkHttp) {
       followRedirects = true
-/*
-      install(HttpCache) {
-        privateStorage = HttpCacheStorage.Unlimited()
-      }*/
+      /*
+            install(HttpCache) {
+              privateStorage = HttpCacheStorage.Unlimited()
+            }*/
 
       engine {
         config {
@@ -44,30 +44,30 @@ class HttpSupport2(context: Context) {
 
       }
 
-      install(ContentNegotiation){
+      install(ContentNegotiation) {
         json(jsonConfiguration)
       }
       /*install(JsonFeature) {
         serializer = KotlinxSerializer(JsonConfiguration)
       }*/
 
-/*      engine {
-        endpoint {
-          // this: EndpointConfig
-          maxConnectionsPerRoute = 100
-          pipelineMaxSize = 20
-          keepAliveTime = 5000
-          connectTimeout = 5000
-          connectAttempts = 5
-        }
-      }*/
+      /*      engine {
+              endpoint {
+                // this: EndpointConfig
+                maxConnectionsPerRoute = 100
+                pipelineMaxSize = 20
+                keepAliveTime = 5000
+                connectTimeout = 5000
+                connectAttempts = 5
+              }
+            }*/
     }
   }
 
   inline suspend fun <reified T : Any> getJson(
-    url: String,
-    maxStale: Duration? = null,
-    maxAge: Duration? = null
+      url: String,
+      maxStale: Duration? = null,
+      maxAge: Duration? = null
   ): T {
     TODO("implement")
   }
@@ -91,7 +91,6 @@ val Context.httpSupport2: HttpSupport2
 
 class HttpSupport(context: Context) {
 
-  private val log = klog()
 
   companion object : SingletonHolder<HttpSupport, Context>(::HttpSupport)
 
@@ -105,27 +104,27 @@ class HttpSupport(context: Context) {
 
   @Suppress("BlockingMethodInNonBlockingContext")
   suspend fun requestString(
-    url: String,
-    cacheControl: CacheControl? = null,
-    retryWithoutCache: Boolean = false
+      url: String,
+      cacheControl: CacheControl? = null,
+      retryWithoutCache: Boolean = false
   ): String = withContext(Dispatchers.IO) {
     Request.Builder().url(url)
-      .also {
-        if (cacheControl != null) it.cacheControl(cacheControl)
-      }
-      .build().let {
-        okHttp.newCall(it).execute().use {
-          if (it.isSuccessful)
-            it.body!!.string()
-          else {
-            if (cacheControl != null && retryWithoutCache) {
-              log.info("$url failed. code:${it.code} message:${it.message} retrying without cache")
-              requestString(url)
-            } else
-              throw IOException("$url failed. code:${it.code} message:${it.message}")
+        .also {
+          if (cacheControl != null) it.cacheControl(cacheControl)
+        }
+        .build().let {
+          okHttp.newCall(it).execute().use {
+            if (it.isSuccessful)
+              it.body!!.string()
+            else {
+              if (cacheControl != null && retryWithoutCache) {
+                log.info("$url failed. code:${it.code} message:${it.message} retrying without cache")
+                requestString(url)
+              } else
+                throw IOException("$url failed. code:${it.code} message:${it.message}")
+            }
           }
         }
-      }
   }
 }
 

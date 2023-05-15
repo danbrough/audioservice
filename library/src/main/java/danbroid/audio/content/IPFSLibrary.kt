@@ -4,21 +4,19 @@ import androidx.media2.common.MediaItem
 import danbroid.audio.http.HttpSupport2
 import danbroid.audio.library.AudioLibrary
 import danbroid.audio.library.MenuState
+import danbroid.audio.log
 import danbroid.audio.menu.Menus
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import klog.klog
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.headers
+import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 class IPFSLibrary(private val httpSupport2: HttpSupport2) : AudioLibrary {
 
-  private val log = klog()
   companion object {
     const val IPFS_PREFIX = "ipfs://"
     const val IPNS_PREFIX = "ipns://"

@@ -10,11 +10,21 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.common.SubtitleData
-import androidx.media2.session.*
+import androidx.media2.session.MediaBrowser
+import androidx.media2.session.MediaController
+import androidx.media2.session.MediaSessionManager
+import androidx.media2.session.SessionCommand
+import androidx.media2.session.SessionCommandGroup
+import androidx.media2.session.SessionResult
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.audio.service.*
-import klog.klog
+import danbroid.audio.log
+import danbroid.audio.service.AudioService
+import danbroid.audio.service.BuildConfig
+import danbroid.audio.service.buffState
+import danbroid.audio.service.duration
+import danbroid.audio.service.playerState
+import danbroid.audio.service.toDebugString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -41,8 +51,6 @@ open class AudioClient(context: Context) {
       val size: Int,
       val position: Int
   )
-
-  private val log = klog()
 
   private val _playPosition = MutableStateFlow(PlayPosition.NO_POSITION)
   val playPosition: StateFlow<PlayPosition> = _playPosition

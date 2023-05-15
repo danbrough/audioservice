@@ -4,4 +4,4 @@ import klog.klog
 
 private object Log
 
-internal val log = klog(Log::class)
+internal val log = klog("AUDIO_SERVICE")

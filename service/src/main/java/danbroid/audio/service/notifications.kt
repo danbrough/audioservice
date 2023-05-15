@@ -12,7 +12,6 @@ import androidx.media2.common.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.util.NotificationUtil
-import klog.klog
 
 
 object Config {
@@ -45,8 +44,6 @@ object Config {
 
 class NotificationListener(val service: AudioService) : PlayerNotificationManager.NotificationListener {
   private var serviceForeground = false
-
-  private val log = klog()
 
   override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
     if (BuildConfig.DEBUG) log.trace("onNotificationCancelled() byUser:$dismissedByUser")
@@ -117,46 +114,45 @@ fun createNotificationManager(
         it.setColorized(true)
       }
 
-/*  return object : PlayerNotificationManager(
-      service,
-      service.getString(R.string.notification_channel_id),
-      notificationID,
-      PlayerDescriptionAdapter(service),
-      notificationListener
-  ) {
-    override fun createNotification(
-        player: Player,
-        builder: NotificationCompat.Builder?,
-        ongoing: Boolean,
-        largeIcon: Bitmap?
-    ): NotificationCompat.Builder? {
-      return super.createNotification(player, builder, ongoing, largeIcon)?.apply {
-        setUsesChronometer(player.isCurrentWindowSeekable)
-        setShowWhen(player.isCurrentWindowSeekable)
+  /*  return object : PlayerNotificationManager(
+        service,
+        service.getString(R.string.notification_channel_id),
+        notificationID,
+        PlayerDescriptionAdapter(service),
+        notificationListener
+    ) {
+      override fun createNotification(
+          player: Player,
+          builder: NotificationCompat.Builder?,
+          ongoing: Boolean,
+          largeIcon: Bitmap?
+      ): NotificationCompat.Builder? {
+        return super.createNotification(player, builder, ongoing, largeIcon)?.apply {
+          setUsesChronometer(player.isCurrentWindowSeekable)
+          setShowWhen(player.isCurrentWindowSeekable)
+        }
       }
-    }
 
-    override fun getActions(player: Player) = super.getActions(player).also {
-      if (!player.hasPrevious()) it.remove(ACTION_PREVIOUS)
-    }
+      override fun getActions(player: Player) = super.getActions(player).also {
+        if (!player.hasPrevious()) it.remove(ACTION_PREVIOUS)
+      }
 
-  }.apply {
-    setSmallIcon(Config.Notifications.statusBarIcon)
-    setUseNextActionInCompactView(true)
-    setUsePreviousActionInCompactView(true)
+    }.apply {
+      setSmallIcon(Config.Notifications.statusBarIcon)
+      setUseNextActionInCompactView(true)
+      setUsePreviousActionInCompactView(true)
 
-    if (Config.Notifications.notificationColour != 0) {
-      setColor(Config.Notifications.notificationColour)
-    }
+      if (Config.Notifications.notificationColour != 0) {
+        setColor(Config.Notifications.notificationColour)
+      }
 
-    setUsePlayPauseActions(true)
-    setControlDispatcher(DefaultControlDispatcher(0L, 0L))
-    //setUseChronometer(true)
-    setColorized(true)
-    setUseStopAction(false)
-  }*/
+      setUsePlayPauseActions(true)
+      setControlDispatcher(DefaultControlDispatcher(0L, 0L))
+      //setUseChronometer(true)
+      setColorized(true)
+      setUseStopAction(false)
+    }*/
 }
-
 
 
 private class PlayerDescriptionAdapter(val service: AudioService) :
@@ -185,10 +181,10 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
           ?: it.getText(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION)
     }
   }
-/*
-  override fun getCurrentSubText(player: Player): CharSequence? {
-    return super.getCurrentSubText(player)
-  }*/
+  /*
+    override fun getCurrentSubText(player: Player): CharSequence? {
+      return super.getCurrentSubText(player)
+    }*/
 
 
   override fun getCurrentLargeIcon(

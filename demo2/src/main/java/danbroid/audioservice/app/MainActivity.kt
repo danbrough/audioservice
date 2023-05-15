@@ -5,46 +5,42 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.ProvideWindowInsets
 import danbroid.audio.content.TestDataLibrary
 import danbroid.audio.content.rnz
 import danbroid.audio.content.somaFM
 import danbroid.audio.library.RootAudioLibrary
 import danbroid.audio.library.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
-import klog.KLogWriters
-import klog.KMessageFormatter
-import klog.KMessageFormatters
-import klog.Level
-import klog.colored
-import klog.klog
 
 
 class MainActivity : ComponentActivity() {
 
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    log.error("onCreate()")
     super.onCreate(savedInstanceState)
+    log.error("here1")
     WindowCompat.setDecorFitsSystemWindows(window, false)
-
+    log.error("here2")
     RootAudioLibrary.register(
         TestDataLibrary(),
         somaFM,
         rnz
     )
+    log.error("here3")
 
     setContent {
-      ProvideWindowInsets {
-        DemoTheme(darkTheme = false) {
-          if (BuildConfig.DEBUG) log.error("MAIN ACTIVITY SET CONTENT")
-          val navController = rememberNavController()
-          //val scaffoldState = rememberScaffoldState()
-          //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)
+      log.error("setting content ..")
+      DemoTheme(darkTheme = false) {
+        if (BuildConfig.DEBUG) log.error("MAIN ACTIVITY SET CONTENT")
+        val navController = rememberNavController()
+        //val scaffoldState = rememberScaffoldState()
+        //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)
 
-          val audioClientViewModel = audioClientModel()
-          MainScaffold(navController, audioClientViewModel)
-        }
+        val audioClientViewModel = audioClientModel()
+        MainScaffold(navController, audioClientViewModel)
       }
+
     }
   }
 }

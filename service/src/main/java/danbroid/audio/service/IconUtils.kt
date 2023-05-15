@@ -9,18 +9,13 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.media2.common.MediaMetadata
-import coil.Coil
 import coil.imageLoader
 import coil.request.ImageRequest
-import danbroid.audio.service.R
-import klog.klog
 
 class IconUtils(
     val context: Context,
     @ColorInt val iconTint: Int = Config.Notifications.notificationIconTint
 ) {
-
-  private val log = klog()
 
   suspend fun loadIcon(metadata: MediaMetadata): BitmapDrawable? {
     if (BuildConfig.DEBUG) log.trace("loadIcon() $metadata")
