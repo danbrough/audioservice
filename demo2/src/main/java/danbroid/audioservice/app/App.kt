@@ -3,7 +3,6 @@ package danbroid.audioservice.app
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import coil.util.CoilUtils
 import danbroid.audio.service.Config
 import danbroid.util.resource.toResourceColour
 import okhttp3.OkHttpClient

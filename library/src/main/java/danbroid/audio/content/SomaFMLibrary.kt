@@ -8,6 +8,7 @@ import androidx.media2.common.UriMediaItem
 import danbroid.audio.http.httpSupport
 import danbroid.audio.http.httpSupport2
 import danbroid.audio.library.AudioLibrary
+import danbroid.audio.library.BuildConfig
 import danbroid.audio.library.MenuState
 import danbroid.audio.menu.Menu
 import danbroid.audio.utils.parsePlaylistURL
@@ -17,6 +18,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import klog.klog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.SerialName
@@ -35,7 +37,7 @@ const val URI_SOMA_PREFIX = "somafm:/"
 
 const val URI_SOMA_CHANNELS = "$URI_SOMA_PREFIX/channels"
 
-internal val log = danbroid.logging.getLog("danbroid.audio.content")
+private val log = klog("danbroid.audio.content")
 
 @Serializable
 data class SomaChannel(
@@ -136,7 +138,7 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
         log.error("failed to find audio url in $playlistURL")
         return null
       }
-      log.dtrace("playlist: $playlistURL -> $audioURL")
+      if (BuildConfig.DEBUG) log.trace("playlist: $playlistURL -> $audioURL")
       UriMediaItem.Builder(mediaID.toUri())
           .setStartPosition(0L).setEndPosition(-1L)
           .setMetadata(metadata
@@ -146,6 +148,7 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
     }
   }
 }
+
 
 val Context.somaFM: SomaFMLibrary
   get() = SomaFMLibrary.getInstance(this)

@@ -15,7 +15,6 @@ import danbroid.audio.ui.menuScreen
 import danbroid.audio.library.R
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 
-internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 const val URI_PREFIX = "audiodemo:/"
 
 const val URI_CONTENT = "$URI_PREFIX/content"

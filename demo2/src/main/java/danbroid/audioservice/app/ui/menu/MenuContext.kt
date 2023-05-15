@@ -21,6 +21,6 @@ class MenuContext(
 
 }
 
-val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.menu")
+
 
 val LocalMenuContext = compositionLocalOf<MenuContext> { error("No local provided for LocalMenuContext") }

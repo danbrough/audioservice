@@ -10,21 +10,24 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.media2.common.SessionPlayer
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.client.AudioClient
 import danbroid.audio.service.AudioService
 import danbroid.audio.service.playerState
-import danbroid.audio.service.successfull
+import danbroid.audio.service.successful
+import klog.klog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+private val log = klog(AudioClientViewModel::class)
+
 open class AudioClientViewModel(context: Context) : ViewModel() {
 
+
   private val _client = lazy {
-    log.derror("starting audio service ..")
+    log.info("starting audio service ..")
     context.startService(Intent(context, AudioService::class.java))
     AudioClient(context)
   }
@@ -51,7 +54,7 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
       log.warn("already in playlist at $existingIndex")
       if (existingIndex != controller.currentMediaItemIndex) {
         controller.skipToPlaylistItem(existingIndex).then {
-          log.debug("skipTO $existingIndex successfull: ${it.successfull}")
+          log.debug("skipTO $existingIndex successfull: ${it.successful}")
           client.playIfNotPlaying()
         }
       } else {
@@ -67,13 +70,13 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
       }
       withContext(Dispatchers.Main) {
         client.addToPlaylist(mediaItem).then {
-          log.info("addToPlaylist returned ${it.successfull}  playlistIndex: ${controller.currentMediaItemIndex} playlistSize: ${controller.playlist?.size} playerState:${controller.playerState.playerState}")
+          log.info("addToPlaylist returned ${it.successful}  playlistIndex: ${controller.currentMediaItemIndex} playlistSize: ${controller.playlist?.size} playerState:${controller.playerState.playerState}")
           if (controller.playerState == SessionPlayer.PLAYER_STATE_IDLE || controller.playerState == SessionPlayer.PLAYER_STATE_ERROR) {
             log.debug("calling prepare ..")
             controller.prepare().then {
-              log.debug("prepare(): success: ${it.successfull} calling play ..")
+              log.debug("prepare(): success: ${it.successful} calling play ..")
               controller.play().then {
-                log.debug("play() success:${it.successfull}")
+                log.debug("play() success:${it.successful}")
               }
             }
           }
@@ -109,4 +112,3 @@ fun Context.audioClientModel(): AudioClientViewModel {
 }
 
 
-private val log = danbroid.logging.getLog(AudioClientViewModel::class)

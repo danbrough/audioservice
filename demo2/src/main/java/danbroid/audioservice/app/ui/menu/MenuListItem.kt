@@ -39,6 +39,7 @@ import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
 import danbroid.audioservice.app.Routes
+import danbroid.audioservice.app.log
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.MenuContext
 import danbroid.audioservice.app.ui.theme.DemoTheme
@@ -229,7 +230,7 @@ inline fun LazyListScope.menu(
 ) {
 
   val menu = Menu(id, "Untitled")
-  log.dtrace("menuID: ${menu.id}")
+  log.trace("menuID: ${menu.id}")
 
   val itemContent: @Composable LazyItemScope.() -> Unit = {
     menu.onCreate()

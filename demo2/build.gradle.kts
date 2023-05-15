@@ -160,7 +160,7 @@ dependencies {
   //implementation("com.google.guava:guava:_")
 
   implementation("org.danbrough:klog:_")
-  implementation("com.github.danbrough.androidutils:logging_android:_")
+  //implementation("com.github.danbrough.androidutils:logging_android:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:compose:_")
 

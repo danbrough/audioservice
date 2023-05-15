@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import danbroid.audio.library.MenuState
 import danbroid.audio.library.RootAudioLibrary
+import klog.klog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlin.time.Duration
@@ -19,7 +20,7 @@ import kotlin.time.toDuration
 open class MenuModel(val menuID: String, context: Context) : ViewModel() {
 
   init {
-    log.derror("MenuModel() $menuID")
+    log.trace("MenuModel() $menuID")
   }
 
   val dynamicTitleFlow = flow {
@@ -43,7 +44,7 @@ open class MenuModel(val menuID: String, context: Context) : ViewModel() {
   }
 }
 
-private val log = danbroid.logging.getLog(MenuModel::class)
+private val log = klog(MenuModel::class)
 
 
 class MenuModelFactory(val menuID: String, val context: Context) : ViewModelProvider.NewInstanceFactory() {

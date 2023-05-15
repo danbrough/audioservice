@@ -12,8 +12,16 @@ import danbroid.audio.content.somaFM
 import danbroid.audio.library.RootAudioLibrary
 import danbroid.audio.library.audioClientModel
 import danbroid.audioservice.app.ui.theme.DemoTheme
+import klog.KLogWriters
+import klog.KMessageFormatter
+import klog.KMessageFormatters
+import klog.Level
+import klog.colored
+import klog.klog
+
 
 class MainActivity : ComponentActivity() {
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,7 +36,7 @@ class MainActivity : ComponentActivity() {
     setContent {
       ProvideWindowInsets {
         DemoTheme(darkTheme = false) {
-          log.derror("MAIN ACTIVITY SET CONTENT")
+          if (BuildConfig.DEBUG) log.error("MAIN ACTIVITY SET CONTENT")
           val navController = rememberNavController()
           //val scaffoldState = rememberScaffoldState()
           //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)

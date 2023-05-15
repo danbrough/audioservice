@@ -12,6 +12,7 @@ import androidx.media2.common.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.util.NotificationUtil
+import klog.klog
 
 
 object Config {
@@ -43,16 +44,17 @@ object Config {
 }
 
 class NotificationListener(val service: AudioService) : PlayerNotificationManager.NotificationListener {
-  var serviceForeground = false
+  private var serviceForeground = false
 
+  private val log = klog()
 
   override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-    log.dwarn("onNotificationCancelled() byUser:$dismissedByUser")
+    if (BuildConfig.DEBUG) log.trace("onNotificationCancelled() byUser:$dismissedByUser")
     if (dismissedByUser) {
-      log.dwarn("SHOULD STOP PLAYBACK")
+      if (BuildConfig.DEBUG) log.trace("SHOULD STOP PLAYBACK")
     } else {
       if (serviceForeground) {
-        log.dwarn("stopping foreground ..")
+        if (BuildConfig.DEBUG) log.trace("stopping foreground ..")
         service.stopForeground(true)
         serviceForeground = false
       }
@@ -67,7 +69,7 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
     //log.warn("onNotificationPosted() ongoing:$ongoing")
     if (ongoing) {
       if (!serviceForeground) {
-        log.dwarn("starting foreground ..")
+        log.info("starting foreground ..")
         ContextCompat.startForegroundService(
             service.applicationContext,
             Intent(service.applicationContext, service.javaClass)
@@ -77,7 +79,7 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
       }
     } else {
       if (serviceForeground) {
-        log.dwarn("stopping foreground ..")
+        log.info("stopping foreground ..")
         service.stopForeground(false)
         serviceForeground = false
       }
@@ -90,7 +92,7 @@ fun createNotificationManager(
     notificationID: Int = Config.Notifications.notificationID,
     notificationListener: PlayerNotificationManager.NotificationListener = NotificationListener(service)
 ): PlayerNotificationManager {
-  log.dwarn("createNotificationManager()")
+  //log.dwarn("createNotificationManager()")
 
   NotificationUtil.createNotificationChannel(
       service.applicationContext,
@@ -156,7 +158,6 @@ fun createNotificationManager(
 }
 
 
-private val log = danbroid.logging.getLog(NotificationListener::class)
 
 private class PlayerDescriptionAdapter(val service: AudioService) :
     PlayerNotificationManager.MediaDescriptionAdapter {

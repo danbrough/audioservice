@@ -17,4 +17,3 @@ suspend fun parsePlaylistURL(context: Context, url: String): String? =
       }
     }
 
-val log = danbroid.logging.getLog("danbroid.audio.utils")

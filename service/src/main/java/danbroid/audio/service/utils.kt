@@ -1,6 +1,6 @@
 package danbroid.audio.service
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import androidx.annotation.ColorInt
@@ -9,10 +9,6 @@ import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.session.SessionResult
 import com.google.android.exoplayer2.Player
-import okhttp3.CacheControl
-import java.util.concurrent.TimeUnit
-
-
 
 
 /*@Throws(IOException::class)
@@ -102,10 +98,11 @@ val Int.playWhenReadyChangeReason: String
     else -> "ERROR: Invalid PlayWhenReadyChangeReason: $this"
   }
 
-val SessionResult.successfull: Boolean
+val SessionResult.successful: Boolean
   get() = resultCode == SessionResult.RESULT_SUCCESS
 
-val SessionPlayer.PlayerResult.successfull: Boolean
+val SessionPlayer.PlayerResult.successful: Boolean
+  @SuppressLint("RestrictedApi")
   get() = resultCode == SessionPlayer.PlayerResult.RESULT_SUCCESS
 
 val MediaItem?.duration: Long
@@ -114,9 +111,9 @@ val MediaItem?.duration: Long
 @ColorInt
 fun Bundle?.getColor(vararg keys: String, noColor: Int = Color.TRANSPARENT): Int {
   if (this == null) return noColor
-  keys.forEach {
-    if (containsKey(it))
-      getInt(it).also {
+  keys.forEach { key ->
+    if (containsKey(key))
+      getInt(key).also {
         if (it != noColor)
           return it
       }

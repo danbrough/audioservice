@@ -6,6 +6,9 @@ import androidx.media2.common.UriMediaItem
 import danbroid.audio.LibraryIcon
 import danbroid.audio.library.AudioLibrary
 import danbroid.audio.menu.Menu
+import klog.klog
+
+private val log = klog("danbroid.audio.content")
 
 //const val ipfs_gateway = "https://cloudflare-ipfs.com"
 const val ipfs_gateway = "https://h1.danbrough.org"
@@ -136,7 +139,7 @@ class TestDataLibrary(private val tracks: List<Menu> = testTracks) : AudioLibrar
             .setStartPosition(0L).setEndPosition(-1L)
             .setMetadata(it.toMediaMetadata().build()).build()
       }.also {
-        log.dinfo("Found mediaID: $mediaID ${it != null}")
+        log.info("Found mediaID: $mediaID ${it != null}")
       }
 }
 

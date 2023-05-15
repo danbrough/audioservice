@@ -9,7 +9,9 @@ import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.http.httpSupport
 import danbroid.audio.library.AudioLibrary
+import danbroid.audio.library.BuildConfig
 import danbroid.util.misc.SingletonHolder
+import klog.klog
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -21,15 +23,16 @@ import java.util.concurrent.TimeUnit
 class RNZLibrary(context: Context) : AudioLibrary {
   val httpSupport = context.httpSupport
 
+  private val log = klog()
   override suspend fun loadItem(mediaID: String): MediaItem? {
-    log.dtrace("loadItem() $mediaID")
+    if (BuildConfig.DEBUG) log.trace("loadItem() $mediaID")
     val progID = if (mediaID == URI_RNZ_NEWS) rnzNewsProgrammeID() else
       getIDFromProgrammeURI(mediaID)
 
     val defaultIcon = if (mediaID == URI_RNZ_NEWS) rnzNewsIcon else rnzNationalIcon
-    log.dtrace("progID: $progID")
+    log.trace("progID: $progID")
     return if (progID != null) loadProgramme(progID).toMediaItem(defaultIcon).also {
-      log.dtrace("MediaItem: $it")
+      if (BuildConfig.DEBUG) log.trace("MediaItem: $it")
     } else null
   }
 
@@ -84,7 +87,7 @@ class RNZLibrary(context: Context) : AudioLibrary {
 
     val progURL = RNZProgramme.getProgrammeURL(progID)
 
-    log.dtrace("progURL: $progURL")
+    if (BuildConfig.DEBUG) log.trace("progURL: $progURL")
 
     val response = httpSupport.requestString(
         progURL,

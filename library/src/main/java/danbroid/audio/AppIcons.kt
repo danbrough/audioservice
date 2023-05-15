@@ -12,7 +12,7 @@ interface AppIcon<T : Enum<T>> {
   val data: Any
 
   companion object {
-    val ICON_MAP = mutableMapOf<String, Any>()
+    private val ICON_MAP = mutableMapOf<String, Any>()
 
     fun register(vararg icons: AppIcon<*>) {
       icons.forEach {
@@ -34,8 +34,6 @@ interface AppIcon<T : Enum<T>> {
 
 }
 
-
-val log = danbroid.logging.getLog(AppIcon::class)
 
 
 @Serializable

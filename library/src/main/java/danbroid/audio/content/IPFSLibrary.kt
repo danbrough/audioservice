@@ -9,14 +9,16 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import klog.klog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-class IPFSLibrary(val httpSupport2: HttpSupport2) : AudioLibrary {
+class IPFSLibrary(private val httpSupport2: HttpSupport2) : AudioLibrary {
 
+  private val log = klog()
   companion object {
     const val IPFS_PREFIX = "ipfs://"
     const val IPNS_PREFIX = "ipns://"
@@ -38,7 +40,7 @@ class IPFSLibrary(val httpSupport2: HttpSupport2) : AudioLibrary {
       val url = "${gateways[0]}/$cid"
 
       runCatching {
-        log.dtrace("getting ... $url")
+        log.trace("getting ... $url")
 
         httpSupport2.client.get(url) {
           headers {

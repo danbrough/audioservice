@@ -7,6 +7,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import klog.klog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -90,6 +91,8 @@ val Context.httpSupport2: HttpSupport2
 
 class HttpSupport(context: Context) {
 
+  private val log = klog()
+
   companion object : SingletonHolder<HttpSupport, Context>(::HttpSupport)
 
   val cache by lazy {
@@ -129,4 +132,3 @@ class HttpSupport(context: Context) {
 val Context.httpSupport: HttpSupport
   get() = HttpSupport.getInstance(this)
 
-private val log = danbroid.logging.getLog(HttpSupport::class)

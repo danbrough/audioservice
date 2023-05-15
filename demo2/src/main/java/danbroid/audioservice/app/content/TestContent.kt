@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.menu.Menu
+import danbroid.audioservice.app.log
 
 const val URI_TEST = "$URI_CONTENT/test"
 
@@ -34,7 +35,7 @@ fun TestContent() {
 
         val dismissState = rememberDismissState(
             confirmStateChange = {
-              log.dtrace("confirmStateChange $it")
+              log.trace("confirmStateChange $it")
               if (it == DismissValue.DismissedToEnd) unread = !unread
               val accept = it != DismissValue.DismissedToEnd
               log.trace("accept: $accept")

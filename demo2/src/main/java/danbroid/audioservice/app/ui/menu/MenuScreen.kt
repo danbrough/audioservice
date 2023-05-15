@@ -8,6 +8,7 @@ import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.MenuModel
 import danbroid.audio.menu.menuModel
 import danbroid.audioservice.app.content.*
+import danbroid.audioservice.app.log
 
 
 @Composable
@@ -17,7 +18,7 @@ fun MenuScreen(
   audioClientModel: AudioClientViewModel
 ) {
   val menuModel = menuModel<MenuModel>(menuID)
-  log.dtrace("MenuScreen() $menuID")
+  log.trace("MenuScreen() $menuID")
   val context =
     MenuContext(menuID, LocalContext.current, menuModel, audioClientModel, navController)
   CompositionLocalProvider(LocalMenuContext provides context) {
