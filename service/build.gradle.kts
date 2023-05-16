@@ -67,30 +67,30 @@ android {
     }
   */
 
-  val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.getByName("main").java.srcDirs)
-  }
 
+}
 
-  afterEvaluate {
-    publishing {
-      val projectName = name
-      publications {
-        val release by registering(MavenPublication::class) {
-          /*components.forEach {
-        println("Publication component: ${it.name}")
-      }*/
-          from(components["release"])
-          artifact(sourcesJar.get())
-          artifactId = projectName
-          groupId = ProjectVersions.GROUP_ID
-          version = ProjectVersions.VERSION_NAME
-        }
+val sourcesJar by tasks.registering(Jar::class) {
+  archiveClassifier.set("sources")
+  from(android.sourceSets.getByName("main").java.srcDirs)
+}
+
+afterEvaluate {
+  publishing {
+    val projectName = name
+    publications {
+      val release by registering(MavenPublication::class) {
+        /*components.forEach {
+      println("Publication component: ${it.name}")
+    }*/
+        from(components["release"])
+        artifact(sourcesJar.get())
+        artifactId = projectName
+        groupId = ProjectVersions.GROUP_ID
+        version = ProjectVersions.VERSION_NAME
       }
     }
   }
-
 }
 
 tasks.withType<Test> {

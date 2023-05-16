@@ -13,15 +13,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.media2.common.SessionPlayer
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.client.AudioClient
+import danbroid.audio.log
 import danbroid.audio.service.AudioService
 import danbroid.audio.service.playerState
 import danbroid.audio.service.successful
-import klog.klog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private val log = klog(AudioClientViewModel::class)
 
 open class AudioClientViewModel(context: Context) : ViewModel() {
 

@@ -146,11 +146,11 @@ dependencies {
   implementation(AndroidX.compose.runtime.liveData)
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
-  implementation(AndroidX.compose.ui.tooling)
+  //implementation(AndroidX.compose.ui.tooling)
+  implementation(AndroidX.compose.ui.toolingPreview)
 
 
-
-  implementation("com.google.accompanist:accompanist-systemuicontroller:_")
+  //implementation("com.google.accompanist:accompanist-systemuicontroller:_")
   implementation("com.google.accompanist:accompanist-insets:_")
   //implementation("com.google.accompanist:accompanist-coil:_")
   implementation("io.coil-kt:coil-compose:_")
@@ -166,7 +166,7 @@ dependencies {
 
 
   implementation(Square.okHttp3.okHttp)
-  
+
   androidTestImplementation(Testing.junit4)
 
   androidTestImplementation(AndroidX.test.core)
@@ -174,17 +174,17 @@ dependencies {
   androidTestImplementation(AndroidX.test.rules)
 
 
-/*  testImplementation("ch.qos.logback:logback-classic:_")
-  testImplementation("ch.qos.logback:logback-core:_")
+  /*  testImplementation("ch.qos.logback:logback-classic:_")
+    testImplementation("ch.qos.logback:logback-core:_")
 
-  kapt("com.google.dagger:hilt-android-compiler:_")
-  implementation("com.google.dagger:hilt-android:_")
+    kapt("com.google.dagger:hilt-android-compiler:_")
+    implementation("com.google.dagger:hilt-android:_")
 
-  // For instrumentation tests
-  androidTestImplementation("com.google.dagger:hilt-android-testing:_")
+    // For instrumentation tests
+    androidTestImplementation("com.google.dagger:hilt-android-testing:_")
 
-  // For local unit tests
-  testImplementation("com.google.dagger:hilt-android-testing:_")*/
+    // For local unit tests
+    testImplementation("com.google.dagger:hilt-android-testing:_")*/
 
 
 }

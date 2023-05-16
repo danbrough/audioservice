@@ -17,20 +17,16 @@ class MainActivity : ComponentActivity() {
 
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    log.error("onCreate()")
+    log.info("onCreate()")
     super.onCreate(savedInstanceState)
-    log.error("here1")
     WindowCompat.setDecorFitsSystemWindows(window, false)
-    log.error("here2")
     RootAudioLibrary.register(
         TestDataLibrary(),
         somaFM,
         rnz
     )
-    log.error("here3")
 
     setContent {
-      log.error("setting content ..")
       DemoTheme(darkTheme = false) {
         if (BuildConfig.DEBUG) log.error("MAIN ACTIVITY SET CONTENT")
         val navController = rememberNavController()
@@ -38,6 +34,7 @@ class MainActivity : ComponentActivity() {
         //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)
 
         val audioClientViewModel = audioClientModel()
+        if (BuildConfig.DEBUG) log.error("MAIN ACTIVITY SET CONTENT")
         MainScaffold(navController, audioClientViewModel)
       }
 
