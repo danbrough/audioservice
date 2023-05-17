@@ -1,4 +1,4 @@
-package danbroid.audio.ui
+package danbroid.audioservice.app.ui.menu
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -35,9 +35,9 @@ import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
+import danbroid.audio.ui.AppIcon
 import danbroid.audioservice.app.Routes
-import danbroid.audioservice.app.ui.menu.LocalMenuContext
-import danbroid.audioservice.app.ui.menu.MenuContext
+import danbroid.audioservice.app.log
 import danbroid.audioservice.app.ui.theme.DemoTheme
 
 @Composable
@@ -61,7 +61,8 @@ fun IconImage(
 @Composable
 fun MenuListIcon(_icon: Any?, title: String = "") {
   val imageModifier =
-    Modifier.size(52.dp)
+    Modifier
+      .size(52.dp)
       .padding(4.dp)
   // .padding(start = 8.dp, top = 0.dp, bottom = 0.dp)
 
@@ -75,11 +76,11 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
   icon?.also {
     when (it) {
       is Bitmap ->
-/*        DemoImage(
-            imageUrl = it,
-            title,
-            modifier = imageModifier
-        )*/
+        /*        DemoImage(
+                    imageUrl = it,
+                    title,
+                    modifier = imageModifier
+                )*/
         Image(
           it.asImageBitmap(),
           title,
@@ -98,6 +99,7 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
           title,
           modifier = imageModifier
         )
+
       is ImageVector ->
         Icon(
           it,
@@ -105,6 +107,7 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
           modifier = imageModifier,
           tint = iconTint
         )
+
       is Int ->
         Icon(
           painterResource(it),
@@ -112,6 +115,7 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
           modifier = imageModifier,
           tint = iconTint,
         )
+
       else ->
         IconImage(
           imageUrl = it.toString(),
@@ -135,7 +139,9 @@ private fun MenuListItemRow(
   _icon: Any?
 ) {
   Row(
-    modifier = modifier.height(62.dp).fillMaxWidth(),
+    modifier = modifier
+      .height(62.dp)
+      .fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
   ) {
 
@@ -148,7 +154,9 @@ private fun MenuListItemRow(
           colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
       )*/
     Column(
-      Modifier.padding(start = 16.dp).fillMaxWidth(),
+      Modifier
+        .padding(start = 16.dp)
+        .fillMaxWidth(),
       verticalArrangement = Arrangement.Bottom
     ) {
       Text(title, style = MaterialTheme.typography.subtitle1)
@@ -174,7 +182,9 @@ fun MenuListItemImpl(
     Box {
       MenuListItemRow(modifier, title, subTitle, _icon)
       Box(
-        Modifier.height(62.dp).fillMaxWidth()
+        Modifier
+          .height(62.dp)
+          .fillMaxWidth()
           .background(MaterialTheme.colors.secondaryVariant.copy(alpha = 0.2f))
       ) {
 
@@ -223,7 +233,7 @@ inline fun LazyListScope.menu(
 ) {
 
   val menu = Menu(id, "Untitled")
-  log.dtrace("menuID: ${menu.id}")
+  log.trace("menuID: ${menu.id}")
 
   val itemContent: @Composable LazyItemScope.() -> Unit = {
     menu.onCreate()
@@ -252,9 +262,9 @@ inline fun LazyListScope.menu(
   }
 
   if (sticky)
-    stickyHeader(menu.id, null,itemContent)
+    stickyHeader(menu.id, null, itemContent)
   else
-    item(menu.id, null,itemContent)
+    item(menu.id, null, itemContent)
 }
 
 
@@ -298,7 +308,11 @@ fun onClicked(
 @Composable
 fun menuScreen(block: LazyListScope.() -> Unit) {
   Column {
-    Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
+    Spacer(
+      Modifier
+        .fillMaxWidth()
+        .statusBarsHeight()
+        .background(MaterialTheme.colors.primary))
     LazyColumn {
       block()
     }

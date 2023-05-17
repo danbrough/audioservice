@@ -10,8 +10,8 @@ import danbroid.audio.content.ipfs_gateway
 import danbroid.audio.content.testTracks
 import danbroid.audio.library.R
 import danbroid.audio.ui.AppIcon
-import danbroid.audio.ui.menu
-import danbroid.audio.ui.menuScreen
+import danbroid.audioservice.app.ui.menu.menu
+import danbroid.audioservice.app.ui.menu.menuScreen
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")

@@ -6,8 +6,6 @@ interface AudioLibrary {
   suspend fun loadItem(mediaID: String): MediaItem?
 }
 
-private val log = danbroid.logging.getLog(AudioLibrary::class)
-
 
 object RootAudioLibrary : AudioLibrary {
 
@@ -18,9 +16,9 @@ object RootAudioLibrary : AudioLibrary {
   }
 
   override suspend fun loadItem(mediaID: String): MediaItem? =
-      libraries.firstNotNullOfOrNull {
-        it.loadItem(mediaID)
-      }
+    libraries.firstNotNullOfOrNull {
+      it.loadItem(mediaID)
+    }
 
 
 }

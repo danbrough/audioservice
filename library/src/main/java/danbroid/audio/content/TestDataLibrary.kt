@@ -4,6 +4,7 @@ import androidx.core.net.toUri
 import androidx.media2.common.MediaItem
 import androidx.media2.common.UriMediaItem
 import danbroid.audio.library.AudioLibrary
+import danbroid.audio.log
 
 //const val ipfs_gateway = "https://cloudflare-ipfs.com"
 const val ipfs_gateway = "https://h1.danbrough.org"
@@ -15,21 +16,24 @@ val testTracks = testData {
     id = "http://sohoradioculture.doughunt.co.uk:8000/320mp3"
     title = "Soho NYC"
     subTitle = "Soho radio from NYC"
-    iconURI = "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_nyc.png"
+    iconURI =
+      "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_nyc.png"
   }
 
   item {
     id = "http://sohoradiomusic.doughunt.co.uk:8000/320mp3"
     title = "Soho UK"
     subTitle = "Soho radio from London"
-    iconURI = "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_uk.png"
+    iconURI =
+      "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_uk.png"
   }
 
   item {
     id = "http://colostreaming.com:8094"
     title = "Radio SHE"
     subTitle = "Some cheesy rock station from florida"
-    iconURI = "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/RadioSHE.png"
+    iconURI =
+      "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/RadioSHE.png"
 
   }
 
@@ -132,14 +136,14 @@ val testTracks = testData {
 
 class TestDataLibrary : AudioLibrary {
   override suspend fun loadItem(mediaID: String): MediaItem? =
-      testTracks.testData.firstOrNull {
-        it.id == mediaID
-      }?.let {
-        UriMediaItem.Builder(mediaID.toUri())
-            .setStartPosition(0L).setEndPosition(-1L)
-            .setMetadata(it.toMediaMetadata().build()).build()
-      }.also {
-        log.dinfo("Found mediaID: $mediaID ${it != null}")
-      }
+    testTracks.testData.firstOrNull {
+      it.id == mediaID
+    }?.let {
+      UriMediaItem.Builder(mediaID.toUri())
+        .setStartPosition(0L).setEndPosition(-1L)
+        .setMetadata(it.toMediaMetadata().build()).build()
+    }.also {
+      log.trace("Found mediaID: $mediaID ${it != null}")
+    }
 }
 

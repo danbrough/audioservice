@@ -10,14 +10,22 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.common.SubtitleData
-import androidx.media2.session.*
+import androidx.media2.session.MediaBrowser
+import androidx.media2.session.MediaController
+import androidx.media2.session.MediaSessionManager
+import androidx.media2.session.SessionCommand
+import androidx.media2.session.SessionCommandGroup
+import androidx.media2.session.SessionResult
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.audio.service.*
+import danbroid.audio.log
+import danbroid.audio.service.AudioService
+import danbroid.audio.service.buffState
+import danbroid.audio.service.duration
+import danbroid.audio.service.playerState
+import danbroid.audio.service.toDebugString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 
 open class AudioClient(context: Context) {
@@ -37,10 +45,10 @@ open class AudioClient(context: Context) {
   }
 
   data class QueueState(
-      val hasPrevious: Boolean,
-      val hasNext: Boolean,
-      val size: Int,
-      val position: Int
+    val hasPrevious: Boolean,
+    val hasNext: Boolean,
+    val size: Int,
+    val position: Int
   )
 
   private val _playPosition = MutableStateFlow(PlayPosition.NO_POSITION)
@@ -71,7 +79,7 @@ open class AudioClient(context: Context) {
   protected val controllerCallback = ControllerCallback()
 
   protected val mainExecutor =
-      ContextCompat.getMainExecutor(context)//Executors.newSingleThreadExecutor()
+    ContextCompat.getMainExecutor(context)//Executors.newSingleThreadExecutor()
   // protected val mainExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
 
   val mediaController: MediaBrowser = run {
@@ -86,13 +94,13 @@ open class AudioClient(context: Context) {
       it.serviceName == AudioService::class.qualifiedName
     }
 
-    log.dtrace("serviceToken: $serviceToken.")
+    log.trace("serviceToken: $serviceToken.")
 
 
     MediaBrowser.Builder(context)
-        .setControllerCallback(mainExecutor, controllerCallback)
-        .setSessionToken(serviceToken)
-        .build()
+      .setControllerCallback(mainExecutor, controllerCallback)
+      .setSessionToken(serviceToken)
+      .build()
   }
 
   val playlistIndex: Int = mediaController.currentMediaItemIndex
@@ -142,9 +150,9 @@ open class AudioClient(context: Context) {
   }
 
   private fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
-      addListener({
-        job.invoke(get())
-      }, mainExecutor)
+    addListener({
+      job.invoke(get())
+    }, mainExecutor)
 
 
   fun addToPlaylist(item: MediaItem): ListenableFuture<SessionResult> {
@@ -152,10 +160,10 @@ open class AudioClient(context: Context) {
     val args = bundleOf()
     ParcelUtils.putVersionedParcelable(args, AudioService.ACTION_ARG_MEDIA_ITEM, item.metadata)
     return mediaController.sendCustomCommand(
-        SessionCommand(
-            AudioService.ACTION_ADD_TO_PLAYLIST,
-            null
-        ), args
+      SessionCommand(
+        AudioService.ACTION_ADD_TO_PLAYLIST,
+        null
+      ), args
     )
   }
 
@@ -168,7 +176,7 @@ open class AudioClient(context: Context) {
   private fun updatePosition() {
     val position = mediaController.currentPosition
     val duration = mediaController.duration
-    log.dtrace("updatePosition():${hashCode()} $position:$duration seeking:$seeking")
+    log.trace("updatePosition():${hashCode()} $position:$duration seeking:$seeking")
 
     handler.removeCallbacks(updatePositionJob)
     if (seeking) return
@@ -188,8 +196,8 @@ open class AudioClient(context: Context) {
   protected inner class ControllerCallback : MediaBrowser.BrowserCallback() {
 
     override fun onPlaybackInfoChanged(
-        controller: MediaController,
-        info: MediaController.PlaybackInfo
+      controller: MediaController,
+      info: MediaController.PlaybackInfo
     ) {
       log.trace("onPlaybackInfoChanged(): $info")
     }
@@ -204,20 +212,20 @@ open class AudioClient(context: Context) {
     }
 
     override fun onPlaylistChanged(
-        controller: MediaController,
-        list: MutableList<MediaItem>?,
-        metadata: MediaMetadata?
+      controller: MediaController,
+      list: MutableList<MediaItem>?,
+      metadata: MediaMetadata?
     ) {
       val state = controller.playerState
 
       log.trace("onPlaylistChanged() size:${list?.size ?: "null"} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex} duration:${controller.currentMediaItem?.duration}")
-      log.dtrace("metadata: ${metadata.toDebugString()}")
-      log.dtrace("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
+      log.trace("metadata: ${metadata.toDebugString()}")
+      log.trace("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
       _queueState.value = _queueState.value.copy(
-          hasPrevious = controller.previousMediaItemIndex != -1,
-          hasNext = controller.nextMediaItemIndex != -1,
-          size = list?.size ?: 0,
-          position = controller.currentMediaItemIndex
+        hasPrevious = controller.previousMediaItemIndex != -1,
+        hasNext = controller.nextMediaItemIndex != -1,
+        size = list?.size ?: 0,
+        position = controller.currentMediaItemIndex
       )
       _playList.value = list ?: emptyList()
     }
@@ -229,17 +237,17 @@ open class AudioClient(context: Context) {
     override fun onCurrentMediaItemChanged(controller: MediaController, item: MediaItem?) {
       log.trace("onCurrentMediaItemChanged(): $item currentPos: ${controller.currentPosition} duration:${controller.duration} ")
 
-      log.dtrace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
-      log.dtrace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
+      log.trace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
+      log.trace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
 
       updatePosition()
 
       _currentItem.value = item
       _metadata.value = item?.metadata
       _queueState.value = _queueState.value.copy(
-          hasPrevious = controller.previousMediaItemIndex != -1,
-          hasNext = controller.nextMediaItemIndex != -1,
-          position = controller.currentMediaItemIndex
+        hasPrevious = controller.previousMediaItemIndex != -1,
+        hasNext = controller.nextMediaItemIndex != -1,
+        position = controller.currentMediaItemIndex
       )
     }
 
@@ -273,17 +281,17 @@ open class AudioClient(context: Context) {
 
 
     override fun onSubtitleData(
-        controller: MediaController,
-        item: MediaItem,
-        track: SessionPlayer.TrackInfo,
-        data: SubtitleData
+      controller: MediaController,
+      item: MediaItem,
+      track: SessionPlayer.TrackInfo,
+      data: SubtitleData
     ) {
       log.trace("onSubtitleData() $track data: $data")
     }
 
     override fun onTracksChanged(
-        controller: MediaController,
-        tracks: MutableList<SessionPlayer.TrackInfo>
+      controller: MediaController,
+      tracks: MutableList<SessionPlayer.TrackInfo>
     ) {
       val state = controller.playerState
       log.trace("onTracksChanged() tracks:${tracks} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex}")
@@ -297,10 +305,10 @@ open class AudioClient(context: Context) {
       val playlist = controller.playlist ?: emptyList()
       _playList.value = playlist
       _queueState.value = QueueState(
-          hasPrevious = controller.previousMediaItemIndex != -1,
-          hasNext = controller.nextMediaItemIndex != -1,
-          size = playlist.size,
-          position = controller.currentMediaItemIndex
+        hasPrevious = controller.previousMediaItemIndex != -1,
+        hasNext = controller.nextMediaItemIndex != -1,
+        size = playlist.size,
+        position = controller.currentMediaItemIndex
       )
 
       _playState.value = when (controller.playerState) {
@@ -323,4 +331,3 @@ open class AudioClient(context: Context) {
 }
 
 
-private val log = danbroid.logging.getLog(AudioClient::class)

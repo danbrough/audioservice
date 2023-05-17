@@ -29,8 +29,8 @@ android {
     getByName("release") {
       isMinifyEnabled = false
       proguardFiles(
-          getDefaultProguardFile("proguard-android-optimize.txt"),
-          "proguard-rules.pro"
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+        "proguard-rules.pro"
       )
     }
 
@@ -47,13 +47,13 @@ android {
 
   kotlin.sourceSets.all {
     setOf(
-        "kotlinx.serialization.ExperimentalSerializationApi",
-        "androidx.compose.material.ExperimentalMaterialApi",
-        "androidx.compose.animation.ExperimentalAnimationApi",
-        "kotlin.time.ExperimentalTime",
-        //"kotlinx.coroutines.ExperimentalCoroutinesApi",
-        //"kotlinx.coroutines.FlowPreview",
-        //"androidx.compose.material.ExperimentalMaterialApi"
+      "kotlinx.serialization.ExperimentalSerializationApi",
+      "androidx.compose.material.ExperimentalMaterialApi",
+      "androidx.compose.animation.ExperimentalAnimationApi",
+      "kotlin.time.ExperimentalTime",
+      //"kotlinx.coroutines.ExperimentalCoroutinesApi",
+      //"kotlinx.coroutines.FlowPreview",
+      //"androidx.compose.material.ExperimentalMaterialApi"
     ).forEach {
       languageSettings.optIn(it)
     }
@@ -122,6 +122,7 @@ dependencies {
 
   //api(AndroidX.concurrent.futures)
   api("com.google.guava:guava:_")
+  implementation("org.danbrough:klog:_")
 
   //api(AndroidX.media2.exoplayer)
 //  implementation(Google.android.material)

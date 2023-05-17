@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.media2.common.MediaMetadata
-import danbroid.audio.ui.menu
-import danbroid.audio.ui.menuScreen
+import danbroid.audioservice.app.ui.menu.menu
+import danbroid.audioservice.app.ui.menu.menuScreen
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.MenuContext
 

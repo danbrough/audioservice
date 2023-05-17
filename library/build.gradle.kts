@@ -89,7 +89,8 @@ dependencies {
   implementation(AndroidX.media2.common)
   implementation(KotlinX.serialization.json)
   implementation("com.github.danbrough.androidutils:misc:_")
-  implementation("com.github.danbrough.androidutils:logging_core:_")
+  implementation("org.danbrough:klog:_")
+
   compileOnly(AndroidX.compose.runtime)
   implementation(Square.okHttp3.okHttp)
   implementation("org.jetbrains.kotlin:kotlin-reflect:_")

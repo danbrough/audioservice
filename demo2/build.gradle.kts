@@ -129,6 +129,7 @@ dependencies {
   implementation(AndroidX.core.ktx)
   implementation(KotlinX.serialization.json)
   implementation(KotlinX.serialization.cbor)
+  implementation("org.danbrough:klog:_")
 
   //implementation(KotlinX.serialization.cbor)
   //implementation(KotlinX.serialization.protobuf)

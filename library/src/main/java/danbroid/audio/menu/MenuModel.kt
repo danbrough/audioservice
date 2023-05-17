@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import danbroid.audio.content.somaFM
+import danbroid.audio.log
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
@@ -19,7 +20,7 @@ import kotlin.time.toDuration
 open class MenuModel(val menuID: String, context: Context) : ViewModel() {
 
   init {
-    log.derror("MenuModel() $menuID")
+    log.debug("MenuModel() $menuID")
   }
 
   val dynamicTitleFlow = flow {
@@ -40,8 +41,6 @@ open class MenuModel(val menuID: String, context: Context) : ViewModel() {
     log.debug("onCleared() $menuID")
   }
 }
-
-private val log = danbroid.logging.getLog(MenuModel::class)
 
 
 class MenuModelFactory(val menuID: String, val context: Context) :
