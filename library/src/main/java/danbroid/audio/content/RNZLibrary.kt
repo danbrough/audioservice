@@ -7,11 +7,12 @@ import androidx.core.text.parseAsHtml
 import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.UriMediaItem
+import danbroid.audio.http.httpSupport
 import danbroid.audio.library.AudioLibrary
-import danbroid.audio.service.util.httpSupport
+import danbroid.audio.library.BuildConfig
+import danbroid.audio.log
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.CacheControl
 import java.io.IOException
@@ -22,14 +23,15 @@ class RNZLibrary(context: Context) : AudioLibrary {
   val httpSupport = context.httpSupport
 
   override suspend fun loadItem(mediaID: String): MediaItem? {
-    log.dtrace("loadItem() $mediaID")
+    if (BuildConfig.DEBUG) log.trace("loadItem() $mediaID")
     val progID = if (mediaID == URI_RNZ_NEWS) rnzNewsProgrammeID() else
       getIDFromProgrammeURI(mediaID)
 
     val defaultIcon = if (mediaID == URI_RNZ_NEWS) rnzNewsIcon else rnzNationalIcon
-    log.dtrace("progID: $progID")
+
+    log.trace("progID: $progID")
     return if (progID != null) loadProgramme(progID).toMediaItem(defaultIcon).also {
-      log.dtrace("MediaItem: $it")
+      if (BuildConfig.DEBUG) log.trace("MediaItem: $it")
     } else null
   }
 
@@ -84,7 +86,7 @@ class RNZLibrary(context: Context) : AudioLibrary {
 
     val progURL = RNZProgramme.getProgrammeURL(progID)
 
-    log.dtrace("progURL: $progURL")
+    if (BuildConfig.DEBUG) log.trace("progURL: $progURL")
 
     val response = httpSupport.requestString(
         progURL,
@@ -113,7 +115,7 @@ fun RNZProgramme.toMediaItem(defaultIcon: String): MediaItem =
     }
 
 
-fun RNZProgramme.getMetadata(defaultIcon:String): MediaMetadata.Builder = MediaMetadata.Builder()
+fun RNZProgramme.getMetadata(defaultIcon: String): MediaMetadata.Builder = MediaMetadata.Builder()
     .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZLibrary.getProgrammeURI(id))
     .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
     .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())

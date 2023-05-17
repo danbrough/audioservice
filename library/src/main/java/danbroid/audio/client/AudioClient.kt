@@ -10,14 +10,23 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.common.SubtitleData
-import androidx.media2.session.*
+import androidx.media2.session.MediaBrowser
+import androidx.media2.session.MediaController
+import androidx.media2.session.MediaSessionManager
+import androidx.media2.session.SessionCommand
+import androidx.media2.session.SessionCommandGroup
+import androidx.media2.session.SessionResult
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
-import danbroid.audio.service.*
+import danbroid.audio.log
+import danbroid.audio.service.AudioService
+import danbroid.audio.service.BuildConfig
+import danbroid.audio.service.buffState
+import danbroid.audio.service.duration
+import danbroid.audio.service.playerState
+import danbroid.audio.service.toDebugString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 
 open class AudioClient(context: Context) {
@@ -86,7 +95,7 @@ open class AudioClient(context: Context) {
       it.serviceName == AudioService::class.qualifiedName
     }
 
-    log.dtrace("serviceToken: $serviceToken.")
+    log.trace("serviceToken: $serviceToken.")
 
 
     MediaBrowser.Builder(context)
@@ -168,7 +177,7 @@ open class AudioClient(context: Context) {
   private fun updatePosition() {
     val position = mediaController.currentPosition
     val duration = mediaController.duration
-    log.dtrace("updatePosition():${hashCode()} $position:$duration seeking:$seeking")
+    log.trace("updatePosition():${hashCode()} $position:$duration seeking:$seeking")
 
     handler.removeCallbacks(updatePositionJob)
     if (seeking) return
@@ -211,8 +220,10 @@ open class AudioClient(context: Context) {
       val state = controller.playerState
 
       log.trace("onPlaylistChanged() size:${list?.size ?: "null"} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex} duration:${controller.currentMediaItem?.duration}")
-      log.dtrace("metadata: ${metadata.toDebugString()}")
-      log.dtrace("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
+      if (BuildConfig.DEBUG) {
+        log.trace("metadata: ${metadata.toDebugString()}")
+        log.trace("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
+      }
       _queueState.value = _queueState.value.copy(
           hasPrevious = controller.previousMediaItemIndex != -1,
           hasNext = controller.nextMediaItemIndex != -1,
@@ -229,8 +240,10 @@ open class AudioClient(context: Context) {
     override fun onCurrentMediaItemChanged(controller: MediaController, item: MediaItem?) {
       log.trace("onCurrentMediaItemChanged(): $item currentPos: ${controller.currentPosition} duration:${controller.duration} ")
 
-      log.dtrace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
-      log.dtrace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
+      if (BuildConfig.DEBUG) {
+        log.trace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
+        log.trace("extra keys: ${item?.metadata?.extras?.keySet()?.joinToString(",")}")
+      }
 
       updatePosition()
 
@@ -323,4 +336,3 @@ open class AudioClient(context: Context) {
 }
 
 
-private val log = danbroid.logging.getLog(AudioClient::class)
