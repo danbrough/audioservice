@@ -2,8 +2,8 @@ buildscript {
 
 
   dependencies {
-    //classpath("com.android.tools.build:gradle:4.2.0-alpha09")
-    classpath("com.android.tools.build:gradle:_")
+    //classpath(Android.tools.build.gradlePlugin)
+    classpath(Android.tools.build.gradlePlugin)
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:_")
 
 
@@ -13,7 +13,7 @@ buildscript {
     //mavenLocal()
     google()
     mavenCentral()
-   // jcenter()
+    // jcenter()
   }
 
 }
@@ -26,11 +26,12 @@ subprojects {
   repositories {
     //mavenLocal()
     google()
-   // jcenter()
+    // jcenter()
     mavenCentral()
-  //maven("https://h1.danbrough.org/maven/")
+    maven("/usr/local/kotlinxtras/build/xtras/maven/")
+    //maven("https://h1.danbrough.org/maven/")
     maven("https://jitpack.io")
-  //  mavenLocal()
+    //  mavenLocal()
   }
   /*configurations.all {
     if (name.toLowerCase().contains("test")) {

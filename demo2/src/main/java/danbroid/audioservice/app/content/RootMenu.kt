@@ -8,10 +8,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import danbroid.audio.content.ipfs_gateway
 import danbroid.audio.content.testTracks
+import danbroid.audio.library.R
 import danbroid.audio.ui.AppIcon
 import danbroid.audio.ui.menu
 import danbroid.audio.ui.menuScreen
-import danbroid.audioservice.app.R
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 
 internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
@@ -40,20 +40,20 @@ fun RootMenu() {
       subTitle = if (queueSize > 0) "Size: $queueSize" else "Empty"
       icon = AppIcon.PLAYLIST
     }
-/*
+    /*
 
-    menu {
-      log.dtrace("DYNAMIC MENU")
-      title = stringResource(R.string.app_name)
-      icon = AppIcon.PANORAMA
-      subTitle = dynamicTitle.also {
-        log.dtrace("SUB TITLE $it")
-      }
-      onClicked = {
-        log.debug("clicked $this")
-      }
-    }
-*/
+        menu {
+          log.dtrace("DYNAMIC MENU")
+          title = stringResource(R.string.app_name)
+          icon = AppIcon.PANORAMA
+          subTitle = dynamicTitle.also {
+            log.dtrace("SUB TITLE $it")
+          }
+          onClicked = {
+            log.debug("clicked $this")
+          }
+        }
+    */
 
     menu(URI_TEST) {
       title = "Test Content"
@@ -65,7 +65,7 @@ fun RootMenu() {
     menu(URI_SOMA_FM) {
       title = "Soma FM"
       subTitle =
-          "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
+        "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
       icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
     }
 

@@ -84,13 +84,15 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
   private val mainExecutor = ContextCompat.getMainExecutor(context)
 
   protected fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
-      addListener({
-        job.invoke(get())
-      }, mainExecutor)
+    addListener({
+      job.invoke(get())
+    }, mainExecutor)
 
   companion object {
-    class AudioClientViewModelFactory(val context: Context) : ViewModelProvider.NewInstanceFactory() {
-      override fun <T : ViewModel?> create(modelClass: Class<T>): T = modelClass.getDeclaredConstructor(Context::class.java).newInstance(context) as T
+    class AudioClientViewModelFactory(val context: Context) :
+      ViewModelProvider.NewInstanceFactory() {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        modelClass.getDeclaredConstructor(Context::class.java).newInstance(context) as T
     }
   }
 }

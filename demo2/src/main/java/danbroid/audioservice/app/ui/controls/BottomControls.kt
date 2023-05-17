@@ -26,7 +26,7 @@ import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audio.client.AudioClient
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.service.AudioService
-import danbroid.audioservice.app.R
+import danbroid.audio.library.R
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.audio.formatDurationFromSeconds

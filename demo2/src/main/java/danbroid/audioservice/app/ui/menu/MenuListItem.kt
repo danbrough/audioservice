@@ -252,9 +252,9 @@ inline fun LazyListScope.menu(
   }
 
   if (sticky)
-    stickyHeader(menu.id, itemContent)
+    stickyHeader(menu.id, null,itemContent)
   else
-    item(menu.id, itemContent)
+    item(menu.id, null,itemContent)
 }
 
 

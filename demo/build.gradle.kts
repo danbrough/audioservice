@@ -79,38 +79,38 @@ dependencies {
 
   implementation(project(":demo_common"))
   implementation(project(":service"))
-  implementation(AndroidX.lifecycle.runtimeKtx)
+  implementation(AndroidX.lifecycle.runtime.ktx)
   implementation(AndroidX.lifecycle.liveDataKtx)
   implementation(AndroidX.lifecycle.viewModelKtx)
   //implementation(AndroidX.coreKtx)
   implementation(Kotlin.stdlib.jdk8)
   implementation(KotlinX.coroutines.android)
-  implementation("androidx.core:core-ktx:_")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
-  //implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")
-  //implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:_")
-  implementation(AndroidX.paletteKtx)
+  implementation(AndroidX.core.ktx)
+  implementation(KotlinX.serialization.json)
+  //implementation(KotlinX.serialization.cbor)
+  //implementation(KotlinX.serialization.protobuf)
+  implementation(AndroidX.palette.ktx)
 
   implementation(AndroidX.navigation.fragmentKtx)
   implementation(AndroidX.navigation.uiKtx)
   implementation(AndroidX.constraintLayout)
-  implementation(AndroidX.preferenceKtx)
+  implementation(AndroidX.preference.ktx)
   implementation(AndroidX.media2.common)
   implementation(AndroidX.concurrent.futures)
   implementation(Google.android.material)
 
-  //implementation("androidx.media2:media2-exoplayer:$media_version")
-  //implementation("androidx.media2:media2-player:$media_version")
+  //implementation(AndroidX.media2.exoplayer)
+  //implementation(AndroidX.media2.player)
   //implementation("com.google.guava:guava:_")
 
   implementation("com.github.danbrough.androidutils:logging_android:_")
   implementation("com.github.danbrough.androidutils:menu:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   //implementation("com.sothree.slidinguppanel:library:_")
-/*  implementation("com.mikepenz:iconics-core:5.0.3")
-  implementation("com.mikepenz:iconics-views:5.0.3")
-  implementation ("com.mikepenz:fontawesome-typeface:5.9.0.0-kotlin")
-  implementation("com.mikepenz:community-material-typeface:5.3.45.1-kotlin")*/
+/*  implementation("com.mikepenz:iconics-core:_")
+  implementation("com.mikepenz:iconics-views:_")
+  implementation ("com.mikepenz:fontawesome-typeface:_")
+  implementation("com.mikepenz:community-material-typeface:_")*/
 
 
   implementation(Square.okHttp3.okHttp)
@@ -128,14 +128,14 @@ dependencies {
 /*  testImplementation("ch.qos.logback:logback-classic:_")
   testImplementation("ch.qos.logback:logback-core:_")
 
-  kapt("com.google.dagger:hilt-android-compiler:_")
-  implementation("com.google.dagger:hilt-android:_")
+  kapt(Google.dagger.hilt.android.compiler)
+  implementation(Google.dagger.hilt.android)
 
   // For instrumentation tests
-  androidTestImplementation("com.google.dagger:hilt-android-testing:_")
+  androidTestImplementation(Google.dagger.hilt.android.testing)
 
   // For local unit tests
-  testImplementation("com.google.dagger:hilt-android-testing:_")*/
+  testImplementation(Google.dagger.hilt.android.testing)*/
 
 
 }
