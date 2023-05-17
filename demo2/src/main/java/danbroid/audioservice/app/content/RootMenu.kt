@@ -6,15 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import danbroid.audio.AppIcon
-import danbroid.audio.LibraryIcon
 import danbroid.audio.content.ipfs_gateway
 import danbroid.audio.content.testTracks
+import danbroid.audio.library.R
+import danbroid.audio.ui.AppIcon
 import danbroid.audio.ui.menu
 import danbroid.audio.ui.menuScreen
-import danbroid.audio.library.R
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 
+internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 const val URI_PREFIX = "audiodemo:/"
 
 const val URI_CONTENT = "$URI_PREFIX/content"
@@ -38,22 +38,22 @@ fun RootMenu() {
     menu(URI_PLAYLIST, clickable = queueSize > 0) {
       title = stringResource(R.string.playlist)
       subTitle = if (queueSize > 0) "Size: $queueSize" else "Empty"
-      icon = LibraryIcon.PLAYLIST
+      icon = AppIcon.PLAYLIST
     }
-/*
+    /*
 
-    menu {
-      log.dtrace("DYNAMIC MENU")
-      title = stringResource(R.string.app_name)
-      icon = AppIcon.PANORAMA
-      subTitle = dynamicTitle.also {
-        log.dtrace("SUB TITLE $it")
-      }
-      onClicked = {
-        log.debug("clicked $this")
-      }
-    }
-*/
+        menu {
+          log.dtrace("DYNAMIC MENU")
+          title = stringResource(R.string.app_name)
+          icon = AppIcon.PANORAMA
+          subTitle = dynamicTitle.also {
+            log.dtrace("SUB TITLE $it")
+          }
+          onClicked = {
+            log.debug("clicked $this")
+          }
+        }
+    */
 
     menu(URI_TEST) {
       title = "Test Content"
@@ -65,31 +65,31 @@ fun RootMenu() {
     menu(URI_SOMA_FM) {
       title = "Soma FM"
       subTitle =
-          "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
+        "Over 30 unique channels of listener-supported, commercial-free, underground/alternative radio broadcasting to the world"
       icon = "$ipfs_gateway/ipns/audienz.danbrough.org/media/somafm.png"
     }
 
     menu(URI_SETTINGS) {
       title = stringResource(R.string.settings)
       subTitle = stringResource(R.string.settings_description)
-      icon = LibraryIcon.SETTINGS
+      icon = AppIcon.SETTINGS
     }
 
 
     menu("somafm://poptron") {
       title = "PopTron"
       isPlayable = true
-      icon = LibraryIcon.SOMAFM
+      icon = AppIcon.RADIO
     }
 
-    /*TODO: testTracks.testData.forEach {
+    testTracks.testData.forEach {
       menu(it.id) {
         title = it.title
         subTitle = it.subTitle
         icon = it.iconURI
         isPlayable = true
       }
-    }*/
+    }
   }
 }
 

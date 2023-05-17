@@ -7,12 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import danbroid.audio.library.MenuState
-import danbroid.audio.library.RootAudioLibrary
-import klog.klog
+import danbroid.audio.content.somaFM
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
-import kotlin.time.Duration
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -20,7 +19,7 @@ import kotlin.time.toDuration
 open class MenuModel(val menuID: String, context: Context) : ViewModel() {
 
   init {
-    log.trace("MenuModel() $menuID")
+    log.derror("MenuModel() $menuID")
   }
 
   val dynamicTitleFlow = flow {
@@ -33,21 +32,20 @@ open class MenuModel(val menuID: String, context: Context) : ViewModel() {
     }
   }.stateIn(viewModelScope, SharingStarted.Lazily, "Initial set in model")
 
-
-  protected val menuFlow: Flow<MenuState> =
-      RootAudioLibrary.loadMenus(menuID) ?: flowOf(MenuState.ERROR("No content found for $menuID"))
-
-  val menus: StateFlow<MenuState> = menuFlow.stateIn(viewModelScope, SharingStarted.Eagerly, MenuState.LOADING("Loading $menuID"))
+  val somaChannels = flow {
+    emit(context.somaFM.channels())
+  }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
   override fun onCleared() {
     log.debug("onCleared() $menuID")
   }
 }
 
-private val log = klog(MenuModel::class)
+private val log = danbroid.logging.getLog(MenuModel::class)
 
 
-class MenuModelFactory(val menuID: String, val context: Context) : ViewModelProvider.NewInstanceFactory() {
+class MenuModelFactory(val menuID: String, val context: Context) :
+  ViewModelProvider.NewInstanceFactory() {
   @Suppress("UNCHECKED_CAST")
   override fun <T : ViewModel> create(modelClass: Class<T>): T = MenuModel(menuID, context) as T
 }
@@ -55,8 +53,8 @@ class MenuModelFactory(val menuID: String, val context: Context) : ViewModelProv
 
 @Composable
 inline fun <reified T : MenuModel> menuModel(menuID: String) = viewModel<T>(
-    factory = MenuModelFactory(menuID, LocalContext.current),
-    key = menuID
+  factory = MenuModelFactory(menuID, LocalContext.current),
+  key = menuID
 )
 
 

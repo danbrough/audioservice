@@ -12,6 +12,7 @@ import androidx.media2.common.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.util.NotificationUtil
+import danbroid.audio.R
 
 
 object Config {
@@ -42,16 +43,18 @@ object Config {
 
 }
 
-class NotificationListener(val service: AudioService) : PlayerNotificationManager.NotificationListener {
-  private var serviceForeground = false
+class NotificationListener(val service: AudioService) :
+  PlayerNotificationManager.NotificationListener {
+  var serviceForeground = false
+
 
   override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-    if (BuildConfig.DEBUG) log.trace("onNotificationCancelled() byUser:$dismissedByUser")
+    log.dwarn("onNotificationCancelled() byUser:$dismissedByUser")
     if (dismissedByUser) {
-      if (BuildConfig.DEBUG) log.trace("SHOULD STOP PLAYBACK")
+      log.dwarn("SHOULD STOP PLAYBACK")
     } else {
       if (serviceForeground) {
-        if (BuildConfig.DEBUG) log.trace("stopping foreground ..")
+        log.dwarn("stopping foreground ..")
         service.stopForeground(true)
         serviceForeground = false
       }
@@ -59,24 +62,24 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
   }
 
   override fun onNotificationPosted(
-      notificationId: Int,
-      notification: Notification,
-      ongoing: Boolean
+    notificationId: Int,
+    notification: Notification,
+    ongoing: Boolean
   ) {
     //log.warn("onNotificationPosted() ongoing:$ongoing")
     if (ongoing) {
       if (!serviceForeground) {
-        log.info("starting foreground ..")
+        log.dwarn("starting foreground ..")
         ContextCompat.startForegroundService(
-            service.applicationContext,
-            Intent(service.applicationContext, service.javaClass)
+          service.applicationContext,
+          Intent(service.applicationContext, service.javaClass)
         )
         service.startForeground(notificationId, notification)
         serviceForeground = true
       }
     } else {
       if (serviceForeground) {
-        log.info("stopping foreground ..")
+        log.dwarn("stopping foreground ..")
         service.stopForeground(false)
         serviceForeground = false
       }
@@ -85,34 +88,38 @@ class NotificationListener(val service: AudioService) : PlayerNotificationManage
 }
 
 fun createNotificationManager(
-    service: AudioService,
-    notificationID: Int = Config.Notifications.notificationID,
-    notificationListener: PlayerNotificationManager.NotificationListener = NotificationListener(service)
+  service: AudioService,
+  notificationID: Int = Config.Notifications.notificationID,
+  notificationListener: PlayerNotificationManager.NotificationListener = NotificationListener(
+    service
+  )
 ): PlayerNotificationManager {
-  //log.dwarn("createNotificationManager()")
+  log.dwarn("createNotificationManager()")
 
   NotificationUtil.createNotificationChannel(
-      service.applicationContext,
-      service.getString(R.string.notification_channel_id),
-      R.string.notification_channel_name,
-      R.string.notification_description,
-      NotificationUtil.IMPORTANCE_LOW
+    service.applicationContext,
+    service.getString(R.string.notification_channel_id),
+    R.string.notification_channel_name,
+    R.string.notification_description,
+    NotificationUtil.IMPORTANCE_LOW
   )
 
-  return PlayerNotificationManager.Builder(service, notificationID,
-      service.getString(R.string.notification_channel_id),
-      PlayerDescriptionAdapter(service))
-      .setNotificationListener(notificationListener)
-      .setSmallIconResourceId(Config.Notifications.statusBarIcon)
-      .build().also {
-        //it.setUseChronometer(true)
-        if (Config.Notifications.notificationColour != 0) {
-          it.setColor(Config.Notifications.notificationColour)
-        }
-        it.setUseNextActionInCompactView(true)
-        it.setUsePreviousActionInCompactView(true)
-        it.setColorized(true)
+  return PlayerNotificationManager.Builder(
+    service, notificationID,
+    service.getString(R.string.notification_channel_id),
+    PlayerDescriptionAdapter(service)
+  )
+    .setNotificationListener(notificationListener)
+    .setSmallIconResourceId(Config.Notifications.statusBarIcon)
+    .build().also {
+      //it.setUseChronometer(true)
+      if (Config.Notifications.notificationColour != 0) {
+        it.setColor(Config.Notifications.notificationColour)
       }
+      it.setUseNextActionInCompactView(true)
+      it.setUsePreviousActionInCompactView(true)
+      it.setColorized(true)
+    }
 
   /*  return object : PlayerNotificationManager(
         service,
@@ -155,8 +162,10 @@ fun createNotificationManager(
 }
 
 
+private val log = danbroid.logging.getLog(NotificationListener::class)
+
 private class PlayerDescriptionAdapter(val service: AudioService) :
-    PlayerNotificationManager.MediaDescriptionAdapter {
+  PlayerNotificationManager.MediaDescriptionAdapter {
 
   val context: Context = service
 
@@ -164,21 +173,21 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
     get() = service.session.player.currentMediaItem?.metadata
 
   override fun createCurrentContentIntent(player: Player) =
-      service.packageManager?.getLaunchIntentForPackage(service.packageName)?.let { sessionIntent ->
-        PendingIntent.getActivity(service, 0, sessionIntent, 0)
-      }
+    service.packageManager?.getLaunchIntentForPackage(service.packageName)?.let { sessionIntent ->
+      PendingIntent.getActivity(service, 0, sessionIntent, 0)
+    }
 
   override fun getCurrentContentTitle(player: Player): CharSequence {
     return currentMetadata?.let {
       it.getText(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)
-          ?: it.getText(MediaMetadata.METADATA_KEY_TITLE)
+        ?: it.getText(MediaMetadata.METADATA_KEY_TITLE)
     } ?: context.getString(R.string.untitled)
   }
 
   override fun getCurrentContentText(player: Player): CharSequence? {
     return currentMetadata?.let {
       it.getText(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)
-          ?: it.getText(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION)
+        ?: it.getText(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION)
     }
   }
   /*
@@ -188,7 +197,7 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
 
 
   override fun getCurrentLargeIcon(
-      player: Player,
-      callback: PlayerNotificationManager.BitmapCallback
+    player: Player,
+    callback: PlayerNotificationManager.BitmapCallback
   ) = currentMetadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
 }

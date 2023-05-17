@@ -29,17 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.google.accompanist.insets.statusBarsHeight
-import danbroid.audio.AppIcon
-import danbroid.audio.LibraryIcon
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
 import danbroid.audio.menu.MenuDSL
 import danbroid.audioservice.app.Routes
-import danbroid.audioservice.app.log
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.MenuContext
 import danbroid.audioservice.app.ui.theme.DemoTheme
@@ -52,13 +48,10 @@ fun IconImage(
 ) {
 
   Image(
-      /*
-         painter = rememberImagePainter(imageUrl) {
+    painter = rememberImagePainter(data = imageUrl) {
       //crossfade(true)
       transformations(RoundedCornersTransformation(8.dp.value))
     },
-       */
-    painter = rememberAsyncImagePainter(imageUrl) ,
     contentDescription = contentDescription,
     modifier = modifier,
     contentScale = ContentScale.FillBounds,
@@ -74,8 +67,8 @@ fun MenuListIcon(_icon: Any?, title: String = "") {
 
   var icon = _icon
 
-  if (icon is LibraryIcon)
-    icon = AppIcon.lookupIcon(icon)
+  if (icon is AppIcon)
+    icon = AppIcon.lookup(icon)
 
   val iconTint = MaterialTheme.colors.primary
 
@@ -200,7 +193,7 @@ private fun MenuItemPreview() {
 
       ListItem(
         secondaryText = { Text("This is the secondary text") },
-        icon = { MenuListIcon(LibraryIcon.SETTINGS, "Settings") }
+        icon = { MenuListIcon(AppIcon.SETTINGS, "Settings") }
       ) {
         Text("This is the primary text")
       }
@@ -230,7 +223,7 @@ inline fun LazyListScope.menu(
 ) {
 
   val menu = Menu(id, "Untitled")
-  log.trace("menuID: ${menu.id}")
+  log.dtrace("menuID: ${menu.id}")
 
   val itemContent: @Composable LazyItemScope.() -> Unit = {
     menu.onCreate()
@@ -259,7 +252,7 @@ inline fun LazyListScope.menu(
   }
 
   if (sticky)
-    stickyHeader(menu.id,null, itemContent)
+    stickyHeader(menu.id, null,itemContent)
   else
     item(menu.id, null,itemContent)
 }

@@ -1,7 +1,7 @@
 plugins {
   id("com.android.library")
   kotlin("android")
-  `maven-publish`
+  id("maven-publish")
   id("kotlin-parcelize")
   kotlin("kapt")
 }
@@ -10,20 +10,14 @@ android {
 
 
   compileSdk = ProjectVersions.SDK_VERSION
-  //buildToolsVersion = ProjectVersions.BUILD_TOOLS_VERSION
-  namespace = "danbroid.audio.service"
+
+  namespace = "danbroid.audio"
 
   defaultConfig {
     minSdk = ProjectVersions.MIN_SDK_VERSION
-    //targetSdk = ProjectVersions.SDK_VERSION
-
-    //versionCode = ProjectVersions.BUILD_VERSION
-    //versionName = ProjectVersions.VERSION_NAME
-
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles("consumer-rules.pro")
     addManifestPlaceholders(mapOf("projectVersion" to ProjectVersions.getVersionName()))
-
   }
 
   buildFeatures {
@@ -43,54 +37,52 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = ProjectVersions.JAVA_VERSION
+    targetCompatibility = ProjectVersions.JAVA_VERSION
   }
 
   kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.toString()
+    jvmTarget = ProjectVersions.KOTLIN_VERSION
   }
-  /*
 
-    kotlin.sourceSets.all {
-      setOf(
-          "kotlinx.serialization.ExperimentalSerializationApi",
-          "androidx.compose.material.ExperimentalMaterialApi",
-          "androidx.compose.animation.ExperimentalAnimationApi",
-          "kotlin.time.ExperimentalTime",
-          //"kotlinx.coroutines.ExperimentalCoroutinesApi",
-          //"kotlinx.coroutines.FlowPreview",
-          //"androidx.compose.material.ExperimentalMaterialApi"
-      ).forEach {
-        languageSettings.useExperimentalAnnotation(it)
-      }
+  kotlin.sourceSets.all {
+    setOf(
+        "kotlinx.serialization.ExperimentalSerializationApi",
+        "androidx.compose.material.ExperimentalMaterialApi",
+        "androidx.compose.animation.ExperimentalAnimationApi",
+        "kotlin.time.ExperimentalTime",
+        //"kotlinx.coroutines.ExperimentalCoroutinesApi",
+        //"kotlinx.coroutines.FlowPreview",
+        //"androidx.compose.material.ExperimentalMaterialApi"
+    ).forEach {
+      languageSettings.optIn(it)
     }
-  */
+  }
+
+  val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.getByName("main").java.srcDirs)
+  }
 
 
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-  archiveClassifier.set("sources")
-  from(android.sourceSets.getByName("main").java.srcDirs)
-}
-
-afterEvaluate {
-  publishing {
-    val projectName = name
-    publications {
-      val release by registering(MavenPublication::class) {
-        /*components.forEach {
-      println("Publication component: ${it.name}")
-    }*/
-        from(components["release"])
-        artifact(sourcesJar.get())
-        artifactId = projectName
-        groupId = ProjectVersions.GROUP_ID
-        version = ProjectVersions.VERSION_NAME
+  afterEvaluate {
+    publishing {
+      val projectName = name
+      publications {
+        val release by registering(MavenPublication::class) {
+          /*components.forEach {
+        println("Publication component: ${it.name}")
+      }*/
+          from(components["release"])
+          artifact(sourcesJar.get())
+          artifactId = projectName
+          groupId = ProjectVersions.GROUP_ID
+          version = ProjectVersions.VERSION_NAME
+        }
       }
     }
   }
+
 }
 
 tasks.withType<Test> {
@@ -112,15 +104,14 @@ dependencies {
   implementation(KotlinX.coroutines.android)
   implementation(AndroidX.annotation)
   implementation(AndroidX.lifecycle.liveDataKtx)
-  implementation("androidx.core:core-ktx:_")
+  implementation(AndroidX.core.ktx)
 
-  //implementation("androidx.fragment:fragment-ktx:_")
-  api("androidx.media2:media2-common:_")
-  api("androidx.media2:media2-session:_")
+  //implementation(AndroidX.fragment.ktx)
+  api(AndroidX.media2.common)
+  api(AndroidX.media2.session)
 
   implementation("org.jetbrains.kotlin:kotlin-reflect:_")
-  implementation("io.coil-kt:coil:_")
-  implementation(Square.okHttp3.okHttp)
+
   //implementation(AndroidX.media2.session)
 //  implementation(project(":session"))
 
@@ -131,16 +122,17 @@ dependencies {
 
   //api(AndroidX.concurrent.futures)
   api("com.google.guava:guava:_")
+
   //api(AndroidX.media2.exoplayer)
 //  implementation(Google.android.material)
   // implementation("com.google.guava:guava:_")
   implementation("com.github.danbrough.androidutils:misc:_")
-  implementation("org.danbrough:klog:_")
+  implementation("com.github.danbrough.androidutils:logging_core:_")
   /*  api("com.github.bumptech.glide:glide:_")
     kapt("com.github.bumptech.glide:compiler:_")*/
 
-  implementation("androidx.palette:palette:_")
-
+  implementation(AndroidX.palette)
+  implementation(COIL)
 
   /*
     val exo_vanilla = false
@@ -165,7 +157,7 @@ dependencies {
         implementation("com.google.android.exoplayer:exoplayer-ui:_")
         implementation("com.google.android.exoplayer:exoplayer-hls:_")
         implementation("com.google.android.exoplayer:exoplayer-dash:_")*/
-    implementation("androidx.media2:media2-exoplayer:_")
+    implementation(AndroidX.media2.exoplayer)
     implementation("com.google.android.exoplayer:extension-cast:_")
 
   } else {
@@ -184,15 +176,16 @@ dependencies {
     //implementation("com.github.danbrough.exoplayer:extension-opus:_")
     // implementation("com.github.danbrough.exoplayer:extension-flac:_")
   }
+  implementation(Square.okHttp3.okHttp)
 
 
-  //implementation("com.github.danbrough.exoplayer:extension-media2:2.12.0-dan02")
+  //implementation("com.github.danbrough.exoplayer:extension-media2:_")
 
 
-  //implementation("androidx.appcompat:appcompat:_")
-  testImplementation("junit:junit:_")
-  androidTestImplementation("androidx.test.ext:junit:_")
-  androidTestImplementation("androidx.test.espresso:espresso-core:_")
+  //implementation(AndroidX.appCompat)
+  testImplementation(Testing.junit4)
+  androidTestImplementation(AndroidX.test.ext.junit)
+  androidTestImplementation(AndroidX.test.espresso.core)
 }
 
 /*

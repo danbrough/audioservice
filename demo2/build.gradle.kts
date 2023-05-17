@@ -2,7 +2,9 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("kapt")
+  //kotlin("serialization")
   kotlin("plugin.serialization")
+
 }
 
 
@@ -10,13 +12,11 @@ plugins {
 android {
 
   compileSdk = ProjectVersions.SDK_VERSION
-  ndkVersion = ProjectVersions.NDK_VERSION
 
+  namespace = "danbroid.audioservice.app"
 
   defaultConfig {
-    //buildToolsVersion("30.0.2"
     vectorDrawables.useSupportLibrary = true
-    namespace = "danbroid.audioservice.app"
 
     minSdk = ProjectVersions.MIN_SDK_VERSION
     targetSdk = ProjectVersions.SDK_VERSION
@@ -49,7 +49,7 @@ android {
     getByName("release") {
       isMinifyEnabled = ProjectVersions.MINIFY_ENABLED
       proguardFiles(
-          getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
       )
       signingConfig = signingConfigs.getByName("release")
     }
@@ -84,15 +84,17 @@ android {
 
   kotlin.sourceSets.all {
     setOf(
-        "kotlinx.serialization.ExperimentalSerializationApi",
-        "androidx.compose.material.ExperimentalMaterialApi",
-        "androidx.compose.animation.ExperimentalAnimationApi",
-        "androidx.compose.foundation.ExperimentalFoundationApi",
-        "kotlin.time.ExperimentalTime",
-        //"kotlinx.coroutines.ExperimentalCoroutinesApi",
-        //"kotlinx.coroutines.FlowPreview",
-        //"androidx.compose.material.ExperimentalMaterialApi"
+      "kotlinx.serialization.ExperimentalSerializationApi",
+      "androidx.compose.material.ExperimentalMaterialApi",
+      "androidx.compose.animation.ExperimentalAnimationApi",
+      "androidx.compose.foundation.ExperimentalFoundationApi",
+      "kotlin.time.ExperimentalTime",
+
+      //"kotlinx.coroutines.ExperimentalCoroutinesApi",
+      //"kotlinx.coroutines.FlowPreview",
+      //"androidx.compose.material.ExperimentalMaterialApi"
     ).forEach {
+
       languageSettings.optIn(it)
     }
   }
@@ -124,43 +126,42 @@ dependencies {
   implementation(KotlinX.coroutines.android)
   implementation(AndroidX.media2.common)
   implementation("org.jetbrains.kotlin:kotlin-reflect:_")
-  implementation("androidx.core:core-ktx:_")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")
+  implementation(AndroidX.core.ktx)
+  implementation(KotlinX.serialization.json)
+  implementation(KotlinX.serialization.cbor)
 
-  //implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:_")
-  //implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:_")
+  //implementation(KotlinX.serialization.cbor)
+  //implementation(KotlinX.serialization.protobuf)
 
   implementation("com.github.fornewid:material-motion-compose:_")
 
-  implementation("androidx.navigation:navigation-compose:_")
-  implementation("androidx.activity:activity-compose:_")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:_")
+  implementation(AndroidX.navigation.compose)
+
+  implementation(AndroidX.activity.compose)
+  implementation(AndroidX.lifecycle.viewModelCompose)
   implementation(AndroidX.constraintLayout.compose)
 
   implementation(AndroidX.compose.ui)
   implementation(AndroidX.compose.ui.text)
   implementation(AndroidX.compose.ui.util)
-  implementation("androidx.compose.ui:ui-viewbinding:_")
+  implementation(AndroidX.compose.ui.viewBinding)
   implementation(AndroidX.compose.runtime)
   implementation(AndroidX.compose.runtime.liveData)
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
-  //implementation(AndroidX.compose.ui.tooling)
-  implementation(AndroidX.compose.ui.toolingPreview)
+  implementation(AndroidX.compose.ui.tooling)
 
 
-  //implementation("com.google.accompanist:accompanist-systemuicontroller:_")
-  implementation("com.google.accompanist:accompanist-insets:_")
+  implementation(Google.accompanist.systemUiController)
+  implementation(Google.accompanist.insets)
   //implementation("com.google.accompanist:accompanist-coil:_")
-  implementation("io.coil-kt:coil-compose:_")
+  implementation(COIL.compose)
 
-  //implementation("androidx.media2:media2-exoplayer:$media_version")
-  //implementation("androidx.media2:media2-player:$media_version")
+  //implementation(AndroidX.media2.exoplayer)
+  //implementation(AndroidX.media2.player)
   //implementation("com.google.guava:guava:_")
 
-  implementation("org.danbrough:klog:_")
-  //implementation("com.github.danbrough.androidutils:logging_android:_")
+  implementation("com.github.danbrough.androidutils:logging_android:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:compose:_")
 
@@ -177,14 +178,14 @@ dependencies {
   /*  testImplementation("ch.qos.logback:logback-classic:_")
     testImplementation("ch.qos.logback:logback-core:_")
 
-    kapt("com.google.dagger:hilt-android-compiler:_")
-    implementation("com.google.dagger:hilt-android:_")
+    kapt(Google.dagger.hilt.android.compiler)
+    implementation(Google.dagger.hilt.android)
 
     // For instrumentation tests
-    androidTestImplementation("com.google.dagger:hilt-android-testing:_")
+    androidTestImplementation(Google.dagger.hilt.android.testing)
 
     // For local unit tests
-    testImplementation("com.google.dagger:hilt-android-testing:_")*/
+    testImplementation(Google.dagger.hilt.android.testing)*/
 
 
 }
