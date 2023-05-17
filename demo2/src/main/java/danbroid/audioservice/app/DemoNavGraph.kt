@@ -1,13 +1,15 @@
 package danbroid.audioservice.app
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import danbroid.audio.content.RNZLibrary
 import danbroid.audio.library.AudioClientViewModel
@@ -27,11 +29,31 @@ object Routes {
 
   fun menuRoute(menuID: String) = "${MENU}?id=${menuID.uriEncode()}"
 }
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun DemoNavGraph(
+  modifier: Modifier,
+  navController: NavHostController,
+  audioClientModel: AudioClientViewModel
+) = NavHost(
+  navController,
+  modifier = modifier,
+  startDestination = Routes.HOME
+) {
+
+
+  /*log.dinfo("screenContext: $screenContext")
+  Screen.values().forEach {
+    it.composable(this, screenContext)
+  }*/
+
+
+}
 
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun DemoNavGraph(
+fun DemoNavGraphOld(
     modifier: Modifier,
     navController: NavHostController,
     audioClientModel: AudioClientViewModel

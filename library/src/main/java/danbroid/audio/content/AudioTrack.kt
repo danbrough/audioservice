@@ -1,41 +1,50 @@
 package danbroid.audio.content
 
-import android.graphics.Bitmap
+import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.media2.common.MediaMetadata
-import danbroid.audio.menu.Menu
+import danbroid.audio.service.AudioService
+import kotlinx.serialization.Serializable
 
 @DslMarker
 annotation class TestDataDSL
 
-typealias TestData = MutableList<Menu>
-
+@TestDataDSL
+class TestData {
+  val testData = mutableListOf<AudioTrack>()
+}
 
 @TestDataDSL
-fun testData(block: TestData.() -> Unit) = mutableListOf<Menu>().apply {
+fun testData(block: TestData.() -> Unit) = TestData().apply {
   block()
 }
 
 @TestDataDSL
-fun TestData.menu(block: Menu.() -> Unit) = Menu("", "").also {
+fun TestData.item(block: AudioTrack.() -> Unit) = AudioTrack("").also {
   it.block()
-  it.isPlayable = true
-  add(it)
+  testData.add(it)
+}
+
+@Serializable
+data class AudioTrack(
+    var id: String,
+    var title: String = "Untitled",
+    var subTitle: String = "",
+    var iconURI: String? = null,
+    var bitrate: Int = -1
+) {
+  constructor(md: MediaMetadata) : this(
+      md.getString(MediaMetadata.METADATA_KEY_MEDIA_ID)!!
+  ) {
+    title = md.getText(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)?.toString() ?: "Untitled"
+    subTitle = md.getText(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)?.toString() ?: ""
+    bitrate = md.extras?.getInt(AudioService.MEDIA_METADATA_KEY_BITRATE) ?: -1
+    iconURI = md.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
+  }
 }
 
 
-fun MediaMetadata.toMenu(): Menu =
-    Menu(
-        getString(MediaMetadata.METADATA_KEY_MEDIA_ID)!!,
-        getText(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)?.toString() ?: "Untitled",
-        getText(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)?.toString() ?: "",
-        iconUrl = getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString(),
-    ).also {
-      it.icon = getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
-    }
-
-
-fun Menu.toMediaMetadata(): MediaMetadata.Builder = MediaMetadata.Builder()
+fun AudioTrack.toMediaMetadata(): MediaMetadata.Builder = MediaMetadata.Builder()
     .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, id)
     .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, id)
     .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title)
@@ -45,10 +54,17 @@ fun Menu.toMediaMetadata(): MediaMetadata.Builder = MediaMetadata.Builder()
     .setExtras(bundleOf())
 
     .also { builder ->
-      val iconData = icon
-      if (iconUrl != null) builder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, iconUrl)
-      if (iconData is Bitmap)
-        builder.putBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON, iconData)
+      if (iconURI != null) builder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, iconURI)
+
+      var _bundle: Bundle? = null
+      val bundle: () -> Bundle = {
+        _bundle ?: Bundle().also {
+          _bundle = it
+          builder.setExtras(it)
+        }
+      }
+      if (bitrate != -1)
+        bundle().putInt(AudioService.MEDIA_METADATA_KEY_BITRATE, bitrate)
     }
 
 

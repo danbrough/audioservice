@@ -20,15 +20,14 @@ class MainActivity : ComponentActivity() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
     RootAudioLibrary.register(
-        TestDataLibrary(),
-        somaFM,
-        rnz
+      TestDataLibrary(),
+      somaFM,
+      rnz
     )
 
     setContent {
       ProvideWindowInsets {
         DemoTheme(darkTheme = false) {
-          log.derror("MAIN ACTIVITY SET CONTENT")
           val navController = rememberNavController()
           //val scaffoldState = rememberScaffoldState()
           //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)

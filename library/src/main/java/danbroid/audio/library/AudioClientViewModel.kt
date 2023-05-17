@@ -13,20 +13,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.media2.common.SessionPlayer
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.client.AudioClient
-import danbroid.audio.log
 import danbroid.audio.service.AudioService
 import danbroid.audio.service.playerState
-import danbroid.audio.service.successful
+import danbroid.audio.service.successfull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 open class AudioClientViewModel(context: Context) : ViewModel() {
 
-
   private val _client = lazy {
-    log.info("starting audio service ..")
+    log.derror("starting audio service ..")
     context.startService(Intent(context, AudioService::class.java))
     AudioClient(context)
   }
@@ -53,7 +50,7 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
       log.warn("already in playlist at $existingIndex")
       if (existingIndex != controller.currentMediaItemIndex) {
         controller.skipToPlaylistItem(existingIndex).then {
-          log.debug("skipTO $existingIndex successfull: ${it.successful}")
+          log.debug("skipTO $existingIndex successfull: ${it.successfull}")
           client.playIfNotPlaying()
         }
       } else {
@@ -69,13 +66,13 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
       }
       withContext(Dispatchers.Main) {
         client.addToPlaylist(mediaItem).then {
-          log.info("addToPlaylist returned ${it.successful}  playlistIndex: ${controller.currentMediaItemIndex} playlistSize: ${controller.playlist?.size} playerState:${controller.playerState.playerState}")
+          log.info("addToPlaylist returned ${it.successfull}  playlistIndex: ${controller.currentMediaItemIndex} playlistSize: ${controller.playlist?.size} playerState:${controller.playerState.playerState}")
           if (controller.playerState == SessionPlayer.PLAYER_STATE_IDLE || controller.playerState == SessionPlayer.PLAYER_STATE_ERROR) {
             log.debug("calling prepare ..")
             controller.prepare().then {
-              log.debug("prepare(): success: ${it.successful} calling play ..")
+              log.debug("prepare(): success: ${it.successfull} calling play ..")
               controller.play().then {
-                log.debug("play() success:${it.successful}")
+                log.debug("play() success:${it.successfull}")
               }
             }
           }
@@ -86,16 +83,16 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
 
   private val mainExecutor = ContextCompat.getMainExecutor(context)
 
-  private fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
-      addListener({
-        job.invoke(get())
-      }, mainExecutor)
+  protected fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
+    addListener({
+      job.invoke(get())
+    }, mainExecutor)
 
   companion object {
-    class AudioClientViewModelFactory(val context: Context) : ViewModelProvider.NewInstanceFactory() {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getDeclaredConstructor(Context::class.java).newInstance(context) as T
-      }
+    class AudioClientViewModelFactory(val context: Context) :
+      ViewModelProvider.NewInstanceFactory() {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        modelClass.getDeclaredConstructor(Context::class.java).newInstance(context) as T
     }
   }
 }
@@ -111,3 +108,4 @@ fun Context.audioClientModel(): AudioClientViewModel {
 }
 
 
+private val log = danbroid.logging.getLog(AudioClientViewModel::class)

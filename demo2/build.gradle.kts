@@ -135,8 +135,9 @@ dependencies {
 
   implementation("com.github.fornewid:material-motion-compose:_")
 
+  //implementation(AndroidX.navigation.compose)
+  implementation(AndroidX.navigation.commonKtx)
   implementation(AndroidX.navigation.compose)
-
   implementation(AndroidX.activity.compose)
   implementation(AndroidX.lifecycle.viewModelCompose)
   implementation(AndroidX.constraintLayout.compose)

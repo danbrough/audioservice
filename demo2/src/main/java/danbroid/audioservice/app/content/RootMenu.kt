@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import danbroid.audio.content.ipfs_gateway
+import danbroid.audio.content.testTracks
 import danbroid.audio.library.R
 import danbroid.audio.ui.AppIcon
 import danbroid.audio.ui.menu
@@ -81,14 +82,14 @@ fun RootMenu() {
       icon = AppIcon.RADIO
     }
 
-    /*TODO  testTracks.testData.forEach {
-       menu(it.id) {
-         title = it.title
-         subTitle = it.subTitle
-         icon = it.iconURI
-         isPlayable = true
-       }
-     }*/
+    testTracks.testData.forEach {
+      menu(it.id) {
+        title = it.title
+        subTitle = it.subTitle
+        icon = it.iconURI
+        isPlayable = true
+      }
+    }
   }
 }
 

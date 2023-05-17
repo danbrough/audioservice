@@ -1,25 +1,23 @@
 package danbroid.audioservice.app
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
 import danbroid.audio.library.AudioClientViewModel
-import danbroid.audio.ui.BackButtonHandler
-import danbroid.audioservice.app.ui.controls.BottomControls
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -28,51 +26,41 @@ fun MainScaffold(
   audioClientModel: AudioClientViewModel
 ) {
   val coroutineScope = rememberCoroutineScope()
-  val insets = LocalWindowInsets.current
-
+  val navBottom = with(LocalDensity.current) { WindowInsets.navigationBars.getBottom(this).toDp() }
+  log.trace("NAV BAR BOTTOM: $navBottom")
   val scaffoldState = rememberBottomSheetScaffoldState()
-
-  val navBottom = with(LocalDensity.current) { insets.navigationBars.bottom.toDp() }
-  log.trace("NAV BAR BOTTOM: ${navBottom}")
   val sheetHeight = 50.dp
 
+
   BottomSheetScaffold(
-    modifier = Modifier,
-    /*      topBar = {
-            Row {
-              Text(title)
-            }
-          },*/
-    scaffoldState = scaffoldState,
     sheetBackgroundColor = MaterialTheme.colors.primary,
+    sheetPeekHeight = sheetHeight + navBottom,
     sheetContent = {
-      Box(
-        Modifier
-          .fillMaxWidth()
-          .fillMaxHeight()) {
-        BottomControls(expanded = scaffoldState.bottomSheetState.isExpanded, audioClientModel)
+      Column(Modifier.fillMaxSize()) {
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text("Current song title", modifier = Modifier.weight(1f))
+          IconButton(onClick = { /*TODO play song*/ }) {
+            Icon(
+              Icons.Rounded.PlayArrow,
+              contentDescription = "Play"
+            )
+          }
+        }
       }
-
-    },
-    //sheetPeekHeight = if (bottomSheetScaffoldState.bottomSheetState.isExpanded) 0.dp else 56.dp
-    sheetPeekHeight = sheetHeight + navBottom
-  ) {
-    DemoNavGraph(
+    }) {
+    Box(
       Modifier
-        .navigationBarsPadding(end = false)
-        .padding(bottom = sheetHeight),
-      navController,
-      audioClientModel
-    )
-
-    BackButtonHandler(scaffoldState.bottomSheetState.isExpanded) {
-      coroutineScope.launch {
-        scaffoldState.bottomSheetState.collapse()
-      }
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
+      Text("Main Screen Content")
     }
   }
-
-
 }
 
 

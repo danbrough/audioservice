@@ -15,8 +15,7 @@ import java.util.concurrent.TimeUnit
 
 
 suspend fun parsePlaylistURL(context: Context, url: String): String? =
-  context.httpSupport.requestString(url, CacheControl.Builder().maxStale(1, TimeUnit.DAYS).build())
-    .let {
+    context.httpSupport.requestString(url, CacheControl.Builder().maxStale(1, TimeUnit.DAYS).build()).let {
       it.lines().firstNotNullOfOrNull { line ->
         val i = line.indexOf('=');
         if (line.startsWith("File") && i > 0) {
@@ -114,10 +113,10 @@ val Int.playWhenReadyChangeReason: String
     else -> "ERROR: Invalid PlayWhenReadyChangeReason: $this"
   }
 
-val SessionResult.successful: Boolean
+val SessionResult.successfull: Boolean
   get() = resultCode == SessionResult.RESULT_SUCCESS
 
-val SessionPlayer.PlayerResult.successful: Boolean
+val SessionPlayer.PlayerResult.successfull: Boolean
   get() = resultCode == SessionPlayer.PlayerResult.RESULT_SUCCESS
 
 val MediaItem?.duration: Long

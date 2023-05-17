@@ -5,8 +5,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import danbroid.audio.log
-import klog.klog
 
 
 @Composable
@@ -50,3 +48,4 @@ fun SnackBarHost(state: SnackbarHostState, modifier: Modifier) {
   }
 }
 
+val log = danbroid.logging.getLog("danbroid.audio.ui")
