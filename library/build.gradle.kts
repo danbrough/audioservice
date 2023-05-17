@@ -98,6 +98,13 @@ dependencies {
   implementation(AndroidX.constraintLayout.compose)
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
+  implementation(Ktor.client.core)
+  implementation(Ktor.client.okHttp)
+  implementation(Ktor.client.cio)
+  implementation(Ktor.client.contentNegotiation)
+  implementation("io.ktor:ktor-serialization-kotlinx-json:_")
+  implementation(Ktor.client.logging)
+  implementation(Ktor.client.serialization)
 
   implementation(Google.android.material)
   api(AndroidX.media2.common)

@@ -13,6 +13,7 @@ import danbroid.audio.library.BuildConfig
 import danbroid.audio.log
 import danbroid.util.misc.SingletonHolder
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.CacheControl
 import java.io.IOException
@@ -41,13 +42,15 @@ class RNZLibrary(context: Context) : AudioLibrary {
     const val URI_RNZ_NEWS = "$SCHEME_RNZ://news"
     const val URL_RNZ = "https://www.rnz.co.nz/topics"
     const val URL_RNZ_NEWS = "https://www.rnz.co.nz/news"
-    private const val rnzNationalIcon = "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz-national.jpg"
-    private const val rnzNewsIcon = "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz_news.jpg"
+    private const val rnzNationalIcon =
+      "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz-national.jpg"
+    private const val rnzNewsIcon =
+      "https://cloudflare-ipfs.com/ipns/audienz.danbrough.org/media/rnz_news.jpg"
 
     fun getProgrammeURI(id: Long) = "$URI_PREFIX_RNZ_PROGRAMME/$id"
     fun getIDFromProgrammeURI(uri: String): Long? =
-        if (uri.startsWith(URI_PREFIX_RNZ_PROGRAMME))
-          uri.substringAfter("$URI_PREFIX_RNZ_PROGRAMME/").toLong() else null
+      if (uri.startsWith(URI_PREFIX_RNZ_PROGRAMME))
+        uri.substringAfter("$URI_PREFIX_RNZ_PROGRAMME/").toLong() else null
   }
 
   private val json = Json {
@@ -80,7 +83,7 @@ class RNZLibrary(context: Context) : AudioLibrary {
 
   @Throws(IOException::class)
   suspend fun loadProgramme(
-      progID: Long
+    progID: Long
   ): RNZProgramme {
     log.trace("loadProgramme() $progID")
 
@@ -89,8 +92,8 @@ class RNZLibrary(context: Context) : AudioLibrary {
     if (BuildConfig.DEBUG) log.trace("progURL: $progURL")
 
     val response = httpSupport.requestString(
-        progURL,
-        CacheControl.Builder().maxStale(Int.MAX_VALUE, TimeUnit.SECONDS).build()
+      progURL,
+      CacheControl.Builder().maxStale(Int.MAX_VALUE, TimeUnit.SECONDS).build()
     )
 
     return json.decodeFromString<RNZItem>(response).item
@@ -107,21 +110,30 @@ class RNZLibrary(context: Context) : AudioLibrary {
 )*/
 
 fun RNZProgramme.toMediaItem(defaultIcon: String): MediaItem =
-    getMetadata(defaultIcon).build().let {
-      UriMediaItem.Builder(it.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri())
-          .setStartPosition(0L).setEndPosition(-1L)
-          .setMetadata(it)
-          .build()
-    }
+  getMetadata(defaultIcon).build().let {
+    UriMediaItem.Builder(it.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri())
+      .setStartPosition(0L).setEndPosition(-1L)
+      .setMetadata(it)
+      .build()
+  }
 
 
 fun RNZProgramme.getMetadata(defaultIcon: String): MediaMetadata.Builder = MediaMetadata.Builder()
-    .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZLibrary.getProgrammeURI(id))
-    .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
-    .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString())
-    .putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, if (thumbnail != null) "http://www.rnz.co.nz$thumbnail" else defaultIcon)
-    .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)
-    .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audio.mp3?.url ?: audio.ogg!!.url)
+  .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, RNZLibrary.getProgrammeURI(id))
+  .putString(
+    MediaMetadata.METADATA_KEY_DISPLAY_TITLE,
+    programmeName.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
+  )
+  .putString(
+    MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE,
+    body.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
+  )
+  .putString(
+    MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI,
+    if (thumbnail != null) "http://www.rnz.co.nz$thumbnail" else defaultIcon
+  )
+  .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)
+  .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audio.mp3?.url ?: audio.ogg!!.url)
 
 val Context.rnz: RNZLibrary
   get() = RNZLibrary.getInstance(this)

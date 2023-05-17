@@ -18,9 +18,9 @@ import androidx.media2.session.SessionCommandGroup
 import androidx.media2.session.SessionResult
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
+import danbroid.audio.library.BuildConfig
 import danbroid.audio.log
 import danbroid.audio.service.AudioService
-import danbroid.audio.service.BuildConfig
 import danbroid.audio.service.buffState
 import danbroid.audio.service.duration
 import danbroid.audio.service.playerState
@@ -46,10 +46,10 @@ open class AudioClient(context: Context) {
   }
 
   data class QueueState(
-      val hasPrevious: Boolean,
-      val hasNext: Boolean,
-      val size: Int,
-      val position: Int
+    val hasPrevious: Boolean,
+    val hasNext: Boolean,
+    val size: Int,
+    val position: Int
   )
 
   private val _playPosition = MutableStateFlow(PlayPosition.NO_POSITION)
@@ -80,7 +80,7 @@ open class AudioClient(context: Context) {
   protected val controllerCallback = ControllerCallback()
 
   protected val mainExecutor =
-      ContextCompat.getMainExecutor(context)//Executors.newSingleThreadExecutor()
+    ContextCompat.getMainExecutor(context)//Executors.newSingleThreadExecutor()
   // protected val mainExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
 
   val mediaController: MediaBrowser = run {
@@ -99,9 +99,9 @@ open class AudioClient(context: Context) {
 
 
     MediaBrowser.Builder(context)
-        .setControllerCallback(mainExecutor, controllerCallback)
-        .setSessionToken(serviceToken)
-        .build()
+      .setControllerCallback(mainExecutor, controllerCallback)
+      .setSessionToken(serviceToken)
+      .build()
   }
 
   val playlistIndex: Int = mediaController.currentMediaItemIndex
@@ -151,9 +151,9 @@ open class AudioClient(context: Context) {
   }
 
   private fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
-      addListener({
-        job.invoke(get())
-      }, mainExecutor)
+    addListener({
+      job.invoke(get())
+    }, mainExecutor)
 
 
   fun addToPlaylist(item: MediaItem): ListenableFuture<SessionResult> {
@@ -161,10 +161,10 @@ open class AudioClient(context: Context) {
     val args = bundleOf()
     ParcelUtils.putVersionedParcelable(args, AudioService.ACTION_ARG_MEDIA_ITEM, item.metadata)
     return mediaController.sendCustomCommand(
-        SessionCommand(
-            AudioService.ACTION_ADD_TO_PLAYLIST,
-            null
-        ), args
+      SessionCommand(
+        AudioService.ACTION_ADD_TO_PLAYLIST,
+        null
+      ), args
     )
   }
 
@@ -197,8 +197,8 @@ open class AudioClient(context: Context) {
   protected inner class ControllerCallback : MediaBrowser.BrowserCallback() {
 
     override fun onPlaybackInfoChanged(
-        controller: MediaController,
-        info: MediaController.PlaybackInfo
+      controller: MediaController,
+      info: MediaController.PlaybackInfo
     ) {
       log.trace("onPlaybackInfoChanged(): $info")
     }
@@ -213,9 +213,9 @@ open class AudioClient(context: Context) {
     }
 
     override fun onPlaylistChanged(
-        controller: MediaController,
-        list: MutableList<MediaItem>?,
-        metadata: MediaMetadata?
+      controller: MediaController,
+      list: MutableList<MediaItem>?,
+      metadata: MediaMetadata?
     ) {
       val state = controller.playerState
 
@@ -225,10 +225,10 @@ open class AudioClient(context: Context) {
         log.trace("duration: ${metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)}")
       }
       _queueState.value = _queueState.value.copy(
-          hasPrevious = controller.previousMediaItemIndex != -1,
-          hasNext = controller.nextMediaItemIndex != -1,
-          size = list?.size ?: 0,
-          position = controller.currentMediaItemIndex
+        hasPrevious = controller.previousMediaItemIndex != -1,
+        hasNext = controller.nextMediaItemIndex != -1,
+        size = list?.size ?: 0,
+        position = controller.currentMediaItemIndex
       )
       _playList.value = list ?: emptyList()
     }
@@ -250,9 +250,9 @@ open class AudioClient(context: Context) {
       _currentItem.value = item
       _metadata.value = item?.metadata
       _queueState.value = _queueState.value.copy(
-          hasPrevious = controller.previousMediaItemIndex != -1,
-          hasNext = controller.nextMediaItemIndex != -1,
-          position = controller.currentMediaItemIndex
+        hasPrevious = controller.previousMediaItemIndex != -1,
+        hasNext = controller.nextMediaItemIndex != -1,
+        position = controller.currentMediaItemIndex
       )
     }
 
@@ -286,17 +286,17 @@ open class AudioClient(context: Context) {
 
 
     override fun onSubtitleData(
-        controller: MediaController,
-        item: MediaItem,
-        track: SessionPlayer.TrackInfo,
-        data: SubtitleData
+      controller: MediaController,
+      item: MediaItem,
+      track: SessionPlayer.TrackInfo,
+      data: SubtitleData
     ) {
       log.trace("onSubtitleData() $track data: $data")
     }
 
     override fun onTracksChanged(
-        controller: MediaController,
-        tracks: MutableList<SessionPlayer.TrackInfo>
+      controller: MediaController,
+      tracks: MutableList<SessionPlayer.TrackInfo>
     ) {
       val state = controller.playerState
       log.trace("onTracksChanged() tracks:${tracks} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex}")
@@ -310,10 +310,10 @@ open class AudioClient(context: Context) {
       val playlist = controller.playlist ?: emptyList()
       _playList.value = playlist
       _queueState.value = QueueState(
-          hasPrevious = controller.previousMediaItemIndex != -1,
-          hasNext = controller.nextMediaItemIndex != -1,
-          size = playlist.size,
-          position = controller.currentMediaItemIndex
+        hasPrevious = controller.previousMediaItemIndex != -1,
+        hasNext = controller.nextMediaItemIndex != -1,
+        size = playlist.size,
+        position = controller.currentMediaItemIndex
       )
 
       _playState.value = when (controller.playerState) {
