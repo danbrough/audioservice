@@ -9,28 +9,30 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.media2.common.MediaMetadata
-import coil.imageLoader
+import coil.Coil
 import coil.request.ImageRequest
+import danbroid.audio.R
 
 class IconUtils(
     val context: Context,
     @ColorInt val iconTint: Int = Config.Notifications.notificationIconTint
 ) {
 
+
   suspend fun loadIcon(metadata: MediaMetadata): BitmapDrawable? {
-    if (BuildConfig.DEBUG) log.trace("loadIcon() $metadata")
+    log.dtrace("loadIcon() $metadata")
 
     val imageURI = metadata.getString(MediaMetadata.METADATA_KEY_ART_URI)
         ?: metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
 
 
-    /*
-        imageURI.resolveDrawableURI(context).also {
-          if (it != 0) return drawableToBitmapIcon(it)
-        }
-    */
+/*
+    imageURI.resolveDrawableURI(context).also {
+      if (it != 0) return drawableToBitmapIcon(it)
+    }
+*/
 
-    if (BuildConfig.DEBUG) log.trace("loading image $imageURI...")
+    log.trace("loading image $imageURI...")
     val request = ImageRequest.Builder(context)
         .data(imageURI)
         .size(Config.Notifications.notificationIconWidth)
@@ -40,26 +42,26 @@ class IconUtils(
 
 
     log.trace("making request for $imageURI")
-    val result = request.context.imageLoader.execute(request)
-    if (BuildConfig.DEBUG) log.trace("got result: $result")
+    val result = Coil.execute(request)
+    log.trace("got result: $result")
     return result.drawable as? BitmapDrawable
   }
-  /*
-      Glide.with(context).asBitmap().load(imageURI).diskCacheStrategy(DiskCacheStrategy.DATA)
-          //.transform(RoundedCorners(iconCornerRadius))
-          .into(object : CustomTarget<Bitmap>(
-              Config.Notifications.notificationIconWidth,
-              Config.Notifications.notificationIconHeight
-          ) {
-            override fun onLoadCleared(placeholder: Drawable?) = Unit
+/*
+    Glide.with(context).asBitmap().load(imageURI).diskCacheStrategy(DiskCacheStrategy.DATA)
+        //.transform(RoundedCorners(iconCornerRadius))
+        .into(object : CustomTarget<Bitmap>(
+            Config.Notifications.notificationIconWidth,
+            Config.Notifications.notificationIconHeight
+        ) {
+          override fun onLoadCleared(placeholder: Drawable?) = Unit
 
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-              log.error("ON RESOURCE READY")
-              callbacks.remove(metadata)!!.invoke(resource)
+          override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+            log.error("ON RESOURCE READY")
+            callbacks.remove(metadata)!!.invoke(resource)
 
-            }
-          })
-  */
+          }
+        })
+*/
 
 
   fun drawableToBitmapIcon(@DrawableRes resID: Int): BitmapDrawable {
@@ -71,7 +73,7 @@ class IconUtils(
         Bitmap.Config.ARGB_8888
     )
 
-    if (BuildConfig.DEBUG) log.trace("drawing bitmap ..")
+    log.dtrace("drawing bitmap ..")
     val canvas = Canvas(bitmap)
     drawable.setBounds(0, 0, canvas.width, canvas.height)
 
@@ -85,4 +87,5 @@ class IconUtils(
   }
 }
 
+private val log = danbroid.logging.getLog(IconUtils::class)
 

@@ -1,7 +1,5 @@
 package danbroid.audio.menu
 
-
-import danbroid.audio.AppIcon
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlin.reflect.KProperty
@@ -9,8 +7,6 @@ import kotlin.reflect.KProperty
 @DslMarker
 annotation class MenuDSL
 
-@Serializable
-data class Menus(val title: String, val menus: List<Menu>)
 
 @Serializable
 data class Menu(
@@ -26,30 +22,22 @@ data class Menu(
   @Transient
   private var iconData: Any? = null
 
-  private object IconProperty {
-
+  @Transient
+  var icon: Any? by object {
     operator fun getValue(menu: Menu, property: KProperty<*>): Any? {
-      AppIcon.lookupIcon(menu.iconData)?.also {
-        return it
-      }
-      AppIcon.lookupIcon(menu.iconUrl)?.also {
-        return it
-      }
-      return menu.iconData ?: menu.iconUrl
+      return iconData ?: iconUrl
     }
 
     operator fun setValue(menu: Menu, property: KProperty<*>, value: Any?) {
       when (value) {
-        is CharSequence -> menu.iconUrl = value.toString()
-        is AppIcon<*> -> menu.iconUrl = value.uri
+        is String -> iconUrl = value
+        else -> iconData = value
       }
-      menu.iconData = value
     }
-
   }
 
-  var icon: Any? by IconProperty
 }
 
 
-//private val log = danbroid.logging.getLog(Menu::class)
+
+

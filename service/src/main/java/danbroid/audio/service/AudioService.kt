@@ -3,6 +3,8 @@ package danbroid.audio.service
 import android.app.Notification
 import android.content.ComponentName
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -17,18 +19,10 @@ import androidx.media2.common.MediaItem
 import androidx.media2.common.MediaMetadata
 import androidx.media2.common.SessionPlayer
 import androidx.media2.common.UriMediaItem
-import androidx.media2.session.MediaSession
-import androidx.media2.session.MediaSessionService
-import androidx.media2.session.SessionCommand
-import androidx.media2.session.SessionCommandGroup
-import androidx.media2.session.SessionResult
+import androidx.media2.session.*
 import androidx.palette.graphics.Palette
 import androidx.versionedparcelable.ParcelUtils
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.ext.media2.SessionPlayerConnector
 import com.google.android.exoplayer2.metadata.Metadata
@@ -41,11 +35,8 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.BandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.common.util.concurrent.ListenableFuture
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import danbroid.audio.BuildConfig
+import kotlinx.coroutines.*
 import java.util.concurrent.Executor
 
 class AudioService : MediaSessionService() {
@@ -77,13 +68,12 @@ class AudioService : MediaSessionService() {
 
   private lateinit var callbackExecutor: Executor
   private lateinit var notificationManager: PlayerNotificationManager
-  private val iconUtils = IconUtils(this)
+  internal val iconUtils = IconUtils(this)
 
   private val lifecycleScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-
   override fun onCreate() {
-    log.info("onCreate() hashCode:${hashCode()}")
+    log.derror("onCreate() hashCode:${hashCode()}")
     super.onCreate()
 
 
@@ -100,7 +90,7 @@ class AudioService : MediaSessionService() {
 
 
     createExternalExoPlayer()
-    if (BuildConfig.DEBUG) log.debug("created player: $exoPlayer")
+    log.ddebug("created player: $exoPlayer")
 
 
     val sessionPlayer = SessionPlayerConnector(exoPlayer)
@@ -127,9 +117,9 @@ class AudioService : MediaSessionService() {
 
       val debug = false
 
-      /*      override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem) {
-              log.warn("onCurrentMediaItemChanged() $item")
-            }*/
+/*      override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem) {
+        log.warn("onCurrentMediaItemChanged() $item")
+      }*/
 
       override fun onCurrentMediaItemChanged(player: SessionPlayer, item: MediaItem?) {
         item ?: return
@@ -172,7 +162,7 @@ class AudioService : MediaSessionService() {
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    if (BuildConfig.DEBUG) log.warn("onStartCommand() hashCode:${hashCode()}")
+    log.dwarn("onStartCommand() hashCode:${hashCode()}")
     super.onStartCommand(intent, flags, startId)
     return START_NOT_STICKY
   }
@@ -186,18 +176,18 @@ class AudioService : MediaSessionService() {
   fun createExternalExoPlayer(): ExoPlayer {
 
 
-    /*
-        val ffmpegRenderersFactory = object : RenderersFactory {
-          override fun createRenderers(
-            eventHandler: Handler,
-            videoRendererEventListener: VideoRendererEventListener,
-            audioRendererEventListener: AudioRendererEventListener,
-            textRendererOutput: TextOutput,
-            metadataRendererOutput: MetadataOutput
-          ) = arrayOf(FfmpegAudioRenderer(eventHandler, audioRendererEventListener).also {
-          })
-        }
-    */
+/*
+    val ffmpegRenderersFactory = object : RenderersFactory {
+      override fun createRenderers(
+        eventHandler: Handler,
+        videoRendererEventListener: VideoRendererEventListener,
+        audioRendererEventListener: AudioRendererEventListener,
+        textRendererOutput: TextOutput,
+        metadataRendererOutput: MetadataOutput
+      ) = arrayOf(FfmpegAudioRenderer(eventHandler, audioRendererEventListener).also {
+      })
+    }
+*/
 
 
     val defaultRenderersFactory =
@@ -239,33 +229,30 @@ class AudioService : MediaSessionService() {
 
 
       override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-        if (BuildConfig.DEBUG) log.trace("onTracksChanged()")
+        log.derror("onTracksChanged()")
       }
 
       override fun onMetadata(metadata: Metadata) {
         (0 until metadata.length()).forEach {
-          if (BuildConfig.DEBUG) log.trace("onMetadata() ${metadata[it]}")
+          log.derror("onMetadata() ${metadata[it]}")
         }
       }
 
       override fun onMediaMetadataChanged(mediaMetadata: com.google.android.exoplayer2.MediaMetadata) {
-        if (BuildConfig.DEBUG) {
-          log.trace("onMediaMetadataChanged() $mediaMetadata")
-          log.trace("MediaMetadata: title:${mediaMetadata.title}")
-          log.trace("MediaMetadata: artist:${mediaMetadata.artist}")
-          log.trace("MediaMetadata: albumArtist:${mediaMetadata.albumArtist}")
-          log.trace("MediaMetadata: year:${mediaMetadata.year}")
+        log.derror("onMediaMetadataChanged() $mediaMetadata")
+        log.derror("MediaMetadata: title:${mediaMetadata.title}")
+        log.derror("MediaMetadata: artist:${mediaMetadata.artist}")
+        log.derror("MediaMetadata: albumArtist:${mediaMetadata.albumArtist}")
+        log.derror("MediaMetadata: year:${mediaMetadata.year}")
 
-          mediaMetadata.extras?.keySet()?.forEach {
-            log.trace("MediaMetadata: EXTRA KEY:${it}")
-          }
+        mediaMetadata.extras?.keySet()?.forEach {
+          log.derror("MediaMetadata: EXTRA KEY:${it}")
         }
 
       }
 
       override fun onStaticMetadataChanged(metadataList: MutableList<Metadata>) {
-        if (BuildConfig.DEBUG)
-          log.trace("onStaticMetadataChanged() $metadataList")
+        log.derror("onStaticMetadataChanged() $metadataList")
       }
     })
 
@@ -280,24 +267,24 @@ class AudioService : MediaSessionService() {
 
 
   override fun onUpdateNotification(session: MediaSession): MediaNotification? {
-    if (BuildConfig.DEBUG) log.trace("onUpdateNotification()")
+    log.dtrace("onUpdateNotification()")
     //val notification = super.onUpdateNotification(session)
 
     return null
   }
 
   override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession {
-    if (BuildConfig.DEBUG) log.trace("onGetSession() controllerInfo: $controllerInfo")
+    log.ddebug("onGetSession() controllerInfo: $controllerInfo")
 
     return session
   }
 
   private fun loadIcon(mediaItem: MediaItem) {
-    log.debug("loadIcon() $mediaItem")
+    log.derror("loadIcon() $mediaItem")
 
     lifecycleScope.launch {
       fun updateMetadata(bitmap: BitmapDrawable) {
-        if (BuildConfig.DEBUG) log.trace("updateMetadata()")
+        log.dwarn("updateMetadata()")
 
         val builder = MediaMetadata.Builder(mediaItem.metadata!!)
 
@@ -306,7 +293,7 @@ class AudioService : MediaSessionService() {
         }
 
         if (!extras.containsKey(MEDIA_METADATA_KEY_LIGHT_COLOR)) {
-          if (BuildConfig.DEBUG) log.trace("generating palette............................................")
+          log.dwarn("generating palette............................................")
 
           val palette = Palette.from(bitmap.bitmap).generate()
 
@@ -375,7 +362,7 @@ class AudioService : MediaSessionService() {
       }
       //etStyle(androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle())
       // notificationManager.setColorized(true)
-      if (BuildConfig.DEBUG) log.trace("metadata: ${session.player.currentMediaItem?.metadata.toDebugString()}")
+      log.dtrace("metadata: ${session.player.currentMediaItem?.metadata.toDebugString()}")
       val extras = session.player.currentMediaItem?.metadata?.extras
 
 
@@ -387,7 +374,7 @@ class AudioService : MediaSessionService() {
 
       if (dominantColor == Color.TRANSPARENT) dominantColor = Config.Notifications.notificationColour
 
-      if (BuildConfig.DEBUG) log.trace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
+      log.dtrace("dominantColor: $dominantColor duration:${session.player.currentMediaItem.duration}")
       notificationManager.setUseChronometer(session.player.currentMediaItem.duration.let { it > 0L && it != Long.MAX_VALUE })
       notificationManager.setColor(dominantColor)
     }
@@ -413,7 +400,7 @@ class AudioService : MediaSessionService() {
       loadIcon(item)
       log.trace("adding playlist item ...")
       session.player.addPlaylistItem(0, item).then {
-        log.trace("added item to playlist: $it")
+        log.dtrace("added item to playlist: $it")
         session.player.prepare().then {
           log.trace("got $it calling play:")
           session.player.play().then {
@@ -438,7 +425,7 @@ class AudioService : MediaSessionService() {
       }
 
       if (command.commandCode == SessionCommand.COMMAND_CODE_PLAYER_PAUSE) {
-        if (BuildConfig.DEBUG) log.trace("PAUSING IT DUDE!")
+        log.derror("PAUSING IT DUDE!")
       }
       return super.onCommandRequest(session, controller, command)
     }
@@ -462,7 +449,7 @@ class AudioService : MediaSessionService() {
 
       if (customCommand.customAction == ACTION_ADD_TO_PLAYLIST) {
         val metadata = ParcelUtils.getVersionedParcelable<MediaMetadata>(args!!, ACTION_ARG_MEDIA_ITEM)!!
-        log.trace("found metadata $metadata")
+        log.dtrace("found metadata $metadata")
         val uri = metadata.getString(MediaMetadata.METADATA_KEY_MEDIA_URI)!!.toUri()
         //val uri = metadata.getString(MediaMetadata.METADATA_KEY_MEDIA_ID)!!.toUri()
 
@@ -474,9 +461,9 @@ class AudioService : MediaSessionService() {
 
         loadIcon(mediaItem)
 
-        log.trace("adding playlist item.. with uri: ${mediaItem.uri}")
+        log.dtrace("adding playlist item.. with uri: ${mediaItem.uri}")
         session.player.addPlaylistItem(Int.MAX_VALUE, mediaItem).then {
-          log.trace("addToPlaylistItem returned ${it.successful}")
+          log.dtrace("addToPlaylistItem returned ${it.successfull}")
         }
 
 
@@ -500,7 +487,7 @@ class AudioService : MediaSessionService() {
     }
 
     override fun onMetadata(eventTime: AnalyticsListener.EventTime, metadata: Metadata) {
-      log.trace("ANALYTICS: metadata $metadata pos:${exoPlayer.currentPosition} duration:${exoPlayer.duration}")
+      log.derror("ANALYTICS: metadata $metadata pos:${exoPlayer.currentPosition} duration:${exoPlayer.duration}")
       var title: String? = null
       var album: String? = null
 //      val currentMetadata = player.currentMediaItem!!.metadata!!
@@ -510,28 +497,25 @@ class AudioService : MediaSessionService() {
 
         when (entry) {
           is VorbisComment -> {
-            log.trace("ANALYTICS:VORBIS COMMENT: ${entry.key}:=<${entry.value}>")
+            log.dtrace("ANALYTICS:VORBIS COMMENT: ${entry.key}:=<${entry.value}>")
             when (entry.key) {
               "Title" -> {
                 title = entry.value
               }
             }
           }
-
           is TextInformationFrame -> {
-            log.trace("ANALYTICS: ID3 COMMENT: ${entry.id}:=<${entry.value}>")
+            log.dtrace("ANALYTICS: ID3 COMMENT: ${entry.id}:=<${entry.value}>")
             when (entry.id) {
               "TIT2" -> {
                 title = entry.value
               }
-
               "TALB" -> {
                 album = entry.value
-                log.trace("album: $album")
+                log.dtrace("album: $album")
               }
             }
           }
-
           is IcyInfo -> {
             log.trace("ANALYTICS: IcyInfo title:${entry.title} ${entry.url}")
             title = entry.title
@@ -540,11 +524,9 @@ class AudioService : MediaSessionService() {
       }
 
 
-      if (BuildConfig.DEBUG) {
-        log.trace("playlistMetadata: ${session.player.playlistMetadata}")
-        log.trace("currentItem.metadata: ${session.player.currentMediaItem?.metadata}")
-        log.trace("title: $title")
-      }
+      log.dtrace("playlistMetadata: ${session.player.playlistMetadata}")
+      log.dtrace("currentItem.metadata: ${session.player.currentMediaItem?.metadata}")
+      log.dtrace("title: $title")
 
       if (title != "")
         MediaMetadata.Builder(session.player.currentMediaItem!!.metadata!!)
@@ -572,72 +554,72 @@ class AudioService : MediaSessionService() {
 
     }
 
-    /*    override fun onTracksChanged(
-            eventTime: AnalyticsListener.EventTime,
-            trackGroups: TrackGroupArray,
-            trackSelections: TrackSelectionArray
-        ) {
-          log.dwarn("ANALYTICS onTracksChanged()")
-          for (n in 0 until trackGroups.length) {
-            for (m in 0 until trackGroups[n].length) {
-              trackGroups[n].getFormat(m).also { format ->
-                val metadata = format.metadata
-                val currentMetadata = player.currentMediaItem?.metadata
-                log.dtrace("ANALYTICS:bitrate: ${format.bitrate}")
-                log.dtrace("ANALYTICS:trackMetadata:$n cls:${format::class.java} ${metadata}")
-                log.dtrace("ANALYTICS:currentMetadata: ${currentMetadata}")
+/*    override fun onTracksChanged(
+        eventTime: AnalyticsListener.EventTime,
+        trackGroups: TrackGroupArray,
+        trackSelections: TrackSelectionArray
+    ) {
+      log.dwarn("ANALYTICS onTracksChanged()")
+      for (n in 0 until trackGroups.length) {
+        for (m in 0 until trackGroups[n].length) {
+          trackGroups[n].getFormat(m).also { format ->
+            val metadata = format.metadata
+            val currentMetadata = player.currentMediaItem?.metadata
+            log.dtrace("ANALYTICS:bitrate: ${format.bitrate}")
+            log.dtrace("ANALYTICS:trackMetadata:$n cls:${format::class.java} ${metadata}")
+            log.dtrace("ANALYTICS:currentMetadata: ${currentMetadata}")
 
-                var title: String? = null
+            var title: String? = null
 
-                if (metadata != null) {
-                  (0 until metadata.length()).forEach {
-                    val entry = metadata.get(it)
-                    log.dtrace("ANALYTICS: entry: ${entry} cls: ${entry::class.java}")
-                    when (entry) {
-                      is VorbisComment -> {
-                        log.dtrace("ANALYTICS:VORBIS COMMENT: ${entry.key}:=<${entry.value}>")
-                        when (entry.key) {
-                          "Title" -> {
-                            title = entry.value
-                          }
-                        }
-                      }
-                      is TextInformationFrame -> {
-                        log.dtrace("ANALYTICS: ID3 COMMENT: ${entry.id}:=<${entry.value}>")
-                        when (entry.id) {
-                          "TIT2" -> {
-                            title = entry.value
-                          }
-                          "TALB" -> {
-                            val album = entry.value
-                            log.dinfo("album: $album")
-                          }
-                        }
+            if (metadata != null) {
+              (0 until metadata.length()).forEach {
+                val entry = metadata.get(it)
+                log.dtrace("ANALYTICS: entry: ${entry} cls: ${entry::class.java}")
+                when (entry) {
+                  is VorbisComment -> {
+                    log.dtrace("ANALYTICS:VORBIS COMMENT: ${entry.key}:=<${entry.value}>")
+                    when (entry.key) {
+                      "Title" -> {
+                        title = entry.value
                       }
                     }
                   }
-
-                  if (currentMetadata != null && title != null) {
-                    val oldTitle =
-                        currentMetadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)
-                    if (oldTitle != title) {
-                      val newMetadata = MediaMetadata.Builder(currentMetadata).also {
-                        it.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title)
-                      }.build()
-                      log.derror("ANALYTICS: updating currentMediaItem metadata with title:$title")
-
-                    //  player.currentMediaItem?.metadata = newMetadata
-                      player.updatePlaylistMetadata(newMetadata)
+                  is TextInformationFrame -> {
+                    log.dtrace("ANALYTICS: ID3 COMMENT: ${entry.id}:=<${entry.value}>")
+                    when (entry.id) {
+                      "TIT2" -> {
+                        title = entry.value
+                      }
+                      "TALB" -> {
+                        val album = entry.value
+                        log.dinfo("album: $album")
+                      }
                     }
                   }
                 }
               }
+
+              if (currentMetadata != null && title != null) {
+                val oldTitle =
+                    currentMetadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)
+                if (oldTitle != title) {
+                  val newMetadata = MediaMetadata.Builder(currentMetadata).also {
+                    it.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title)
+                  }.build()
+                  log.derror("ANALYTICS: updating currentMediaItem metadata with title:$title")
+
+                //  player.currentMediaItem?.metadata = newMetadata
+                  player.updatePlaylistMetadata(newMetadata)
+                }
+              }
             }
-
           }
-
         }
-        */
+
+      }
+
+    }
+    */
 
   }
 
@@ -666,3 +648,4 @@ fun MediaMetadata?.toDebugString(): String = if (BuildConfig.DEBUG) this.run {
 } else "Metadata"
 
 
+private val log = danbroid.logging.getLog(AudioService::class)
