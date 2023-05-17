@@ -7,11 +7,12 @@ import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.MenuModel
 
 class MenuContext(
-    val id: String,
-    val context: Context,
-    val menuModel: MenuModel,
-    val audioClientModel: AudioClientViewModel,
-    val navHostController: NavHostController) {
+  val id: String,
+  val context: Context,
+  val menuModel: MenuModel,
+  val audioClientModel: AudioClientViewModel,
+  val navHostController: NavHostController
+) {
 
 
   companion object {
@@ -21,6 +22,6 @@ class MenuContext(
 
 }
 
-val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.menu")
 
-val LocalMenuContext = compositionLocalOf<MenuContext> { error("No local provided for LocalMenuContext") }
+val LocalMenuContext =
+  compositionLocalOf<MenuContext> { error("No local provided for LocalMenuContext") }

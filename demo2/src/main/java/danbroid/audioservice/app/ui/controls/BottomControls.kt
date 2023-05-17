@@ -24,21 +24,28 @@ import androidx.media2.common.MediaMetadata
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
 import danbroid.audio.client.AudioClient
+import danbroid.audio.formatDurationFromSeconds
 import danbroid.audio.library.AudioClientViewModel
-import danbroid.audio.service.AudioService
 import danbroid.audio.library.R
+import danbroid.audio.service.AudioService
+import danbroid.audioservice.app.log
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
-import danbroid.audio.formatDurationFromSeconds
 
 
 @Composable
-private fun PlayerButton(imageVector: ImageVector, contentDescription: String = "", modifier: Modifier = Modifier.size(42.dp), onClicked: () -> Unit = {}) {
+private fun PlayerButton(
+  imageVector: ImageVector,
+  contentDescription: String = "",
+  modifier: Modifier = Modifier.size(42.dp),
+  onClicked: () -> Unit = {}
+) {
   IconButton(onClicked, modifier = modifier) {
-    Icon(imageVector = imageVector,
-        contentDescription = contentDescription,
-        tint = MaterialTheme.colors.secondary,
-        modifier = modifier
+    Icon(
+      imageVector = imageVector,
+      contentDescription = contentDescription,
+      tint = MaterialTheme.colors.secondary,
+      modifier = modifier
     )
   }
 }
@@ -46,9 +53,10 @@ private fun PlayerButton(imageVector: ImageVector, contentDescription: String = 
 
 @Composable
 private fun BottomControls(
-    title: String? = "title", subTitle: String? = "subTitle",
-    hasPrevious: Boolean, isPlaying: Boolean, hasNext: Boolean, expanded: Boolean,
-    skipToPrev: () -> Unit = {}, togglePlay: () -> Unit = {}, skipToNext: () -> Unit = {}) {
+  title: String? = "title", subTitle: String? = "subTitle",
+  hasPrevious: Boolean, isPlaying: Boolean, hasNext: Boolean, expanded: Boolean,
+  skipToPrev: () -> Unit = {}, togglePlay: () -> Unit = {}, skipToNext: () -> Unit = {}
+) {
 
 
   ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
@@ -69,90 +77,117 @@ private fun BottomControls(
       top.linkTo(button2.top)
     }
     if (hasPrevious)
-      PlayerButton(Icons.Default.SkipPrevious, stringResource(R.string.lbl_skip_prev), button1Modifier, skipToPrev)
+      PlayerButton(
+        Icons.Default.SkipPrevious,
+        stringResource(R.string.lbl_skip_prev),
+        button1Modifier,
+        skipToPrev
+      )
 
 
     if (isPlaying)
       PlayerButton(Icons.Default.Pause, stringResource(R.string.pause), button2Modifier, togglePlay)
     else
-      PlayerButton(Icons.Default.PlayArrow, stringResource(R.string.play), button2Modifier, togglePlay)
+      PlayerButton(
+        Icons.Default.PlayArrow,
+        stringResource(R.string.play),
+        button2Modifier,
+        togglePlay
+      )
 
     if (hasNext)
-      PlayerButton(Icons.Default.SkipNext, stringResource(R.string.lbl_skip_next), button3Modifier, skipToNext)
+      PlayerButton(
+        Icons.Default.SkipNext,
+        stringResource(R.string.lbl_skip_next),
+        button3Modifier,
+        skipToNext
+      )
 
     Icon(
-        painterResource(if (expanded) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up),
-        stringResource(R.string.swipe_up),
-        tint = LocalContentColor.current.copy(alpha = 0.2f),
-        modifier = Modifier.size(28.dp)
-            .constrainAs(upArrow) {
-              //end.linkTo(parent.end, margin = 4.dp)
-              start.linkTo(parent.start)
-              end.linkTo(parent.end)
-              top.linkTo(parent.top)
-            }
-    )
-
-    Text(
-        title ?: "",
-        style = MaterialTheme.typography.subtitle1,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-
-        modifier = Modifier.constrainAs(text1) {
+      painterResource(if (expanded) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up),
+      stringResource(R.string.swipe_up),
+      tint = LocalContentColor.current.copy(alpha = 0.2f),
+      modifier = Modifier
+        .size(28.dp)
+        .constrainAs(upArrow) {
+          //end.linkTo(parent.end, margin = 4.dp)
+          start.linkTo(parent.start)
+          end.linkTo(parent.end)
           top.linkTo(parent.top)
-          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 4.dp, bias = 0F)
-          width = Dimension.fillToConstraints
         }
     )
 
     Text(
-        subTitle ?: "",
-        style = MaterialTheme.typography.caption,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.constrainAs(text2) {
-          linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 4.dp, bias = 0F)
-          top.linkTo(text1.bottom)
-          width = Dimension.fillToConstraints
+      title ?: "",
+      style = MaterialTheme.typography.subtitle1,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
 
-        }
+      modifier = Modifier.constrainAs(text1) {
+        top.linkTo(parent.top)
+        linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 4.dp, bias = 0F)
+        width = Dimension.fillToConstraints
+      }
+    )
+
+    Text(
+      subTitle ?: "",
+      style = MaterialTheme.typography.caption,
+      maxLines = 2,
+      overflow = TextOverflow.Ellipsis,
+      modifier = Modifier.constrainAs(text2) {
+        linkTo(buttonsEnd, parent.end, startMargin = 0.dp, endMargin = 4.dp, bias = 0F)
+        top.linkTo(text1.bottom)
+        width = Dimension.fillToConstraints
+
+      }
     )
 
     var menuExpanded by remember { mutableStateOf(false) }
 
-    val navRight = with(LocalDensity.current) { LocalWindowInsets.current.navigationBars.right.toDp() }
+    val navRight =
+      with(LocalDensity.current) { LocalWindowInsets.current.navigationBars.right.toDp() }
 
-    Box(modifier = Modifier.constrainAs(menu) {
-      end.linkTo(parent.end, margin = navRight)
-    }.wrapContentHeight(Alignment.Bottom)) {
+    Box(modifier = Modifier
+      .constrainAs(menu) {
+        end.linkTo(parent.end, margin = navRight)
+      }
+      .wrapContentHeight(Alignment.Bottom)) {
       IconButton({ menuExpanded = true }) {
         Icon(imageVector = Icons.Default.MoreVert, "")
       }
 
       DropdownMenu(
-          expanded = menuExpanded,
-          offset = DpOffset(0.dp, 0.dp),
-          onDismissRequest = {
-            log.derror("onDismissRequest")
-            menuExpanded = false
-          },
+        expanded = menuExpanded,
+        offset = DpOffset(0.dp, 0.dp),
+        onDismissRequest = {
+          log.trace("onDismissRequest")
+          menuExpanded = false
+        },
       ) {
         DropdownMenuItem({
-          log.dtrace("clicked item1")
+          log.trace("clicked item1")
           menuExpanded = false
         }) {
           Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Default.Cast, "", tint = MaterialTheme.colors.primary)
-            Text("Cast to TV", modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.subtitle2)
+            Text(
+              "Cast to TV",
+              modifier = Modifier.padding(8.dp),
+              style = MaterialTheme.typography.subtitle2
+            )
           }
         }
         DropdownMenuItem({
-          log.dtrace("clicked item2")
+          log.trace("clicked item2")
           menuExpanded = false
         }) {
           Icon(Icons.Default.Info, "", tint = MaterialTheme.colors.primary)
-          Text("Item 2 with a very long title", modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.subtitle2)
+          Text(
+            "Item 2 with a very long title",
+            modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.subtitle2
+          )
         }
       }
     }
@@ -164,28 +199,53 @@ private fun BottomControls(
 private fun BottomControlsPreview() {
   DemoTheme {
     CompositionLocalProvider(LocalContentColor provides contentColorFor(MaterialTheme.colors.primary)) {
-      Column(Modifier.background(MaterialTheme.colors.primary).width(400.dp)) {
-        BottomControls("The Title which is quote long here as you can see", "The Subtitle which is really long and so will have ellipsis", true, true, true, true)
+      Column(
+        Modifier
+          .background(MaterialTheme.colors.primary)
+          .width(400.dp)) {
+        BottomControls(
+          "The Title which is quote long here as you can see",
+          "The Subtitle which is really long and so will have ellipsis",
+          true,
+          true,
+          true,
+          true
+        )
       }
     }
   }
 }
 
 @Composable
-fun ExtraControls(value: Float, durationInSeconds: Float, onValueChange: (Float) -> Unit, onValueChangeFinished: () -> Unit = {}) {
+fun ExtraControls(
+  value: Float,
+  durationInSeconds: Float,
+  onValueChange: (Float) -> Unit,
+  onValueChangeFinished: () -> Unit = {}
+) {
 
-  DemoTheme(colors = LightThemeColors.copy(primary = LightThemeColors.onPrimary, onPrimary = LightThemeColors.primary)) {
-    Row(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+  DemoTheme(
+    colors = LightThemeColors.copy(
+      primary = LightThemeColors.onPrimary,
+      onPrimary = LightThemeColors.primary
+    )
+  ) {
+    Row(
+      Modifier
+        .fillMaxWidth()
+        .padding(start = 8.dp, end = 8.dp),
+      horizontalArrangement = Arrangement.SpaceBetween
+    ) {
       Text(value.formatDurationFromSeconds())
       Text(durationInSeconds.formatDurationFromSeconds())
     }
     Slider(
-        value,
-        onValueChange = onValueChange,
-        onValueChangeFinished = onValueChangeFinished,
-        // steps = 5,
-        valueRange = 0f..durationInSeconds,
-        modifier = Modifier.fillMaxWidth(),
+      value,
+      onValueChange = onValueChange,
+      onValueChangeFinished = onValueChangeFinished,
+      // steps = 5,
+      valueRange = 0f..durationInSeconds,
+      modifier = Modifier.fillMaxWidth(),
     )
 
 
@@ -205,7 +265,7 @@ private fun ExtraControlsPreview() {
 
 @Composable
 fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewModel) {
-  log.ddebug("BottomControls() expanded: $expanded")
+  log.debug("BottomControls() expanded: $expanded")
 
   val player = audioClientModel.client
   val playerState by player.playState.collectAsState()
@@ -221,9 +281,15 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
   Column(modifier = modifier.fillMaxWidth()) {
 
     BottomControls(
-        title, subTitle,
-        queueState.hasPrevious, playerState == AudioClient.PlayerState.PLAYING, queueState.hasNext, expanded,
-        player::skipToPrev, player::togglePause, player::skipToNext
+      title,
+      subTitle,
+      queueState.hasPrevious,
+      playerState == AudioClient.PlayerState.PLAYING,
+      queueState.hasNext,
+      expanded,
+      player::skipToPrev,
+      player::togglePause,
+      player::skipToNext
     )
 
     if (expanded) {
@@ -236,11 +302,11 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
 
       if (playPosition.duration > 0L) {
         ExtraControls(value, playPosition.duration, {
-          log.dtrace("value: $it")
+          log.trace("value: $it")
           value = it
           dragging = true
         }, onValueChangeFinished = {
-          log.dtrace("on value change ")
+          log.trace("on value change ")
           player.seekTo(value)
           dragging = false
         })
@@ -250,33 +316,44 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(20.dp)) {
           val colorModifier = Modifier.size(24.dp)
           listOf(
-              AudioService.MEDIA_METADATA_KEY_DARK_COLOR,
-              AudioService.MEDIA_METADATA_KEY_LIGHT_COLOR,
-              AudioService.MEDIA_METADATA_KEY_DARK_MUTED_COLOR,
-              AudioService.MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR,
-              AudioService.MEDIA_METADATA_KEY_DOMINANT_COLOR,
-              AudioService.MEDIA_METADATA_KEY_VIBRANT_COLOR,
+            AudioService.MEDIA_METADATA_KEY_DARK_COLOR,
+            AudioService.MEDIA_METADATA_KEY_LIGHT_COLOR,
+            AudioService.MEDIA_METADATA_KEY_DARK_MUTED_COLOR,
+            AudioService.MEDIA_METADATA_KEY_LIGHT_MUTED_COLOR,
+            AudioService.MEDIA_METADATA_KEY_DOMINANT_COLOR,
+            AudioService.MEDIA_METADATA_KEY_VIBRANT_COLOR,
           ).forEach {
-            Box(modifier = colorModifier.background(Color(extras.getInt(it, android.graphics.Color.TRANSPARENT))))
+            Box(
+              modifier = colorModifier.background(
+                Color(
+                  extras.getInt(
+                    it,
+                    android.graphics.Color.TRANSPARENT
+                  )
+                )
+              )
+            )
           }
         }
       }
 
       var menuExpanded by remember { mutableStateOf(false) }
-      Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)) {
+      Box(modifier = Modifier
+        .fillMaxSize()
+        .wrapContentSize(Alignment.TopStart)) {
         Icon(imageVector = Icons.Default.MoreVert, "", modifier = Modifier.clickable {
           menuExpanded = true
         })
         DropdownMenu(
-            expanded = menuExpanded,
-            onDismissRequest = {
-              log.derror("onDismissRequest")
-              menuExpanded = false
-            },
-            modifier = Modifier.background(Color.Red)
+          expanded = menuExpanded,
+          onDismissRequest = {
+            log.trace("onDismissRequest")
+            menuExpanded = false
+          },
+          modifier = Modifier.background(Color.Red)
         ) {
           DropdownMenuItem({
-            log.dtrace("clicked item1")
+            log.trace("clicked item1")
             menuExpanded = false
           }) {
             Row {
@@ -285,7 +362,7 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
             }
           }
           DropdownMenuItem({
-            log.dtrace("clicked item2")
+            log.trace("clicked item2")
             menuExpanded = false
           }) {
             Text("Item 2")
@@ -303,14 +380,26 @@ fun DropdownDemo() {
   val items = listOf("A", "B", "C", "D", "E", "F")
   val disabledValue = "B"
   var selectedIndex by remember { mutableStateOf(0) }
-  Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)) {
-    Text(items[selectedIndex], modifier = Modifier.fillMaxWidth().clickable(onClick = { expanded = true }).background(
-        Color.Gray))
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .wrapContentSize(Alignment.TopStart)) {
+    Text(
+      items[selectedIndex],
+      modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = { expanded = true })
+        .background(
+          Color.Gray
+        )
+    )
     DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false },
-        modifier = Modifier.fillMaxWidth().background(
-            Color.Red)
+      expanded = expanded,
+      onDismissRequest = { expanded = false },
+      modifier = Modifier
+        .fillMaxWidth()
+        .background(
+          Color.Red
+        )
     ) {
       items.forEachIndexed { index, s ->
         DropdownMenuItem(onClick = {
@@ -329,6 +418,5 @@ fun DropdownDemo() {
   }
 }
 
-private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.controls")
 
 

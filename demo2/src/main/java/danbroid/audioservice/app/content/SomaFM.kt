@@ -3,9 +3,10 @@ package danbroid.audioservice.app.content
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import danbroid.audioservice.app.log
+import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.menu
 import danbroid.audioservice.app.ui.menu.menuScreen
-import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.util.format.uriEncode
 
 
@@ -13,7 +14,7 @@ import danbroid.util.format.uriEncode
 fun SomaFM() {
   val context = LocalMenuContext.current
 
-  log.dtrace("SomaFM")
+
   runCatching {
     val somaChannels by context.menuModel.somaChannels.collectAsState()
 

@@ -1,25 +1,9 @@
 package danbroid.audioservice.app
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
 import danbroid.audio.library.AudioClientViewModel
-import danbroid.audio.ui.BackButtonHandler
-import danbroid.audioservice.app.ui.controls.BottomControls
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -27,22 +11,25 @@ fun MainScaffoldOld(
   navController: NavHostController,
   audioClientModel: AudioClientViewModel
 ) {
-  val coroutineScope = rememberCoroutineScope()
-  val insets = LocalWindowInsets.current
+  /*
+    val coroutineScope = rememberCoroutineScope()
+    val insets = LocalWindowInsets.current
 
-  val scaffoldState = rememberBottomSheetScaffoldState()
+    val scaffoldState = rememberBottomSheetScaffoldState()
 
-  val navBottom = with(LocalDensity.current) { insets.navigationBars.bottom.toDp() }
-  log.trace("NAV BAR BOTTOM: ${navBottom}")
-  val sheetHeight = 50.dp
+    val navBottom = with(LocalDensity.current) { insets.navigationBars.bottom.toDp() }
+    log.trace("NAV BAR BOTTOM: ${navBottom}")
+    val sheetHeight = 50.dp
 
-  BottomSheetScaffold(
-    modifier = Modifier,
-    /*      topBar = {
-            Row {
-              Text(title)
-            }
-          },*/
+    BottomSheetScaffold(
+      modifier = Modifier,
+      */
+  /*      topBar = {
+              Row {
+                Text(title)
+              }
+            },*//*
+
     scaffoldState = scaffoldState,
     sheetBackgroundColor = MaterialTheme.colors.primary,
     sheetContent = {
@@ -57,7 +44,7 @@ fun MainScaffoldOld(
     //sheetPeekHeight = if (bottomSheetScaffoldState.bottomSheetState.isExpanded) 0.dp else 56.dp
     sheetPeekHeight = sheetHeight + navBottom
   ) {
-    DemoNavGraph(
+    DemoNavGraphOld(
       Modifier
         .navigationBarsPadding(end = false)
         .padding(bottom = sheetHeight),
@@ -71,6 +58,7 @@ fun MainScaffoldOld(
       }
     }
   }
+*/
 
 
 }

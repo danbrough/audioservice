@@ -10,11 +10,10 @@ import danbroid.audio.content.ipfs_gateway
 import danbroid.audio.content.testTracks
 import danbroid.audio.library.R
 import danbroid.audio.ui.AppIcon
+import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.audioservice.app.ui.menu.menu
 import danbroid.audioservice.app.ui.menu.menuScreen
-import danbroid.audioservice.app.ui.menu.LocalMenuContext
 
-internal val log = danbroid.logging.getLog("danbroid.audioservice.app.content")
 const val URI_PREFIX = "audiodemo:/"
 
 const val URI_CONTENT = "$URI_PREFIX/content"

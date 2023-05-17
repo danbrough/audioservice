@@ -136,8 +136,8 @@ dependencies {
 
   implementation("com.github.fornewid:material-motion-compose:_")
 
-  //implementation(AndroidX.navigation.compose)
-  implementation(AndroidX.navigation.commonKtx)
+
+  //implementation(AndroidX.navigation.commonKtx)
   implementation(AndroidX.navigation.compose)
   implementation(AndroidX.activity.compose)
   implementation(AndroidX.lifecycle.viewModelCompose)
@@ -163,7 +163,7 @@ dependencies {
   //implementation(AndroidX.media2.player)
   //implementation("com.google.guava:guava:_")
 
-  implementation("com.github.danbrough.androidutils:logging_android:_")
+  //implementation("com.github.danbrough.androidutils:logging_android:_")
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("com.github.danbrough.androidutils:compose:_")
 

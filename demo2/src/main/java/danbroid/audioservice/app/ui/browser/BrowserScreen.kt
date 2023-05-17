@@ -22,6 +22,7 @@ import danbroid.audio.content.RNZLibrary
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.library.audioClientModel
 import danbroid.audioservice.app.R
+import danbroid.audioservice.app.log
 
 
 private fun createWebView(context: Context, audioClientModel: AudioClientViewModel): WebView {
@@ -33,14 +34,14 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
   val onBackPressedCallback = object : OnBackPressedCallback(false) {
     override fun handleOnBackPressed() {
-      log.dinfo("handleOnBackPressed()")
+      log.info("handleOnBackPressed()")
       webView.goBack()
     }
   }
 
   webView.webViewClient = object : WebViewClient() {
     override fun onPageFinished(view: WebView, url: String) {
-      log.dwarn("onPageFinished() $url canGoBack: ${view.canGoBack()}")
+      log.warn("onPageFinished() $url canGoBack: ${view.canGoBack()}")
       onBackPressedCallback.isEnabled = view.canGoBack()
     }
 
@@ -86,7 +87,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun warn(o: String) {
-      log.dwarn(o)
+      log.warn(o)
     }
 
     /**
@@ -99,17 +100,17 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun debug(o: String) {
-      log.ddebug(o)
+      log.debug(o)
     }
 
     @JavascriptInterface
     fun info(o: String) {
-      log.dinfo(o)
+      log.info(o)
     }
 
     @JavascriptInterface
     fun mediaLink(data: String) {
-      log.dinfo("mediaLink() data:$data")
+      log.info("mediaLink() data:$data")
       activity.runOnUiThread {
         //activity.activityModel().playMedia("RNZ:${data.substring(data.indexOf('X') + 1)}")
         val code = data.substring(data.indexOf('X') + 1)
@@ -121,7 +122,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun onClick(href: String?, data: String, clazz: String?) {
-      log.dtrace("onClick() href:$href data:$data clazz:$clazz")
+      log.trace("onClick() href:$href data:$data clazz:$clazz")
 
       val i = data.indexOf('X')
       if (i < 0) return
@@ -140,7 +141,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun overLinkLongClicked(href: String) {
-      log.ddebug(" overLinkLongClicked():$href")
+      log.debug(" overLinkLongClicked():$href")
     }
   }
 
@@ -153,7 +154,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun BrowserScreen(url: String, audioClientModel: AudioClientViewModel) {
-  log.dtrace("BrowserScreen()")
+  log.trace("BrowserScreen()")
   Column {
     Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     AndroidView(factory = { createWebView(it, audioClientModel) }, modifier = Modifier.fillMaxWidth()) {
@@ -163,4 +164,4 @@ fun BrowserScreen(url: String, audioClientModel: AudioClientViewModel) {
 }
 
 
-private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.browser")
+

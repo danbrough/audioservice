@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
-import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.ProvideWindowInsets
 import danbroid.audio.content.TestDataLibrary
 import danbroid.audio.content.rnz
 import danbroid.audio.content.somaFM
@@ -26,16 +24,14 @@ class MainActivity : ComponentActivity() {
     )
 
     setContent {
-      ProvideWindowInsets {
-        DemoTheme(darkTheme = false) {
-          val navController = rememberNavController()
-          //val scaffoldState = rememberScaffoldState()
-          //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)
+      DemoTheme(darkTheme = false) {
+        //val scaffoldState = rememberScaffoldState()
+        //activity.onBackPressedDispatcher.addCallback(activity, onBackPressedCallback)
 
-          val audioClientViewModel = audioClientModel()
-          MainScaffold(navController, audioClientViewModel)
-        }
+        val audioClientViewModel = audioClientModel()
+        MainScaffold(audioClientViewModel)
       }
+
     }
   }
 }

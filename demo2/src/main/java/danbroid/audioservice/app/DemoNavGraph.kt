@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import danbroid.audio.content.RNZLibrary
@@ -32,90 +33,26 @@ object Routes {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DemoNavGraph(
-  modifier: Modifier,
-  navController: NavHostController,
+  modifier: Modifier = Modifier,
+  navController: NavHostController = rememberNavController(),
   audioClientModel: AudioClientViewModel
-) = NavHost(
-  navController,
-  modifier = modifier,
-  startDestination = Routes.HOME
 ) {
-
-
-  /*log.dinfo("screenContext: $screenContext")
-  Screen.values().forEach {
-    it.composable(this, screenContext)
-  }*/
-
-
-}
-
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun DemoNavGraphOld(
-    modifier: Modifier,
-    navController: NavHostController,
-    audioClientModel: AudioClientViewModel
-) = NavHost(
+  NavHost(
     navController,
     modifier = modifier,
     startDestination = Routes.HOME
-) {
+  ) {
 
+    composable(Routes.HOME){
+      Text("Home")
+    }
 
-  /*log.dinfo("screenContext: $screenContext")
+    /*log.dinfo("screenContext: $screenContext")
   Screen.values().forEach {
     it.composable(this, screenContext)
   }*/
 
-  composable(Routes.HOME) {
-    MenuScreen(URI_CONTENT, navController, audioClientModel)
-  }
 
-  composable(Routes.SOMAFM, deepLinks = listOf(navDeepLink {
-    uriPattern = URI_SOMA_FM
-  })) {
-    MenuScreen(URI_SOMA_FM, navController, audioClientModel)
-  }
-
-  composable(Routes.PLAYLIST, deepLinks = listOf(navDeepLink {
-    uriPattern = URI_PLAYLIST
-  })) {
-    MenuScreen(URI_PLAYLIST, navController, audioClientModel)
-  }
-
-  composable("${Routes.MENU}?id={id}", arguments = listOf(
-      navArgument("id") {
-        defaultValue = URI_CONTENT
-        type = NavType.StringType
-      }
-  )) { entry ->
-
-    val menuID = entry.arguments?.getString("id")!!
-
-    MenuScreen(menuID, navController, audioClientModel)
-  }
-
-  composable(
-      Routes.SETTINGS,
-      deepLinks = listOf(navDeepLink {
-        uriPattern = URI_SETTINGS
-      })) { _ ->
-    SettingsScreen()
-  }
-
-  //URI_PLAYLIST
-
-  composable(
-      Routes.BROWSER,
-      deepLinks = listOf(navDeepLink {
-        uriPattern = URI_BROWSER
-      })) { _ ->
-    BrowserScreen(RNZLibrary.URL_RNZ, audioClientModel)
   }
 }
-
-
-
 
