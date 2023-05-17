@@ -17,11 +17,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.content.RNZLibrary
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.library.audioClientModel
 import danbroid.audioservice.app.R
-import danbroid.audioservice.app.log
 
 
 private fun createWebView(context: Context, audioClientModel: AudioClientViewModel): WebView {
@@ -33,28 +33,28 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
   val onBackPressedCallback = object : OnBackPressedCallback(false) {
     override fun handleOnBackPressed() {
-      log.info("handleOnBackPressed()")
+      log.dinfo("handleOnBackPressed()")
       webView.goBack()
     }
   }
 
   webView.webViewClient = object : WebViewClient() {
     override fun onPageFinished(view: WebView, url: String) {
-      log.warn("onPageFinished() $url canGoBack: ${view.canGoBack()}")
+      log.dwarn("onPageFinished() $url canGoBack: ${view.canGoBack()}")
       onBackPressedCallback.isEnabled = view.canGoBack()
     }
 
     @Suppress("DEPRECATION")
     override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse? {
-      /*
-            if (cssRegex.matcher(url).matches()) {
-              return WebResourceResponse(
-                  "text/css",
-                  "UTF-8",
-                  context!!.resources.openRawResource(R.raw.rnzcss)
-              )
-            }
-      */
+/*
+      if (cssRegex.matcher(url).matches()) {
+        return WebResourceResponse(
+            "text/css",
+            "UTF-8",
+            context!!.resources.openRawResource(R.raw.rnzcss)
+        )
+      }
+*/
 
       if (jsRegex.matcher(url).matches()) {
         log.trace("returning jss: $url")
@@ -86,7 +86,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun warn(o: String) {
-      log.warn(o)
+      log.dwarn(o)
     }
 
     /**
@@ -99,17 +99,17 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun debug(o: String) {
-      log.debug(o)
+      log.ddebug(o)
     }
 
     @JavascriptInterface
     fun info(o: String) {
-      log.info(o)
+      log.dinfo(o)
     }
 
     @JavascriptInterface
     fun mediaLink(data: String) {
-      log.info("mediaLink() data:$data")
+      log.dinfo("mediaLink() data:$data")
       activity.runOnUiThread {
         //activity.activityModel().playMedia("RNZ:${data.substring(data.indexOf('X') + 1)}")
         val code = data.substring(data.indexOf('X') + 1)
@@ -121,7 +121,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun onClick(href: String?, data: String, clazz: String?) {
-      log.trace("onClick() href:$href data:$data clazz:$clazz")
+      log.dtrace("onClick() href:$href data:$data clazz:$clazz")
 
       val i = data.indexOf('X')
       if (i < 0) return
@@ -140,7 +140,7 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 
     @JavascriptInterface
     fun overLinkLongClicked(href: String) {
-      log.debug(" overLinkLongClicked():$href")
+      log.ddebug(" overLinkLongClicked():$href")
     }
   }
 
@@ -153,11 +153,9 @@ private fun createWebView(context: Context, audioClientModel: AudioClientViewMod
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun BrowserScreen(url: String, audioClientModel: AudioClientViewModel) {
-  log.trace("BrowserScreen()")
+  log.dtrace("BrowserScreen()")
   Column {
-    Spacer(Modifier
-        .fillMaxWidth()
-        .background(MaterialTheme.colors.primary))
+    Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     AndroidView(factory = { createWebView(it, audioClientModel) }, modifier = Modifier.fillMaxWidth()) {
       it.loadUrl(url)
     }
@@ -165,4 +163,4 @@ fun BrowserScreen(url: String, audioClientModel: AudioClientViewModel) {
 }
 
 
-
+private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.browser")

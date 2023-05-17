@@ -30,7 +30,6 @@ import danbroid.audio.library.R
 import danbroid.audioservice.app.ui.theme.DemoTheme
 import danbroid.audioservice.app.ui.theme.LightThemeColors
 import danbroid.audio.formatDurationFromSeconds
-import danbroid.audioservice.app.log
 
 
 @Composable
@@ -135,12 +134,12 @@ private fun BottomControls(
           expanded = menuExpanded,
           offset = DpOffset(0.dp, 0.dp),
           onDismissRequest = {
-            log.error("onDismissRequest")
+            log.derror("onDismissRequest")
             menuExpanded = false
           },
       ) {
         DropdownMenuItem({
-          log.trace("clicked item1")
+          log.dtrace("clicked item1")
           menuExpanded = false
         }) {
           Row(verticalAlignment = Alignment.CenterVertically) {
@@ -149,7 +148,7 @@ private fun BottomControls(
           }
         }
         DropdownMenuItem({
-          log.trace("clicked item2")
+          log.dtrace("clicked item2")
           menuExpanded = false
         }) {
           Icon(Icons.Default.Info, "", tint = MaterialTheme.colors.primary)
@@ -206,7 +205,7 @@ private fun ExtraControlsPreview() {
 
 @Composable
 fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewModel) {
-  log.debug("BottomControls() expanded: $expanded")
+  log.ddebug("BottomControls() expanded: $expanded")
 
   val player = audioClientModel.client
   val playerState by player.playState.collectAsState()
@@ -237,11 +236,11 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
 
       if (playPosition.duration > 0L) {
         ExtraControls(value, playPosition.duration, {
-          log.trace("value: $it")
+          log.dtrace("value: $it")
           value = it
           dragging = true
         }, onValueChangeFinished = {
-          log.trace("on value change ")
+          log.dtrace("on value change ")
           player.seekTo(value)
           dragging = false
         })
@@ -271,13 +270,13 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
         DropdownMenu(
             expanded = menuExpanded,
             onDismissRequest = {
-              log.error("onDismissRequest")
+              log.derror("onDismissRequest")
               menuExpanded = false
             },
             modifier = Modifier.background(Color.Red)
         ) {
           DropdownMenuItem({
-            log.trace("clicked item1")
+            log.dtrace("clicked item1")
             menuExpanded = false
           }) {
             Row {
@@ -286,7 +285,7 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
             }
           }
           DropdownMenuItem({
-            log.trace("clicked item2")
+            log.dtrace("clicked item2")
             menuExpanded = false
           }) {
             Text("Item 2")
@@ -330,5 +329,6 @@ fun DropdownDemo() {
   }
 }
 
+private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.controls")
 
 

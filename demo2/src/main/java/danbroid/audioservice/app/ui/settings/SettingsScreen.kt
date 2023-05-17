@@ -20,3 +20,4 @@ private fun SettingsSceenPreview() {
   }
 }
 
+private val log = danbroid.logging.getLog("danbroid.audioservice.app.ui.settings")

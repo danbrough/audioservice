@@ -4,44 +4,29 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.Icon
-import androidx.compose.material.ListItem
-import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.rememberDismissState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.menu.Menu
-import danbroid.audioservice.app.log
 
 const val URI_TEST = "$URI_CONTENT/test"
 
 @Composable
 fun TestContent() {
   Column {
-    //Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
+    Spacer(Modifier.fillMaxWidth().statusBarsHeight().background(MaterialTheme.colors.primary))
     val menuItems = (0 until 10).map { Menu("id$it", "Item $it", "subtitle: $it") }
     LazyColumn {
       items(menuItems, { it.id }) { item ->
@@ -49,7 +34,7 @@ fun TestContent() {
 
         val dismissState = rememberDismissState(
             confirmStateChange = {
-              log.trace("confirmStateChange $it")
+              log.dtrace("confirmStateChange $it")
               if (it == DismissValue.DismissedToEnd) unread = !unread
               val accept = it != DismissValue.DismissedToEnd
               log.trace("accept: $accept")
@@ -86,10 +71,7 @@ fun TestContent() {
               )
 
               Box(
-                  Modifier
-                      .fillMaxSize()
-                      .background(color)
-                      .padding(horizontal = 20.dp),
+                  Modifier.fillMaxSize().background(color).padding(horizontal = 20.dp),
                   contentAlignment = alignment
               ) {
                 Icon(

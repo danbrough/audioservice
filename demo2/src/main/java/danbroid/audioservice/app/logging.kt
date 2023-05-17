@@ -1,12 +1,5 @@
 package danbroid.audioservice.app
 
-
-import klog.KLogWriters
-import klog.KMessageFormatters
-import klog.Level
-import klog.colored
-import klog.klog
-/*
 import danbroid.logging.AndroidLog
 import danbroid.logging.LogConfig
 
@@ -28,11 +21,6 @@ val log = LogConfig.let {
     }
   }
   demoLog
-}*/
-
-
-val log = klog("AUDIO_DEMO"){
-  level = Level.TRACE
-  messageFormatter = KMessageFormatters.verbose.colored
-  writer = KLogWriters.stdOut
 }
+
+

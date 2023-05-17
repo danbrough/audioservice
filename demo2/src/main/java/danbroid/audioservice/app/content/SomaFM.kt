@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import danbroid.audio.ui.menu
 import danbroid.audio.ui.menuScreen
-import danbroid.audioservice.app.log
 import danbroid.audioservice.app.ui.menu.LocalMenuContext
 import danbroid.util.format.uriEncode
 
@@ -14,39 +13,40 @@ import danbroid.util.format.uriEncode
 fun SomaFM() {
   val context = LocalMenuContext.current
 
+  log.dtrace("SomaFM")
   runCatching {
-//    val somaChannels by context.menuModel.somaChannels.collectAsState()
-//
-//    menuScreen {
-//
-//      somaChannels.forEach {
-//
-//        menu("somafm://${it.id.uriEncode()}") {
-//          title = it.title
-//          subTitle = it.description
-//          icon = it.image
-//          isPlayable = true
-//        }
-//
-//        /*item("somafm://${it.id.uriEncode()}_") {
-//          ListItem(
-//              Modifier.clickable {
-//                log.dwarn("CLICKED ${it.id}")
-//              },
-//              icon = {
-//                Icon(
-//                    painter = rememberImagePainter(it.image),
-//                    contentDescription = it.title,
-//                    modifier = Modifier.size(48.dp),
-//                    tint = Color.Unspecified,
-//                )
-//              },
-//              secondaryText = { Text(it.description) }
-//          ) { Text(it.title) }
-//          Divider()
-//        }*/
-//      }
-//    }
+    val somaChannels by context.menuModel.somaChannels.collectAsState()
+
+    menuScreen {
+
+      somaChannels.forEach {
+
+        menu("somafm://${it.id.uriEncode()}") {
+          title = it.title
+          subTitle = it.description
+          icon = it.image
+          isPlayable = true
+        }
+
+        /*item("somafm://${it.id.uriEncode()}_") {
+          ListItem(
+              Modifier.clickable {
+                log.dwarn("CLICKED ${it.id}")
+              },
+              icon = {
+                Icon(
+                    painter = rememberImagePainter(it.image),
+                    contentDescription = it.title,
+                    modifier = Modifier.size(48.dp),
+                    tint = Color.Unspecified,
+                )
+              },
+              secondaryText = { Text(it.description) }
+          ) { Text(it.title) }
+          Divider()
+        }*/
+      }
+    }
 
   }.exceptionOrNull()?.also {
     log.error(it.message, it)
