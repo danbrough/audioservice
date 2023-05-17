@@ -6,34 +6,35 @@ import androidx.media2.common.UriMediaItem
 import danbroid.audio.LibraryIcon
 import danbroid.audio.library.AudioLibrary
 import danbroid.audio.menu.Menu
-import klog.klog
 
-private val log = klog("danbroid.audio.content")
 
 //const val ipfs_gateway = "https://cloudflare-ipfs.com"
 const val ipfs_gateway = "https://h1.danbrough.org"
 
- val testTracks = testData {
+val testTracks = testData {
 
   menu {
     id = "http://sohoradioculture.doughunt.co.uk:8000/320mp3"
     title = "Soho NYC"
     subTitle = "Soho radio from NYC"
-    iconUrl = "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_nyc.png"
+    iconUrl =
+      "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_nyc.png"
   }
 
   menu {
     id = "http://sohoradiomusic.doughunt.co.uk:8000/320mp3"
     title = "Soho UK"
     subTitle = "Soho radio from London"
-    iconUrl = "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_uk.png"
+    iconUrl =
+      "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/soho_uk.png"
   }
 
   menu {
     id = "http://colostreaming.com:8094"
     title = "Radio SHE"
     subTitle = "Some cheesy rock station from florida"
-    iconUrl = "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/RadioSHE.png"
+    iconUrl =
+      "${ipfs_gateway}/ipns/k51qzi5uqu5dkfj7jtuefs73phqahshpa4nl7whcjntlq8v1yqi06fv6zjy3d3/media/RadioSHE.png"
   }
 
   menu {
@@ -132,14 +133,14 @@ const val ipfs_gateway = "https://h1.danbrough.org"
 
 class TestDataLibrary(private val tracks: List<Menu> = testTracks) : AudioLibrary {
   override suspend fun loadItem(mediaID: String): MediaItem? =
-      tracks.firstOrNull {
-        it.id == mediaID
-      }?.let {
-        UriMediaItem.Builder(mediaID.toUri())
-            .setStartPosition(0L).setEndPosition(-1L)
-            .setMetadata(it.toMediaMetadata().build()).build()
-      }.also {
-        log.info("Found mediaID: $mediaID ${it != null}")
-      }
+    tracks.firstOrNull {
+      it.id == mediaID
+    }?.let {
+      UriMediaItem.Builder(mediaID.toUri())
+        .setStartPosition(0L).setEndPosition(-1L)
+        .setMetadata(it.toMediaMetadata().build()).build()
+    }.also {
+      log.info("Found mediaID: $mediaID ${it != null}")
+    }
 }
 

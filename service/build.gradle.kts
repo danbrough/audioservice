@@ -29,8 +29,8 @@ android {
     getByName("release") {
       isMinifyEnabled = false
       proguardFiles(
-          getDefaultProguardFile("proguard-android-optimize.txt"),
-          "proguard-rules.pro"
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+        "proguard-rules.pro"
       )
     }
 
@@ -47,42 +47,40 @@ android {
 
   kotlin.sourceSets.all {
     setOf(
-        "kotlinx.serialization.ExperimentalSerializationApi",
-        "androidx.compose.material.ExperimentalMaterialApi",
-        "androidx.compose.animation.ExperimentalAnimationApi",
-        "kotlin.time.ExperimentalTime",
-        //"kotlinx.coroutines.ExperimentalCoroutinesApi",
-        //"kotlinx.coroutines.FlowPreview",
-        //"androidx.compose.material.ExperimentalMaterialApi"
+      "kotlinx.serialization.ExperimentalSerializationApi",
+      "androidx.compose.material.ExperimentalMaterialApi",
+      "androidx.compose.animation.ExperimentalAnimationApi",
+      "kotlin.time.ExperimentalTime",
+      //"kotlinx.coroutines.ExperimentalCoroutinesApi",
+      //"kotlinx.coroutines.FlowPreview",
+      //"androidx.compose.material.ExperimentalMaterialApi"
     ).forEach {
       languageSettings.optIn(it)
     }
   }
+}
 
+afterEvaluate {
   val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
-    from(sourceSets.getByName("main").java.srcDirs)
+    from(android.sourceSets.getByName("main").java.srcDirs)
   }
 
-
-  afterEvaluate {
-    publishing {
-      val projectName = name
-      publications {
-        val release by registering(MavenPublication::class) {
-          /*components.forEach {
-        println("Publication component: ${it.name}")
-      }*/
-          from(components["release"])
-          artifact(sourcesJar.get())
-          artifactId = projectName
-          groupId = ProjectVersions.GROUP_ID
-          version = ProjectVersions.VERSION_NAME
-        }
+  publishing {
+    val projectName = name
+    publications {
+      val release by registering(MavenPublication::class) {
+        /*components.forEach {
+      println("Publication component: ${it.name}")
+    }*/
+        from(components["release"])
+        artifact(sourcesJar.get())
+        artifactId = projectName
+        groupId = ProjectVersions.GROUP_ID
+        version = ProjectVersions.VERSION_NAME
       }
     }
   }
-
 }
 
 tasks.withType<Test> {
@@ -126,8 +124,8 @@ dependencies {
   //api(AndroidX.media2.exoplayer)
 //  implementation(Google.android.material)
   // implementation("com.google.guava:guava:_")
+  implementation("org.danbrough:klog:_")
   implementation("com.github.danbrough.androidutils:misc:_")
-  implementation("com.github.danbrough.androidutils:logging_core:_")
   /*  api("com.github.bumptech.glide:glide:_")
     kapt("com.github.bumptech.glide:compiler:_")*/
 

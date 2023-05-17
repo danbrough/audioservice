@@ -49,12 +49,12 @@ class NotificationListener(val service: AudioService) :
 
 
   override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-    log.dwarn("onNotificationCancelled() byUser:$dismissedByUser")
+    log.debug("onNotificationCancelled() byUser:$dismissedByUser")
     if (dismissedByUser) {
-      log.dwarn("SHOULD STOP PLAYBACK")
+      log.debug("SHOULD STOP PLAYBACK")
     } else {
       if (serviceForeground) {
-        log.dwarn("stopping foreground ..")
+        log.debug("stopping foreground ..")
         service.stopForeground(true)
         serviceForeground = false
       }
@@ -69,7 +69,7 @@ class NotificationListener(val service: AudioService) :
     //log.warn("onNotificationPosted() ongoing:$ongoing")
     if (ongoing) {
       if (!serviceForeground) {
-        log.dwarn("starting foreground ..")
+        log.info("starting foreground ..")
         ContextCompat.startForegroundService(
           service.applicationContext,
           Intent(service.applicationContext, service.javaClass)
@@ -79,7 +79,7 @@ class NotificationListener(val service: AudioService) :
       }
     } else {
       if (serviceForeground) {
-        log.dwarn("stopping foreground ..")
+        log.info("stopping foreground ..")
         service.stopForeground(false)
         serviceForeground = false
       }
@@ -94,7 +94,7 @@ fun createNotificationManager(
     service
   )
 ): PlayerNotificationManager {
-  log.dwarn("createNotificationManager()")
+  log.info("createNotificationManager()")
 
   NotificationUtil.createNotificationChannel(
     service.applicationContext,
@@ -161,8 +161,6 @@ fun createNotificationManager(
     }*/
 }
 
-
-private val log = danbroid.logging.getLog(NotificationListener::class)
 
 private class PlayerDescriptionAdapter(val service: AudioService) :
   PlayerNotificationManager.MediaDescriptionAdapter {

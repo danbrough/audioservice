@@ -14,4 +14,3 @@ class AudioServiceConfig(context: Context) {
 val Context.audioServiceConfig: AudioServiceConfig
   get() = AudioServiceConfig.getInstance(this)
 
-private val log = danbroid.logging.getLog(AudioServiceConfig::class)
