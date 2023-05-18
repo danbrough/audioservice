@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,9 +42,8 @@ fun MainScaffold(
     Box(
       Modifier
         .fillMaxSize()
-        .padding(16.dp)
     ) {
-      Text("Main Screen Content")
+      DemoNavGraph(audioClientModel = audioClientModel)
     }
   }
 }

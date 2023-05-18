@@ -11,7 +11,7 @@ object ProjectVersions {
   //var BUILD_TOOLS_VERSION = "31.0.0"
   var BUILD_VERSION = 1
   var VERSION_OFFSET = 1
-  var GROUP_ID = "com.github.danbrough.audioservice"
+  var GROUP_ID = "org.danbrough.audioservice"
   var KEYSTORE_PASSWORD = ""
   var VERSION_FORMAT = ""
 

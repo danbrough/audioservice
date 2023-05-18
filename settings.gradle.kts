@@ -3,7 +3,7 @@ plugins {
 }
 
 
-include(":demo2")
+include(":demo")
 
 
 

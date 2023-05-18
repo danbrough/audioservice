@@ -60,7 +60,6 @@ android {
 
 
 afterEvaluate {
-
   val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(android.sourceSets.getByName("main").java.srcDirs)
@@ -69,10 +68,7 @@ afterEvaluate {
   publishing {
     val projectName = name
     publications {
-      val release by registering(MavenPublication::class) {
-        /*components.forEach {
-      println("Publication component: ${it.name}")
-    }*/
+      register<MavenPublication>("release") {
         from(components["release"])
         artifact(sourcesJar.get())
         artifactId = projectName
