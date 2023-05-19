@@ -105,7 +105,6 @@ dependencies {
 //  implementation(Google.android.material)
   // implementation("com.google.guava:guava:_")
   implementation("com.github.danbrough.androidutils:misc:_")
-  implementation("com.github.danbrough.androidutils:logging_core:_")
   /*  api("com.github.bumptech.glide:glide:_")
     kapt("com.github.bumptech.glide:compiler:_")*/
 

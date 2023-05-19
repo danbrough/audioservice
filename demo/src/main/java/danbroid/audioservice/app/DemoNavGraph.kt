@@ -1,7 +1,6 @@
 package danbroid.audioservice.app
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -13,7 +12,11 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import danbroid.audio.content.RNZLibrary
 import danbroid.audio.library.AudioClientViewModel
-import danbroid.audioservice.app.content.*
+import danbroid.audioservice.app.content.URI_BROWSER
+import danbroid.audioservice.app.content.URI_CONTENT
+import danbroid.audioservice.app.content.URI_PLAYLIST
+import danbroid.audioservice.app.content.URI_SETTINGS
+import danbroid.audioservice.app.content.URI_SOMA_FM
 import danbroid.audioservice.app.ui.browser.BrowserScreen
 import danbroid.audioservice.app.ui.menu.MenuScreen
 import danbroid.audioservice.app.ui.settings.SettingsScreen
@@ -51,6 +54,28 @@ fun DemoNavGraph(
   }*/
 
   composable(Routes.HOME) {
+    /*Box(
+      Modifier
+        .height(200.dp)
+        .fillMaxWidth()
+        .fillMaxHeight()
+        .windowInsetsPadding(WindowInsets.statusBars)
+    ) {
+      Button(modifier = Modifier.align(Alignment.TopStart), onClick = {
+        log.error("CLICKED!")
+        Log.i("AUDIO_DEMO", "clicked from android log")
+      }) {
+        Text("Top")
+      }
+
+      Button(modifier = Modifier.align(Alignment.BottomCenter), onClick = {
+        log.error("CLICKED!")
+        Log.i("AUDIO_DEMO", "clicked from android log")
+      }) {
+        Text("Bottom")
+      }
+
+    }*/
     MenuScreen(URI_CONTENT, navController, audioClientModel)
   }
 

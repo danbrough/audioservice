@@ -276,7 +276,7 @@ fun BottomControls(expanded: Boolean = false, audioClientModel: AudioClientViewM
   val subTitle = currentItem?.metadata?.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE) ?: ""
 
 
-  val modifier = if (expanded) Modifier.statusBarsPadding() else Modifier
+  val modifier = if (expanded) Modifier.padding(bottom = 50.dp) else Modifier
 
   Column(modifier = modifier.fillMaxWidth()) {
 

@@ -1,6 +1,13 @@
 package danbroid.audioservice.app
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -20,15 +27,18 @@ fun MainScaffold(
 ) {
   val navBottom = with(LocalDensity.current) { WindowInsets.navigationBars.getBottom(this).toDp() }
 
+
   val scaffoldState = rememberBottomSheetScaffoldState()
   val sheetHeight = 50.dp
 
   BottomSheetScaffold(
     sheetBackgroundColor = MaterialTheme.colors.primary,
     sheetPeekHeight = sheetHeight + navBottom,
-
     sheetContent = {
-      Column(Modifier.fillMaxSize()) {
+      Column(
+        Modifier
+          .fillMaxSize()
+      ) {
         Row(
           modifier = Modifier
             .fillMaxWidth()

@@ -14,6 +14,9 @@ import danbroid.audioservice.app.ui.theme.DemoTheme
 class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    log.trace("onCreate")
+    log.error("onCreate")
+    log.info("onCreate()")
     super.onCreate(savedInstanceState)
     WindowCompat.setDecorFitsSystemWindows(window, false)
 

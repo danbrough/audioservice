@@ -4,7 +4,7 @@ import java.util.Properties
 
 object ProjectVersions {
   var SDK_VERSION = 33
-  var MIN_SDK_VERSION = 21
+  var MIN_SDK_VERSION = 24
   val JAVA_VERSION = JavaVersion.VERSION_17
   const val KOTLIN_VERSION = "17"
 
