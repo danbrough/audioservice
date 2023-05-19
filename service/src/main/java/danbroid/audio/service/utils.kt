@@ -62,8 +62,8 @@ val Int.playerState: String
   }
 
 
-@Player.State
-val Int.exoPlayerState: String
+val @Player.State
+Int.exoPlayerState: String
   get() = when (this) {
     Player.STATE_IDLE -> "STATE_IDLE"
     Player.STATE_BUFFERING -> "STATE_BUFFERING"
@@ -104,8 +104,8 @@ annotation class PlayWhenReadyChangeReason
 
 */
 
-@Player.PlayWhenReadyChangeReason
-val Int.playWhenReadyChangeReason: String
+val @Player.PlayWhenReadyChangeReason
+Int.playWhenReadyChangeReason: String
   get() = when (this) {
     Player.PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST -> "PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST"
     Player.PLAY_WHEN_READY_CHANGE_REASON_AUDIO_FOCUS_LOSS -> "PLAY_WHEN_READY_CHANGE_REASON_AUDIO_FOCUS_LOSS"

@@ -271,9 +271,12 @@ class AudioService : MediaSessionService() {
 
       }
 
-      override fun onStaticMetadataChanged(metadataList: MutableList<Metadata>) {
+      /*      override fun onStaticMetadataChanged(metadataList: MutableList<Metadata>) {
+              log.trace("onStaticMetadataChanged() $metadataList")
+            }*/
+      /*override fun onStaticMetadataChanged(metadataList: MutableList<Metadata>) {
         log.trace("onStaticMetadataChanged() $metadataList")
-      }
+      }*/
     })
 
 
