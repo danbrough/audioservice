@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -23,13 +24,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.google.accompanist.insets.statusBarsHeight
 import danbroid.audio.library.AudioClientViewModel
@@ -47,15 +52,26 @@ fun IconImage(
   modifier: Modifier = Modifier,
 ) {
 
-  Image(
-    painter = rememberImagePainter(data = imageUrl) {
+  AsyncImage(
+    model = ImageRequest.Builder(LocalContext.current)
+      .data(imageUrl)
+      .crossfade(true)
+      .build(),
+    placeholder = painterResource(danbroid.audioservice.app.R.drawable.ic_launcher_foreground),
+    contentDescription = stringResource(danbroid.audioservice.app.R.string.app_name),
+    contentScale = ContentScale.FillBounds,
+    modifier = modifier.clip(RoundedCornerShape(8.dp))
+  )
+/*  Image(
+    painter = rememberImagePainter(imageUrl,null) {
       //crossfade(true)
-      transformations(RoundedCornersTransformation(8.dp.value))
+
+      //TODO transformations(RoundedCornersTransformation(8.dp.value))
     },
     contentDescription = contentDescription,
     modifier = modifier,
     contentScale = ContentScale.FillBounds,
-  )
+  )*/
 }
 
 @Composable

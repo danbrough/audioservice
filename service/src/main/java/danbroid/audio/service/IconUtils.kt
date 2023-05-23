@@ -9,7 +9,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.media2.common.MediaMetadata
-import coil.Coil
+import coil.imageLoader
 import coil.request.ImageRequest
 import danbroid.audio.R
 
@@ -44,7 +44,7 @@ class IconUtils(
 
 
     log.trace("making request for $imageURI")
-    val result = Coil.execute(request)
+    val result = request.context.imageLoader.execute(request)
     log.trace("got result: $result")
     return result.drawable as? BitmapDrawable
   }
