@@ -15,10 +15,8 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
-import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import androidx.media3.session.SessionToken
-import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.log
 import danbroid.audio.service.AudioService
@@ -123,7 +121,7 @@ open class AudioClient(context: Context, scope: CoroutineScope) {
   }
 
   val playlistIndex: Int = mediaController.currentMediaItemIndex
-  var seeking = false
+  private var seeking = false
 
   fun seekTo(seconds: Float) {
     log.trace("seekTo() $seconds")
@@ -171,20 +169,22 @@ open class AudioClient(context: Context, scope: CoroutineScope) {
   fun addToPlaylist(item: MediaItem): ListenableFuture<SessionResult> {
     log.debug("addToPlaylist(): $item")
     val args = bundleOf()
-    ParcelUtils.putVersionedParcelable(args, AudioService.ACTION_ARG_MEDIA_ITEM, item.metadata)
+
+    /*ParcelUtils.putVersionedParcelable(args, AudioService.ACTION_ARG_MEDIA_ITEM, item.metadata)
     return mediaController.sendCustomCommand(
       SessionCommand(
         AudioService.ACTION_ADD_TO_PLAYLIST,
         null
       ), args
-    )
+    )*/
+    TODO("addToPlaylist not implemented")
   }
 
   private val handler = Handler(Looper.getMainLooper())
+
   private val updatePositionJob: Runnable = Runnable {
     updatePosition()
   }
-
 
   private fun updatePosition() {
     val position = mediaController.currentPosition

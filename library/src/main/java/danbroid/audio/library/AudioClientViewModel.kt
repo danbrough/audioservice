@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.media2.common.SessionPlayer
+import androidx.media3.common.util.UnstableApi
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.client.AudioClient
 import danbroid.audio.log
@@ -19,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@UnstableApi
 open class AudioClientViewModel(context: Context) : ViewModel() {
 
   private val _client = lazy {
@@ -41,6 +43,7 @@ open class AudioClientViewModel(context: Context) : ViewModel() {
   fun play(mediaID: String) {
     log.info("test(): $mediaID")
     val controller = client.mediaController
+    controller.currentMediaItemIndex
     val existingIndex = controller.playlist?.indexOfFirst {
       it.metadata?.mediaId == mediaID
     } ?: -1
