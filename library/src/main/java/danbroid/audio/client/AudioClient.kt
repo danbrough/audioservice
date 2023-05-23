@@ -1,34 +1,35 @@
 package danbroid.audio.client
 
+/*import danbroid.audio.service.buffState
+import danbroid.audio.service.duration
+import danbroid.audio.service.playerState
+import danbroid.audio.service.toDebugString*/
+import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import androidx.concurrent.futures.await
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.media2.common.MediaItem
-import androidx.media2.common.MediaMetadata
-import androidx.media2.common.SessionPlayer
-import androidx.media2.common.SubtitleData
-import androidx.media2.session.MediaBrowser
-import androidx.media2.session.MediaController
-import androidx.media2.session.MediaSessionManager
-import androidx.media2.session.SessionCommand
-import androidx.media2.session.SessionCommandGroup
-import androidx.media2.session.SessionResult
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
+import androidx.media3.session.SessionToken
 import androidx.versionedparcelable.ParcelUtils
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.log
 import danbroid.audio.service.AudioService
-import danbroid.audio.service.buffState
-import danbroid.audio.service.duration
-import danbroid.audio.service.playerState
-import danbroid.audio.service.toDebugString
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 
-open class AudioClient(context: Context) {
+@UnstableApi
+open class AudioClient(context: Context, scope: CoroutineScope) {
 
   enum class PlayerState {
     IDLE, PAUSED, PLAYING, ERROR;
@@ -78,29 +79,47 @@ open class AudioClient(context: Context) {
 
   protected val controllerCallback = ControllerCallback()
 
-  protected val mainExecutor =
+  private val mainExecutor =
     ContextCompat.getMainExecutor(context)//Executors.newSingleThreadExecutor()
   // protected val mainExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
 
-  val mediaController: MediaBrowser = run {
+  /*  val mediaController: MediaBrowser = run {
+  
+  
+      log.info("starting service ..")
+      context.startService(Intent(context, AudioService::class.java))
+  
+  
+      val sessionManager = MediaSessionManager.getInstance(context)
+      val serviceToken = sessionManager.sessionServiceTokens.first {
+        it.serviceName == AudioService::class.qualifiedName
+      }
+  
+      log.trace("serviceToken: $serviceToken.")
+  
+  
+      MediaBrowser.Builder(context)
+        .setControllerCallback(mainExecutor, controllerCallback)
+        .setSessionToken(serviceToken)
+        .build()
+    }*/
 
+  lateinit var mediaController: MediaController
 
-    log.info("starting service ..")
-    context.startService(Intent(context, AudioService::class.java))
+  init {
+    scope.launch {
+      log.debug("creating session token..")
+      val sessionToken = SessionToken(context, ComponentName(context, AudioService::class.java))
 
-
-    val sessionManager = MediaSessionManager.getInstance(context)
-    val serviceToken = sessionManager.sessionServiceTokens.first {
-      it.serviceName == AudioService::class.qualifiedName
+      mediaController = MediaController.Builder(context, sessionToken)
+        .setListener(listener)
+        .buildAsync()
+        .await()
     }
+  }
 
-    log.trace("serviceToken: $serviceToken.")
+  private val listener = object : MediaController.Listener {
 
-
-    MediaBrowser.Builder(context)
-      .setControllerCallback(mainExecutor, controllerCallback)
-      .setSessionToken(serviceToken)
-      .build()
   }
 
   val playlistIndex: Int = mediaController.currentMediaItemIndex
@@ -109,44 +128,38 @@ open class AudioClient(context: Context) {
   fun seekTo(seconds: Float) {
     log.trace("seekTo() $seconds")
     seeking = true
-    mediaController.seekTo((seconds * 1000L).toLong()).then {
-      seeking = false
-      updatePosition()
-    }
+    mediaController.seekTo((seconds * 1000L).toLong())
+    seeking = false
+    updatePosition()
   }
 
   fun play() = mediaController.play()
 
   fun togglePause() {
-    log.debug("togglePause() state: ${mediaController.playerState.playerState}")
-    if (mediaController.playerState == SessionPlayer.PLAYER_STATE_PLAYING) {
+    log.debug("togglePause() playing: ${mediaController.isPlaying}}")
+    if (mediaController.isPlaying)
       mediaController.pause()
-    } else {
+    else
       mediaController.play()
-    }
   }
 
   fun skipToNext() {
-    mediaController.skipToNextPlaylistItem()
+    mediaController.seekToNextMediaItem()
   }
 
   fun skipToPrev() {
-    mediaController.skipToPreviousPlaylistItem()
+    mediaController.seekToPreviousMediaItem()
   }
 
   fun close() {
     log.info("close()")
     handler.removeCallbacksAndMessages(null)
-    mediaController.close()
+    mediaController.stop()
   }
 
   fun clearPlaylist() {
     log.trace("clearPlaylist()")
-    if (!mediaController.playlist.isNullOrEmpty()) {
-      mediaController.removePlaylistItem(0).then {
-        clearPlaylist()
-      }
-    }
+    mediaController.clearMediaItems()
   }
 
   private fun <T> ListenableFuture<T>.then(job: (T) -> Unit) =
@@ -182,36 +195,38 @@ open class AudioClient(context: Context) {
     if (seeking) return
     _playPosition.value = PlayPosition(position / 1000f, duration / 1000f)
 
-    if (duration > 0 && mediaController.playerState == SessionPlayer.PLAYER_STATE_PLAYING)
+    if (duration > 0 && mediaController.isPlaying)
       handler.postDelayed(updatePositionJob, 1000L)
 
   }
 
   fun playIfNotPlaying() {
     log.trace("playIfNotPlaying()")
-    if (mediaController.playerState != SessionPlayer.PLAYER_STATE_PLAYING)
+    if (!mediaController.isPlaying)
       mediaController.play()
   }
 
-  protected inner class ControllerCallback : MediaBrowser.BrowserCallback() {
+  protected inner class ControllerCallback : MediaController.Listener {
 
-    override fun onPlaybackInfoChanged(
+
+    /*TODO override fun onPlaybackInfoChanged(
       controller: MediaController,
       info: MediaController.PlaybackInfo
     ) {
       log.trace("onPlaybackInfoChanged(): $info")
     }
+    */
 
-    override fun onPlaybackCompleted(controller: MediaController) {
+    /*TODO override fun onPlaybackCompleted(controller: MediaController) {
       log.trace("onPlaybackCompleted()")
-    }
+    }*/
 
-    override fun onPlaylistMetadataChanged(controller: MediaController, metadata: MediaMetadata?) {
+    /*TODO  override fun onPlaylistMetadataChanged(controller: MediaController, metadata: MediaMetadata?) {
       log.trace("onPlaylistMetadataChanged() metadata: ${metadata.toDebugString()}")
       _metadata.value = metadata
-    }
+    }*/
 
-    override fun onPlaylistChanged(
+    /*TODO override fun onPlaylistChanged(
       controller: MediaController,
       list: MutableList<MediaItem>?,
       metadata: MediaMetadata?
@@ -228,13 +243,13 @@ open class AudioClient(context: Context) {
         position = controller.currentMediaItemIndex
       )
       _playList.value = list ?: emptyList()
-    }
+    }*/
 
-    override fun onTrackSelected(controller: MediaController, trackInfo: SessionPlayer.TrackInfo) {
+    /*TODO override fun onTrackSelected(controller: MediaController, trackInfo: SessionPlayer.TrackInfo) {
       log.trace("onTrackSelected() ${controller.currentMediaItem?.metadata}")
-    }
+    }*/
 
-    override fun onCurrentMediaItemChanged(controller: MediaController, item: MediaItem?) {
+    /*TODO override fun onCurrentMediaItemChanged(controller: MediaController, item: MediaItem?) {
       log.trace("onCurrentMediaItemChanged(): $item currentPos: ${controller.currentPosition} duration:${controller.duration} ")
 
       log.trace("keys: ${item?.metadata?.keySet()?.joinToString(",")}")
@@ -249,9 +264,9 @@ open class AudioClient(context: Context) {
         hasNext = controller.nextMediaItemIndex != -1,
         position = controller.currentMediaItemIndex
       )
-    }
+    }*/
 
-    override fun onBufferingStateChanged(controller: MediaController, item: MediaItem, state: Int) {
+    /*TODO override fun onBufferingStateChanged(controller: MediaController, item: MediaItem, state: Int) {
       log.trace("onBufferingStateChanged() ${state.buffState} duration: ${item.duration}")
 
       _bufferingState.value = when (state) {
@@ -262,9 +277,9 @@ open class AudioClient(context: Context) {
         else -> error("Unknown buffering state: $state")
       }
     }
+*/
 
-
-    override fun onPlayerStateChanged(controller: MediaController, state: Int) {
+    /*TODO override fun onPlayerStateChanged(controller: MediaController, state: Int) {
       log.trace("onPlayerStateChanged() state:$state = ${state.playerState}  pos:${controller.currentPosition} duration:${controller.duration}")
 
       _playState.value = when (state) {
@@ -277,56 +292,56 @@ open class AudioClient(context: Context) {
 
 
       updatePosition()
-    }
+    }*/
 
 
-    override fun onSubtitleData(
+    /*TODO override fun onSubtitleData(
       controller: MediaController,
       item: MediaItem,
       track: SessionPlayer.TrackInfo,
       data: SubtitleData
     ) {
       log.trace("onSubtitleData() $track data: $data")
-    }
+    }*/
 
-    override fun onTracksChanged(
-      controller: MediaController,
-      tracks: MutableList<SessionPlayer.TrackInfo>
-    ) {
-      val state = controller.playerState
-      log.trace("onTracksChanged() tracks:${tracks} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex}")
-    }
+    /*TODO  override fun onTracksChanged(
+       controller: MediaController,
+       tracks: MutableList<SessionPlayer.TrackInfo>
+     ) {
+       val state = controller.playerState
+       log.trace("onTracksChanged() tracks:${tracks} state:${state.playerState} prev:${controller.previousMediaItemIndex} next:${controller.nextMediaItemIndex}")
+     }
+     */
 
-    override fun onConnected(controller: MediaController, allowedCommands: SessionCommandGroup) {
-      log.info("onConnected()")
-      _connected.value = true
-      _currentItem.value = controller.currentMediaItem
-      _metadata.value = controller.currentMediaItem?.metadata
-      val playlist = controller.playlist ?: emptyList()
-      _playList.value = playlist
-      _queueState.value = QueueState(
-        hasPrevious = controller.previousMediaItemIndex != -1,
-        hasNext = controller.nextMediaItemIndex != -1,
-        size = playlist.size,
-        position = controller.currentMediaItemIndex
-      )
+    /*TODO     override fun onConnected(controller: MediaController, allowedCommands: SessionCommandGroup) {
+       log.info("onConnected()")
+       _connected.value = true
+       _currentItem.value = controller.currentMediaItem
+       _metadata.value = controller.currentMediaItem?.metadata
+       val playlist = controller.playlist ?: emptyList()
+       _playList.value = playlist
+       _queueState.value = QueueState(
+         hasPrevious = controller.previousMediaItemIndex != -1,
+         hasNext = controller.nextMediaItemIndex != -1,
+         size = playlist.size,
+         position = controller.currentMediaItemIndex
+       )
 
-      _playState.value = when (controller.playerState) {
-        SessionPlayer.PLAYER_STATE_IDLE -> PlayerState.IDLE
-        SessionPlayer.PLAYER_STATE_PLAYING -> PlayerState.PLAYING
-        SessionPlayer.PLAYER_STATE_ERROR -> PlayerState.ERROR
-        SessionPlayer.PLAYER_STATE_PAUSED -> PlayerState.PAUSED
-        else -> error("Unknown player state: ${controller.playerState}")
-      }
+       _playState.value = when (controller.playerState) {
+         SessionPlayer.PLAYER_STATE_IDLE -> PlayerState.IDLE
+         SessionPlayer.PLAYER_STATE_PLAYING -> PlayerState.PLAYING
+         SessionPlayer.PLAYER_STATE_ERROR -> PlayerState.ERROR
+         SessionPlayer.PLAYER_STATE_PAUSED -> PlayerState.PAUSED
+         else -> error("Unknown player state: ${controller.playerState}")
+       }
 
-    }
+     }*/
 
     override fun onDisconnected(controller: MediaController) {
       log.info("onDisconnected()")
       _connected.value = false
     }
   }
-
 
 }
 

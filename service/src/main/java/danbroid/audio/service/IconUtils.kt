@@ -8,10 +8,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.media2.common.MediaMetadata
-import coil.Coil
-import coil.request.ImageRequest
-import danbroid.audio.R
+import androidx.media3.common.MediaMetadata
 
 class IconUtils(
   val context: Context,
@@ -20,19 +17,19 @@ class IconUtils(
 
 
   suspend fun loadIcon(metadata: MediaMetadata): BitmapDrawable? {
-    log
+    TODO("implement")
 
-    log.trace("loadIcon() $metadata")
+    /*    log.trace("loadIcon() $metadata")
 
-    val imageURI = metadata.getString(MediaMetadata.METADATA_KEY_ART_URI)
-      ?: metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
+        val imageURI = metadata.getString(MediaMetadata.METADATA_KEY_ART_URI)
+          ?: metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
 
 
-    /*
+        *//*
         imageURI.resolveDrawableURI(context).also {
           if (it != 0) return drawableToBitmapIcon(it)
         }
-    */
+    *//*
 
     log.trace("loading image $imageURI...")
     val request = ImageRequest.Builder(context)
@@ -46,7 +43,7 @@ class IconUtils(
     log.trace("making request for $imageURI")
     val result = Coil.execute(request)
     log.trace("got result: $result")
-    return result.drawable as? BitmapDrawable
+    return result.drawable as? BitmapDrawable*/
   }
   /*
       Glide.with(context).asBitmap().load(imageURI).diskCacheStrategy(DiskCacheStrategy.DATA)

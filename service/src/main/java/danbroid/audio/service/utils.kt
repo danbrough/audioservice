@@ -1,15 +1,11 @@
 package danbroid.audio.service
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import androidx.annotation.ColorInt
-import androidx.media2.common.MediaItem
-import androidx.media2.common.MediaMetadata
-import androidx.media2.common.SessionPlayer
-import androidx.media2.session.SessionResult
-import com.google.android.exoplayer2.Player
+import androidx.media3.common.Player
+import androidx.media3.session.SessionResult
 import danbroid.audio.service.util.httpSupport
 import okhttp3.CacheControl
 import java.util.concurrent.TimeUnit
@@ -19,7 +15,7 @@ suspend fun parsePlaylistURL(context: Context, url: String): String? =
   context.httpSupport.requestString(url, CacheControl.Builder().maxStale(1, TimeUnit.DAYS).build())
     .let {
       it.lines().firstNotNullOfOrNull { line ->
-        val i = line.indexOf('=');
+        val i = line.indexOf('=')
         if (line.startsWith("File") && i > 0) {
           line.substring(i + 1).trim()
         } else if (line.startsWith("http")) {
@@ -51,6 +47,8 @@ private fun processPlaylistURL(
   throw IOException("Failed to parse playlist url: $url")
 }*/
 
+/*
+TODO
 @SessionPlayer.PlayerState
 val Int.playerState: String
   get() = when (this) {
@@ -60,6 +58,7 @@ val Int.playerState: String
     SessionPlayer.PLAYER_STATE_ERROR -> "PLAYER_STATE_ERROR"
     else -> "ERROR_INVALID_PLAYER_STATE: $this"
   }
+*/
 
 
 val @Player.State
@@ -72,7 +71,7 @@ Int.exoPlayerState: String
     else -> "ERROR_INVALID_STATE: $this"
   }
 
-@SessionPlayer.BuffState
+/*TODO @Player.BuffState
 val Int.buffState: String
   get() = when (this) {
     SessionPlayer.BUFFERING_STATE_UNKNOWN -> "BUFFERING_STATE_UNKNOWN"
@@ -80,29 +79,8 @@ val Int.buffState: String
     SessionPlayer.BUFFERING_STATE_BUFFERING_AND_STARVED -> "BUFFERING_STATE_BUFFERING_AND_STARVED"
     SessionPlayer.BUFFERING_STATE_COMPLETE -> "BUFFERING_STATE_COMPLETE"
     else -> "ERROR_INVALID_BUFF_STATE: $this"
-  }
+  }*/
 
-/*
-  int PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST = 1;
-  */
-/** Playback has been paused because of a loss of audio focus. *//*
-
-  int PLAY_WHEN_READY_CHANGE_REASON_AUDIO_FOCUS_LOSS = 2;
-  */
-/** Playback has been paused to avoid becoming noisy. *//*
-
-  int PLAY_WHEN_READY_CHANGE_REASON_AUDIO_BECOMING_NOISY = 3;
-  */
-/** Playback has been started or paused because of a remote change. *//*
-
-  int PLAY_WHEN_READY_CHANGE_REASON_REMOTE = 4;
-  */
-/** Playback has been paused at the end of a media item. *//*
-
-  int PLAY_WHEN_READY_CHANGE_REASON_END_OF_MEDIA_ITEM = 5;
-annotation class PlayWhenReadyChangeReason
-
-*/
 
 val @Player.PlayWhenReadyChangeReason
 Int.playWhenReadyChangeReason: String
@@ -118,12 +96,15 @@ Int.playWhenReadyChangeReason: String
 val SessionResult.successfull: Boolean
   get() = resultCode == SessionResult.RESULT_SUCCESS
 
-val SessionPlayer.PlayerResult.successfull: Boolean
+/*TODO val Player.PlayerResult.successfull: Boolean
   @SuppressLint("RestrictedApi")
-  get() = resultCode == SessionPlayer.PlayerResult.RESULT_SUCCESS
+  get() = resultCode == SessionPlayer.PlayerResult.RESULT_SUCCESS*/
 
+/*
+TODO
 val MediaItem?.duration: Long
   get() = this?.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L
+*/
 
 @ColorInt
 fun Bundle?.getColor(vararg keys: String, noColor: Int = Color.TRANSPARENT): Int {

@@ -4,4 +4,7 @@
   <string name="notification_channel_name">AudioService</string>
   <string name="notification_description">Audio Service</string>
   <string name="untitled">Untitled</string>
+  <string name="error_generic">The application has encountered an unexpected error.</string>
+  <string name="error_media_not_found">Could not locate requested media.</string>
+
 </resources>

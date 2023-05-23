@@ -8,20 +8,23 @@ import android.content.Intent
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import androidx.media2.common.MediaMetadata
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
+import androidx.media3.common.util.NotificationUtil
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.PlayerNotificationManager
+/*import androidx.media2.common.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.util.NotificationUtil
+import com.google.android.exoplayer2.util.NotificationUtil*/
 import danbroid.audio.R
 
 
 object Config {
 
-  var PROJECT_VERSION = "0.0.0"
-
   object Notifications {
 
-    var notificationID = 1438293
+    var notificationID = 1438294
 
     @DrawableRes
     var statusBarIcon = R.drawable.ic_audio_track
@@ -43,6 +46,7 @@ object Config {
 
 }
 
+@UnstableApi
 class NotificationListener(val service: AudioService) :
   PlayerNotificationManager.NotificationListener {
   var serviceForeground = false
@@ -87,6 +91,7 @@ class NotificationListener(val service: AudioService) :
   }
 }
 
+@UnstableApi
 fun createNotificationManager(
   service: AudioService,
   notificationID: Int = Config.Notifications.notificationID,
@@ -104,11 +109,13 @@ fun createNotificationManager(
     NotificationUtil.IMPORTANCE_LOW
   )
 
+
   return PlayerNotificationManager.Builder(
-    service, notificationID,
-    service.getString(R.string.notification_channel_id),
-    PlayerDescriptionAdapter(service)
+    service,
+    notificationID,
+    service.getString(R.string.notification_channel_id)
   )
+    .setMediaDescriptionAdapter(PlayerDescriptionAdapter(service))
     .setNotificationListener(notificationListener)
     .setSmallIconResourceId(Config.Notifications.statusBarIcon)
     .build().also {
@@ -120,6 +127,7 @@ fun createNotificationManager(
       it.setUsePreviousActionInCompactView(true)
       it.setColorized(true)
     }
+
 
   /*  return object : PlayerNotificationManager(
         service,
@@ -162,13 +170,14 @@ fun createNotificationManager(
 }
 
 
+@UnstableApi
 private class PlayerDescriptionAdapter(val service: AudioService) :
   PlayerNotificationManager.MediaDescriptionAdapter {
 
   val context: Context = service
 
-  val currentMetadata: MediaMetadata?
-    get() = service.session.player.currentMediaItem?.metadata
+  val currentMetadata: MediaMetadata
+    get() = TODO() //service.session.player.currentMediaItem?.mediaMetadata
 
   override fun createCurrentContentIntent(player: Player) =
     service.packageManager?.getLaunchIntentForPackage(service.packageName)?.let { sessionIntent ->
@@ -177,15 +186,17 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
 
   override fun getCurrentContentTitle(player: Player): CharSequence {
     return currentMetadata?.let {
-      it.getText(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)
-        ?: it.getText(MediaMetadata.METADATA_KEY_TITLE)
+      it.displayTitle ?: it.title
+//      it.getText(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)
+//        ?: it.getText(MediaMetadata.METADATA_KEY_TITLE)
     } ?: context.getString(R.string.untitled)
   }
 
   override fun getCurrentContentText(player: Player): CharSequence? {
     return currentMetadata?.let {
-      it.getText(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)
-        ?: it.getText(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION)
+      it.subtitle ?: it.description
+//      it.getText(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)
+//        ?: it.getText(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION)
     }
   }
   /*
@@ -197,5 +208,6 @@ private class PlayerDescriptionAdapter(val service: AudioService) :
   override fun getCurrentLargeIcon(
     player: Player,
     callback: PlayerNotificationManager.BitmapCallback
-  ) = currentMetadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
+  ) = null
+  // TODO = currentMetadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
 }

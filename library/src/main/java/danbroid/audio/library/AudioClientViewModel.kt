@@ -1,7 +1,6 @@
 package danbroid.audio.library
 
 import android.content.Context
-import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
@@ -14,7 +13,6 @@ import androidx.media2.common.SessionPlayer
 import com.google.common.util.concurrent.ListenableFuture
 import danbroid.audio.client.AudioClient
 import danbroid.audio.log
-import danbroid.audio.service.AudioService
 import danbroid.audio.service.playerState
 import danbroid.audio.service.successfull
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +22,9 @@ import kotlinx.coroutines.withContext
 open class AudioClientViewModel(context: Context) : ViewModel() {
 
   private val _client = lazy {
-    log.info("starting audio service ..")
-    context.startService(Intent(context, AudioService::class.java))
-    AudioClient(context)
+    //log.info("starting audio service ..")
+    //context.startService(Intent(context, AudioService::class.java))
+    AudioClient(context, viewModelScope)
   }
 
   val client: AudioClient by _client

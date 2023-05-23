@@ -51,6 +51,7 @@ android {
       "androidx.compose.material.ExperimentalMaterialApi",
       "androidx.compose.animation.ExperimentalAnimationApi",
       "kotlin.time.ExperimentalTime",
+      "androidx.media3.common.util.UnstableApi",
       //"kotlinx.coroutines.ExperimentalCoroutinesApi",
       //"kotlinx.coroutines.FlowPreview",
       //"androidx.compose.material.ExperimentalMaterialApi"
@@ -84,8 +85,8 @@ dependencies {
   implementation(AndroidX.core.ktx)
 
   //implementation(AndroidX.fragment.ktx)
-  api(AndroidX.media2.common)
-  api(AndroidX.media2.session)
+  //api(AndroidX.media2.common)
+  //api(AndroidX.media2.session)
 
   implementation("org.jetbrains.kotlin:kotlin-reflect:_")
 
@@ -98,6 +99,7 @@ dependencies {
 
 
   //api(AndroidX.concurrent.futures)
+
   api("com.google.guava:guava:_")
   implementation("org.danbrough:klog:_")
 
@@ -127,17 +129,8 @@ dependencies {
       implementation("$exo_package:extension-cast:$exo_version")
     } else {*/
 
-  val use_vanilla_exoplayer = false
-  if (use_vanilla_exoplayer) {
-    /*    implementation("com.google.android.exoplayer:exoplayer-core:_")
-        implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:_")
-        implementation("com.google.android.exoplayer:exoplayer-ui:_")
-        implementation("com.google.android.exoplayer:exoplayer-hls:_")
-        implementation("com.google.android.exoplayer:exoplayer-dash:_")*/
-    implementation(AndroidX.media2.exoplayer)
-    implementation("com.google.android.exoplayer:extension-cast:_")
 
-  } else {
+  /*
     implementation("com.github.danbrough.exoplayer:exoplayer-core:_")
     implementation("com.github.danbrough.exoplayer:exoplayer-smoothstreaming:_")
     implementation("com.github.danbrough.exoplayer:exoplayer-ui:_")
@@ -147,12 +140,27 @@ dependencies {
     implementation("com.github.danbrough.exoplayer:extension-opus:_")
 
     implementation("com.github.danbrough.exoplayer:extension-media2:_")
+  */
 
-    //implementation("com.github.danbrough.exoplayer:extension-opus:_")
-    //implementation("com.github.danbrough.exoplayer:extension-cast:_")
-    //implementation("com.github.danbrough.exoplayer:extension-opus:_")
-    // implementation("com.github.danbrough.exoplayer:extension-flac:_")
-  }
+  implementation(AndroidX.media3.session)
+  implementation(AndroidX.media3.exoPlayer)
+  implementation(AndroidX.media3.dataSource)
+  implementation(AndroidX.media3.cast)
+  implementation(AndroidX.media3.ui)
+  /*
+          api "androidx.media3:media3-exoplayer:$androidx_media3_version"
+        api "androidx.media3:media3-datasource:$androidx_media3_version"
+        api "androidx.media3:media3-ui:$androidx_media3_version"
+        api "androidx.media3:media3-session:$androidx_media3_version"
+        api "androidx.media3:media3-cast:$androidx_media3_version"
+   */
+  //implementation("androidx.media3:media3-session:_")
+
+  //implementation("com.github.danbrough.exoplayer:extension-opus:_")
+  //implementation("com.github.danbrough.exoplayer:extension-cast:_")
+  //implementation("com.github.danbrough.exoplayer:extension-opus:_")
+  // implementation("com.github.danbrough.exoplayer:extension-flac:_")
+
   implementation(Square.okHttp3.okHttp)
 
 

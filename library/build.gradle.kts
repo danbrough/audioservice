@@ -95,10 +95,12 @@ dependencies {
   implementation(AndroidX.constraintLayout.compose)
   implementation(AndroidX.compose.material)
   implementation(AndroidX.compose.material.icons.extended)
+  //implementation(KotlinX.coroutines.guava)
+  implementation(AndroidX.concurrent.futuresKtx)
 
   implementation(Google.android.material)
-  api(AndroidX.media2.common)
-  api(AndroidX.media2.session)
+  api(AndroidX.media3.common)
+  api(AndroidX.media3.session)
 
   implementation(AndroidX.navigation.compose)
   implementation(AndroidX.activity.compose)
