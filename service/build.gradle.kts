@@ -47,9 +47,9 @@ android {
 
   kotlin.sourceSets.all {
     setOf(
-      "kotlinx.serialization.ExperimentalSerializationApi",
-      "androidx.compose.material.ExperimentalMaterialApi",
-      "androidx.compose.animation.ExperimentalAnimationApi",
+      //"kotlinx.serialization.ExperimentalSerializationApi",
+      //"androidx.compose.material.ExperimentalMaterialApi",
+      //"androidx.compose.animation.ExperimentalAnimationApi",
       "kotlin.time.ExperimentalTime",
       "androidx.media3.common.util.UnstableApi",
       //"kotlinx.coroutines.ExperimentalCoroutinesApi",

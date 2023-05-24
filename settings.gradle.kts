@@ -3,8 +3,7 @@ plugins {
 }
 
 
-include(":demo")
-
+//include(":demo")
 
 
 include(":library", ":service")

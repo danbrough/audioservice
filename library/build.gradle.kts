@@ -46,6 +46,8 @@ android {
       "androidx.compose.material.ExperimentalMaterialApi",
       "androidx.compose.animation.ExperimentalAnimationApi",
       "kotlin.time.ExperimentalTime",
+      "androidx.media3.common.util.UnstableApi",
+
       //"kotlinx.coroutines.ExperimentalCoroutinesApi",
       //"kotlinx.coroutines.FlowPreview",
       "androidx.compose.material.ExperimentalMaterialApi",
@@ -82,7 +84,6 @@ afterEvaluate {
 dependencies {
   implementation(project(":service"))
   implementation(AndroidX.core.ktx)
-  implementation(AndroidX.media2.common)
   implementation(KotlinX.serialization.json)
   implementation("com.github.danbrough.androidutils:misc:_")
   implementation("org.danbrough:klog:_")

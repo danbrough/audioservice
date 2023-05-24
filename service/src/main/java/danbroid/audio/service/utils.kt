@@ -47,18 +47,15 @@ private fun processPlaylistURL(
   throw IOException("Failed to parse playlist url: $url")
 }*/
 
-/*
-TODO
-@SessionPlayer.PlayerState
+
 val Int.playerState: String
   get() = when (this) {
-    SessionPlayer.PLAYER_STATE_IDLE -> "PLAYER_STATE_IDLE"
-    SessionPlayer.PLAYER_STATE_PAUSED -> "PLAYER_STATE_PAUSED"
-    SessionPlayer.PLAYER_STATE_PLAYING -> "PLAYER_STATE_PLAYING"
-    SessionPlayer.PLAYER_STATE_ERROR -> "PLAYER_STATE_ERROR"
+    Player.STATE_IDLE -> "Player.STATE_IDLE"
+    Player.STATE_BUFFERING -> "Player.STATE_BUFFERING"
+    Player.STATE_ENDED -> "Player.STATE_ENDED"
+    Player.STATE_READY -> "Player.STATE_READY"
     else -> "ERROR_INVALID_PLAYER_STATE: $this"
   }
-*/
 
 
 val @Player.State
@@ -93,7 +90,7 @@ Int.playWhenReadyChangeReason: String
     else -> "ERROR: Invalid PlayWhenReadyChangeReason: $this"
   }
 
-val SessionResult.successfull: Boolean
+val SessionResult.successful: Boolean
   get() = resultCode == SessionResult.RESULT_SUCCESS
 
 /*TODO val Player.PlayerResult.successfull: Boolean

@@ -1,8 +1,6 @@
 package danbroid.audio.content
 
-import androidx.core.net.toUri
-import androidx.media2.common.MediaItem
-import androidx.media2.common.UriMediaItem
+import androidx.media3.common.MediaItem
 import danbroid.audio.library.AudioLibrary
 import danbroid.audio.log
 
@@ -139,9 +137,16 @@ class TestDataLibrary : AudioLibrary {
     testTracks.testData.firstOrNull {
       it.id == mediaID
     }?.let {
-      UriMediaItem.Builder(mediaID.toUri())
-        .setStartPosition(0L).setEndPosition(-1L)
-        .setMetadata(it.toMediaMetadata().build()).build()
+      MediaItem.Builder()
+        .setMediaId(it.id)
+        .setClippingConfiguration(
+          MediaItem.ClippingConfiguration.Builder()
+            .setStartPositionMs(0L)
+            .setEndPositionMs(-1L)
+            .build()
+        )
+        .setMediaMetadata(it.toMediaMetadata().build())
+        .build()
     }.also {
       log.trace("Found mediaID: $mediaID ${it != null}")
     }
