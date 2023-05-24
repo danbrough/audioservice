@@ -10,19 +10,18 @@ annotation class MenuDSL
 
 @Serializable
 data class Menu(
-    var id: String,
-    var title: String,
-    var subTitle: String = "",
-    var iconUrl: String? = null,
-    var onClicked: (() -> Unit)? = null,
-    var isBrowsable: Boolean = false,
-    var isPlayable: Boolean = false,
-    var isHidden: Boolean = false
+  var id: String,
+  var title: String,
+  var subTitle: String = "",
+  var iconUrl: String? = null,
+  var onClicked: (() -> Unit)? = null,
+  var isBrowsable: Boolean = false,
+  var isPlayable: Boolean = false,
+  var isHidden: Boolean = false
 ) {
   @Transient
   private var iconData: Any? = null
 
-  @Transient
   var icon: Any? by object {
     operator fun getValue(menu: Menu, property: KProperty<*>): Any? {
       return iconData ?: iconUrl

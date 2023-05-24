@@ -2,12 +2,10 @@ package danbroid.audio.content
 
 import android.content.Context
 import androidx.core.net.toUri
-import androidx.media2.common.MediaItem
-import androidx.media2.common.MediaMetadata
-import androidx.media2.common.UriMediaItem
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import danbroid.audio.library.AudioLibrary
 import danbroid.audio.log
-import danbroid.audio.service.parsePlaylistURL
 import danbroid.audio.service.util.httpSupport
 import danbroid.util.format.uriEncode
 import danbroid.util.misc.SingletonHolder
@@ -100,26 +98,7 @@ class SomaFMLibrary(val context: Context) : AudioLibrary {
 
     return channels().firstOrNull {
       it.id == somaID
-    }?.let {
-
-
-      val metadata = it.mediaMetadata
-      val playlistURL = it.playlists.first({ it.format == SomaChannel.Playlist.Format.AAC }).url
-
-      val audioURL = parsePlaylistURL(context, playlistURL) ?: run {
-        log.error("failed to find audio url in $playlistURL")
-        return null
-      }
-      log.trace("playlist: $playlistURL -> $audioURL")
-      UriMediaItem.Builder(mediaID.toUri())
-        .setStartPosition(0L).setEndPosition(-1L)
-        .setMetadata(
-          metadata
-            .putString(MediaMetadata.METADATA_KEY_MEDIA_URI, audioURL)
-            .build()
-        )
-        .build()
-    }
+    }?.mediaItem
   }
 }
 
@@ -127,16 +106,18 @@ val Context.somaFM: SomaFMLibrary
   get() = SomaFMLibrary.getInstance(this)
 
 
+val SomaChannel.mediaItem: MediaItem
+  get() = MediaItem.Builder()
+    .setMediaId("somafm://${id.uriEncode()}")
+    .setMediaMetadata(mediaMetadata.build())
+    .setUri(playlists.first { it.format == SomaChannel.Playlist.Format.AAC }.url)
+    .build()
+
 val SomaChannel.mediaMetadata: MediaMetadata.Builder
   get() = MediaMetadata.Builder()
-    .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, "somafm://${id.uriEncode()}")
-    .putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title)
-    .putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, description)
-    .putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, image)
-    .putLong(MediaMetadata.METADATA_KEY_PLAYABLE, 1)
-    .putString(
-      MediaMetadata.METADATA_KEY_MEDIA_URI,
-      playlists.first({ it.format == SomaChannel.Playlist.Format.AAC }).url
-    )
+    .setDisplayTitle(title)
+    .setSubtitle(description)
+    .setArtworkUri(image.toUri())
+    .setIsPlayable(true)
 
 

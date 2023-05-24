@@ -1,6 +1,6 @@
 package danbroid.audio.library
 
-import androidx.media2.common.MediaItem
+import androidx.media3.common.MediaItem
 
 interface AudioLibrary {
   suspend fun loadItem(mediaID: String): MediaItem?

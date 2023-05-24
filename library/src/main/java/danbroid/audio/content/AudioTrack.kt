@@ -51,6 +51,7 @@ fun AudioTrack.toMediaMetadata(): MediaMetadata.Builder = MediaMetadata.Builder(
   setSubtitle(subTitle)
   setArtworkUri(iconURI?.toUri())
   setIsPlayable(true)
+  setIsBrowsable(false)
   setExtras(bundleOf(AudioService.MEDIA_METADATA_KEY_BITRATE to bitrate))
 }
 
