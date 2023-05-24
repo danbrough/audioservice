@@ -34,7 +34,7 @@ class RNZLibrary(context: Context) : AudioLibrary {
 
   companion object : SingletonHolder<RNZLibrary, Context>(::RNZLibrary) {
     private const val SCHEME_RNZ = "rnz"
-    private const val URI_PREFIX_RNZ_PROGRAMME = "$SCHEME_RNZ://programme"
+    const val URI_PREFIX_RNZ_PROGRAMME = "$SCHEME_RNZ://programme"
     const val URI_RNZ_NEWS = "$SCHEME_RNZ://news"
     const val URL_RNZ = "https://www.rnz.co.nz/topics"
     const val URL_RNZ_NEWS = "https://www.rnz.co.nz/news"

@@ -10,10 +10,10 @@ annotation class MenuDSL
 
 @Serializable
 data class Menu(
-  var id: String,
-  var title: String,
-  var subTitle: String = "",
-  var iconUrl: String? = null,
+  var id: CharSequence,
+  var title: CharSequence,
+  var subTitle: CharSequence = "",
+  var iconUrl: CharSequence? = null,
   var onClicked: (() -> Unit)? = null,
   var isBrowsable: Boolean = false,
   var isPlayable: Boolean = false,
