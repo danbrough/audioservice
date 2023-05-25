@@ -16,7 +16,7 @@ object ProjectVersions {
   var VERSION_FORMAT = ""
 
   //val NDK_VERSION = "21.3.6528147"
-  const val COMPOSE_VERSION = "1.4.3"
+  const val COMPOSE_VERSION = "1.4.7"
 
   const val MINIFY_ENABLED = true
   const val LOCAL_AUDIOSERVICE = true
