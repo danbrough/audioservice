@@ -46,18 +46,13 @@ subprojects {
 
   afterEvaluate {
     extensions.findByType(PublishingExtension::class.java)?.apply {
-      publications.withType(MavenPublication::class.java).all {
-        repositories {
-          maven("/usr/local/kotlinxtras/build/xtras/maven"){
-            name = "Xtras"
-          }
+      repositories {
+        maven("/usr/local/kotlinxtras/build/xtras/maven"){
+          name = "Xtras"
         }
       }
     }
   }
-
-
-
 }
 
 

@@ -167,8 +167,13 @@ dependencies {
 
 
 afterEvaluate {
-  val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
+  /*val sourcesDebugJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sourcesDebug")
+    from(android.sourceSets.getByName("main").java.srcDirs)
+  }*/
+
+  val sourcesReleaseJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sourcesRelease")
     from(android.sourceSets.getByName("main").java.srcDirs)
   }
 
@@ -177,19 +182,19 @@ afterEvaluate {
     publications {
       register<MavenPublication>("release") {
         from(components["release"])
-        artifact(sourcesJar.get())
+        artifact(sourcesReleaseJar.get())
         artifactId = projectName
         groupId = ProjectVersions.GROUP_ID
         version = ProjectVersions.VERSION_NAME
       }
 
-      register<MavenPublication>("debug") {
+/*      register<MavenPublication>("debug") {
         from(components["debug"])
-        artifact(sourcesJar.get())
+        artifact(sourcesDebugJar)
         artifactId = projectName
         groupId = ProjectVersions.GROUP_ID
         version = ProjectVersions.VERSION_NAME
-      }
+      }*/
     }
   }
 }
