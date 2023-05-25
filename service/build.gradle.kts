@@ -47,9 +47,7 @@ android {
 
   kotlin.sourceSets.all {
     setOf(
-      "kotlinx.serialization.ExperimentalSerializationApi",
-      "androidx.compose.material.ExperimentalMaterialApi",
-      "androidx.compose.animation.ExperimentalAnimationApi",
+
       "kotlin.time.ExperimentalTime",
       //"kotlinx.coroutines.ExperimentalCoroutinesApi",
       //"kotlinx.coroutines.FlowPreview",
@@ -179,6 +177,14 @@ afterEvaluate {
     publications {
       register<MavenPublication>("release") {
         from(components["release"])
+        artifact(sourcesJar.get())
+        artifactId = projectName
+        groupId = ProjectVersions.GROUP_ID
+        version = ProjectVersions.VERSION_NAME
+      }
+
+      register<MavenPublication>("debug") {
+        from(components["debug"])
         artifact(sourcesJar.get())
         artifactId = projectName
         groupId = ProjectVersions.GROUP_ID

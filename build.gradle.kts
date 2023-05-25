@@ -25,11 +25,13 @@ subprojects {
 
   repositories {
     //mavenLocal()
+    maven("/usr/local/kotlinxtras/build/xtras/maven")
     google()
     // jcenter()
     mavenCentral()
     //maven("https://s01.oss.sonatype.org/content/groups/staging")
-    maven("/usr/local/kotlinxtras/build/xtras/maven/")
+
+
     //maven("https://h1.danbrough.org/maven/")
     maven("https://jitpack.io")
     //  mavenLocal()
@@ -41,6 +43,19 @@ subprojects {
       }
     }
   }*/
+
+  afterEvaluate {
+    extensions.findByType(PublishingExtension::class.java)?.apply {
+      publications.withType(MavenPublication::class.java).all {
+        repositories {
+          maven("/usr/local/kotlinxtras/build/xtras/maven"){
+            name = "Xtras"
+          }
+        }
+      }
+    }
+  }
+
 
 
 }

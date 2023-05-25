@@ -75,6 +75,14 @@ afterEvaluate {
         groupId = ProjectVersions.GROUP_ID
         version = ProjectVersions.VERSION_NAME
       }
+
+      register<MavenPublication>("debug") {
+        from(components["debug"])
+        artifact(sourcesJar.get())
+        artifactId = projectName
+        groupId = ProjectVersions.GROUP_ID
+        version = ProjectVersions.VERSION_NAME
+      }
     }
   }
 }
