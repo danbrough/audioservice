@@ -157,8 +157,8 @@ dependencies {
   implementation(Google.accompanist.systemUiController)
   implementation(Google.accompanist.insets)
   //implementation("com.google.accompanist:accompanist-coil:_")
-  implementation(COIL.compose)
 
+  implementation("io.coil-kt:coil-compose:_")
   //implementation(AndroidX.media2.exoplayer)
   //implementation(AndroidX.media2.player)
   //implementation("com.google.guava:guava:_")
@@ -169,6 +169,7 @@ dependencies {
 
 
   implementation(Square.okHttp3.okHttp)
+  implementation("com.android.volley:volley:1.2.1")
 
   androidTestImplementation(Testing.junit4)
 

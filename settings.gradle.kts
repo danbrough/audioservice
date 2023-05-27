@@ -4,7 +4,6 @@ plugins {
 
 
 include(":demo")
-include(":demo2")
 
 
 include(":library", ":service")

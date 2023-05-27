@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import danbroid.audio.library.AudioClientViewModel
 import danbroid.audio.menu.Menu
@@ -46,7 +49,7 @@ fun IconImage(
   contentDescription: String?,
   modifier: Modifier = Modifier,
 ) {
-
+/*
   Image(
     painter = rememberImagePainter(data = imageUrl) {
       //crossfade(true)
@@ -55,6 +58,18 @@ fun IconImage(
     contentDescription = contentDescription,
     modifier = modifier,
     contentScale = ContentScale.FillBounds,
+  )*/
+
+  AsyncImage(
+    model = ImageRequest.Builder(LocalContext.current)
+      .data(imageUrl)
+      .crossfade(true)
+      .build(),
+    //placeholder = painterResource(R.drawable.placeholder),
+    //contentDescription = stringResource(R.string.description),
+    contentDescription = "",
+    contentScale = ContentScale.Crop,
+    modifier = Modifier.clip(RoundedCornerShape(8.dp))
   )
 }
 
@@ -224,7 +239,8 @@ private fun MenuItemPreview() {
 }
 
 @MenuDSL
-inline fun LazyListScope.menu(
+@UnstableApi
+inline fun LazyListScope. menu(
   id: String = "_${MenuContext.NEXT_ID++}",
   sticky: Boolean = false,
   highLighted: Boolean = false,
@@ -267,6 +283,7 @@ inline fun LazyListScope.menu(
     item(menu.id, null, itemContent)
 }
 
+@SuppressLint("RestrictedApi")
 @UnstableApi
 fun onClicked(
   menu: Menu,
@@ -278,6 +295,7 @@ fun onClicked(
     it.invoke()
     return
   }
+
 
 
   navController.findDestination(menu.id.toString())?.also {
