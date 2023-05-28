@@ -169,7 +169,7 @@ dependencies {
 
 
   implementation(Square.okHttp3.okHttp)
-  implementation("com.android.volley:volley:1.2.1")
+  implementation("com.android.volley:volley:_")
 
   androidTestImplementation(Testing.junit4)
 

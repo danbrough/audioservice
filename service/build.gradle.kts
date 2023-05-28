@@ -148,11 +148,11 @@ dependencies {
   implementation(AndroidX.media3.cast)
   implementation(AndroidX.media3.ui)
   /*
-          api "androidx.media3:media3-exoplayer:$androidx_media3_version"
-        api "androidx.media3:media3-datasource:$androidx_media3_version"
-        api "androidx.media3:media3-ui:$androidx_media3_version"
-        api "androidx.media3:media3-session:$androidx_media3_version"
-        api "androidx.media3:media3-cast:$androidx_media3_version"
+          api "androidx.media3:media3-exoplayer:_"
+        api "androidx.media3:media3-datasource:_"
+        api "androidx.media3:media3-ui:_"
+        api "androidx.media3:media3-session:_"
+        api "androidx.media3:media3-cast:_"
    */
   //implementation("androidx.media3:media3-session:_")
 
