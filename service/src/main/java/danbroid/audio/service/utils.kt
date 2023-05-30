@@ -62,7 +62,7 @@ val Int.playerState: String
   }
 
 
-val @Player.State
+val
 Int.exoPlayerState: String
   get() = when (this) {
     Player.STATE_IDLE -> "STATE_IDLE"
@@ -104,7 +104,8 @@ annotation class PlayWhenReadyChangeReason
 
 */
 
-val @Player.PlayWhenReadyChangeReason
+//val @Player.PlayWhenReadyChangeReason
+val
 Int.playWhenReadyChangeReason: String
   get() = when (this) {
     Player.PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST -> "PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST"
