@@ -26,8 +26,6 @@ fun MainScaffold(
   audioClientModel: AudioClientViewModel
 ) {
   val navBottom = with(LocalDensity.current) { WindowInsets.navigationBars.getBottom(this).toDp() }
-
-
   val scaffoldState = rememberBottomSheetScaffoldState()
   val sheetHeight = 50.dp
 

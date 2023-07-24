@@ -51,7 +51,6 @@ fun IconImage(
   contentDescription: String?,
   modifier: Modifier = Modifier,
 ) {
-
   AsyncImage(
     model = ImageRequest.Builder(LocalContext.current)
       .data(imageUrl)
@@ -62,16 +61,6 @@ fun IconImage(
     contentScale = ContentScale.FillBounds,
     modifier = modifier.clip(RoundedCornerShape(8.dp))
   )
-/*  Image(
-    painter = rememberImagePainter(imageUrl,null) {
-      //crossfade(true)
-
-      //TODO transformations(RoundedCornersTransformation(8.dp.value))
-    },
-    contentDescription = contentDescription,
-    modifier = modifier,
-    contentScale = ContentScale.FillBounds,
-  )*/
 }
 
 @Composable
@@ -284,41 +273,6 @@ inline fun LazyListScope.menu(
 }
 
 
-fun onClicked(
-  menu: Menu,
-  navController: NavHostController,
-  audioClientModel: AudioClientViewModel
-) {
-  log.debug("clicked: $menu")
-  menu.onClicked?.also {
-    it.invoke()
-    return
-  }
-
-  navController.findDestination(menu.id)?.also {
-    navController.navigate(menu.id)
-    return
-  }
-
-  if (navController.graph.hasDeepLink(menu.id.toUri())) {
-    navController.navigate(menu.id.toUri())
-  } else if (menu.isBrowsable) {
-    navController.navigate(Routes.menuRoute(menu.id)) //, menuNavOptions)
-  } else if (menu.isPlayable) {
-    audioClientModel.play(menu.id)
-  }
-
-  /*val menuNavOptions: NavOptionsBuilder.() -> Unit = {
-    anim {
-      enter = R.anim.menu_enter
-      exit = R.anim.menu_exit
-      popEnter = R.anim.menu_pop_enter
-      popExit = R.anim.menu_pop_exit
-    }
-  }*/
-}
-
-
 @SuppressLint("ComposableNaming")
 @MenuDSL
 @Composable
@@ -328,7 +282,8 @@ fun menuScreen(block: LazyListScope.() -> Unit) {
       Modifier
         .fillMaxWidth()
         .statusBarsHeight()
-        .background(MaterialTheme.colors.primary))
+        .background(MaterialTheme.colors.primary)
+    )
     LazyColumn {
       block()
     }
